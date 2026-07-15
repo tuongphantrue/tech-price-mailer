@@ -2,7 +2,7 @@ name: Send RAM/SSD/Laptop Price Email
 
 on:
   schedule:
-    - cron: "0 1 * * *"   # once a day at 1am UTC (8am Vietnam, UTC+7)
+    - cron: "*/30 * * * *"
   workflow_dispatch:        # lets you trigger it manually from the Actions tab
 
 jobs:
