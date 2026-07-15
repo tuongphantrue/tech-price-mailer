@@ -113,6 +113,14 @@ MAX_ITEMS_PER_CATEGORY: "12"
 
 ## Notes
 
+- The workflow needs write access to push its dedup state branch. It
+  requests this itself (`permissions: contents: write` at the top of
+  `send-tech-price.yml`), but some accounts/orgs override that and force
+  the token to read-only regardless. If the "Persist dedup state to state
+  branch" step fails with `403` / `Permission ... denied` / `exit code
+  128`, go to **Settings -> Actions -> General -> Workflow permissions**
+  in your repo and select **"Read and write permissions"**, then re-run
+  the workflow.
 - GitHub Actions free tier includes 2,000 minutes/month for private repos.
 - You can also trigger it manually anytime via the "Run workflow" button.
 - If the run fails, check the Actions tab -> the failed run -> logs. Common
