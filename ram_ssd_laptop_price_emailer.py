@@ -147,6 +147,81 @@ JUNK_NAME_RE = re.compile(
     re.IGNORECASE,
 )
 
+# ---------------------------------------------------------------------------
+# Spec extraction: MemoryZone product titles pack the spec sheet into the
+# name itself (e.g. "RAM Laptop Kingston DDR4 16GB 3200MHz 1.2v KVR32...",
+# "Laptop Asus Vivobook X1504VA (i5-1334U/8GB/512GB SSD/15.6 FHD/Win11)").
+# There's no separate structured spec field to scrape, so these pull the
+# capacity/type/CPU/etc. back out of the title text with best-effort regex.
+# A field that can't be found renders as "—" rather than guessing.
+# ---------------------------------------------------------------------------
+
+CPU_RE = re.compile(
+    r"(Core\s*i[3579][\w-]*|i[3579]-[\w]+|Ryzen\s*(?:AI\s*)?[3579][\w-]*|"
+    r"Ultra\s*[579][\w-]*|Celeron[\w-]*|Pentium[\w-]*|M[1-4](?:\s*(?:Pro|Max|Ultra))?)",
+    re.IGNORECASE,
+)
+DDR_RE = re.compile(r"DDR([3-5])", re.IGNORECASE)
+BUS_RE = re.compile(r"(\d{3,5})\s*MHz", re.IGNORECASE)
+INTERFACE_KEYWORDS = ["NVMe", "PCIe Gen 5", "PCIe Gen 4", "PCIe Gen 3", "PCIe", "M.2 SATA", "SATA", "M.2"]
+# Any "<number> GB" or "<number> TB", optionally immediately followed by
+# SSD/HDD - used to tell a laptop's RAM figure apart from its storage figure.
+CAPACITY_RE = re.compile(r"(\d+(?:\.\d+)?)\s*(GB|TB)(\s*(SSD|HDD))?", re.IGNORECASE)
+
+
+def extract_ram_specs(name):
+    cap = re.search(r"(\d+)\s*GB", name, re.IGNORECASE)
+    ddr = DDR_RE.search(name)
+    bus = BUS_RE.search(name)
+    return {
+        "Dung lượng": f"{cap.group(1)}GB" if cap else "—",
+        "Chuẩn": f"DDR{ddr.group(1)}" if ddr else "—",
+        "Bus": f"{bus.group(1)}MHz" if bus else "—",
+    }
+
+
+def extract_ssd_specs(name):
+    cap = re.search(r"(\d+(?:\.\d+)?)\s*(TB|GB)", name, re.IGNORECASE)
+    capacity = f"{cap.group(1)}{cap.group(2).upper()}" if cap else "—"
+    interface = "—"
+    for kw in INTERFACE_KEYWORDS:
+        if kw.lower() in name.lower():
+            interface = kw
+            break
+    return {"Dung lượng": capacity, "Chuẩn": interface}
+
+
+def extract_laptop_specs(name):
+    cpu_match = CPU_RE.search(name)
+    cpu = cpu_match.group(1) if cpu_match else "—"
+
+    ram, rom = None, None
+    for m in CAPACITY_RE.finditer(name):
+        value, unit, _, storage_kind = m.groups()
+        label = f"{value}{unit.upper()}" + (f" {storage_kind.upper()}" if storage_kind else "")
+        if storage_kind or unit.upper() == "TB":
+            # Explicitly tagged as SSD/HDD, or a TB figure (RAM is never
+            # advertised in TB on these listings) -> storage, not RAM.
+            if rom is None:
+                rom = label
+        elif ram is None:
+            ram = label
+        elif rom is None:
+            # Second bare "<N>GB" with no SSD/HDD tag - on these titles
+            # that's almost always the storage figure written without an
+            # explicit SSD/HDD suffix (e.g. "8GB/512GB").
+            rom = label
+
+    return {"CPU": cpu, "RAM": ram or "—", "ROM (Lưu trữ)": rom or "—"}
+
+
+# Maps category key -> (extractor function, ordered column labels to show).
+SPEC_EXTRACTORS = {
+    "ram": (extract_ram_specs, ["Dung lượng", "Chuẩn", "Bus"]),
+    "ssd": (extract_ssd_specs, ["Dung lượng", "Chuẩn"]),
+    "laptop": (extract_laptop_specs, ["CPU", "RAM", "ROM (Lưu trữ)"]),
+}
+
 
 def norm(s):
     """Collapse whitespace/NBSP and normalize to NFC so diacritics compare
@@ -266,9 +341,15 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     return items
 
 
-def fetch_category(url, max_items=MAX_ITEMS_PER_CATEGORY):
+def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY):
     html = fetch_page(url)
-    return parse_listing(html, max_items=max_items)
+    items = parse_listing(html, max_items=max_items)
+    extractor = SPEC_EXTRACTORS.get(key)
+    if extractor:
+        extract_fn, _ = extractor
+        for item in items:
+            item["specs"] = extract_fn(item["name"])
+    return items
 
 
 def _price_html(price, old_price):
@@ -297,25 +378,36 @@ def _price_text(price, old_price):
 def build_html(categories_data, timestamp):
     sections = []
     for cat in categories_data:
+        spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
+
         if not cat["items"]:
             body = (
                 f"<p>Could not parse any items this run. "
                 f"Check <a href='{escape(cat['url'])}'>{escape(cat['url'])}</a> directly.</p>"
             )
         else:
+            header_cells = "".join(
+                f"<th style='padding:8px 12px;text-align:left;'>{escape(col)}</th>" for col in spec_cols
+            )
             row_html = "\n".join(
                 f"<tr>"
                 f"<td style='padding:6px 12px;border-bottom:1px solid #eee'>{escape(item['name'])}</td>"
-                f"<td style='padding:6px 12px;border-bottom:1px solid #eee;text-align:right;white-space:nowrap'>"
+                + "".join(
+                    f"<td style='padding:6px 12px;border-bottom:1px solid #eee;white-space:nowrap'>"
+                    f"{escape(item.get('specs', {}).get(col, '—'))}</td>"
+                    for col in spec_cols
+                )
+                + f"<td style='padding:6px 12px;border-bottom:1px solid #eee;text-align:right;white-space:nowrap'>"
                 f"{_price_html(item['price'], item['old_price'])}</td>"
                 f"</tr>"
                 for item in cat["items"]
             )
             body = f"""
-<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:640px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:720px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
 <thead>
 <tr style="background:#f5f5f5;">
 <th style="padding:8px 12px;text-align:left;">Sản phẩm</th>
+{header_cells}
 <th style="padding:8px 12px;text-align:right;">Giá</th>
 </tr>
 </thead>
@@ -349,12 +441,17 @@ kiểm tra lại giá trên website trước khi đặt hàng.
 def build_plain_text(categories_data, timestamp):
     lines = [f"Gia RAM/SSD/Laptop - cap nhat {timestamp}", ""]
     for cat in categories_data:
+        spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
         lines.append(f"== {cat['label']} ({cat['url']}) ==")
         if not cat["items"]:
             lines.append("  Could not parse any items this run.")
         else:
             for item in cat["items"]:
-                lines.append(f"  - {item['name']}: {_price_text(item['price'], item['old_price'])}")
+                specs = item.get("specs", {})
+                spec_str = ", ".join(f"{col}: {specs.get(col, '—')}" for col in spec_cols)
+                price_str = _price_text(item["price"], item["old_price"])
+                lines.append(f"  - {item['name']}")
+                lines.append(f"      {spec_str} | Gia: {price_str}")
         lines.append("")
     return "\n".join(lines)
 
@@ -381,7 +478,7 @@ def cmd_generate():
     for cat in CATEGORIES:
         print(f"Fetching {cat['label']} ({cat['url']}) ...")
         try:
-            items = fetch_category(cat["url"])
+            items = fetch_category(cat["key"], cat["url"])
         except requests.RequestException as e:
             print(f"  Failed to fetch {cat['url']}: {e}", file=sys.stderr)
             had_fetch_error = True
