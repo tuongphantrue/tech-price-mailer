@@ -53,7 +53,14 @@ SETUP
 -----
 1. Install dependencies:
 
-    pip install requests beautifulsoup4 certifi
+    pip install requests beautifulsoup4 certifi playwright
+    python -m playwright install --with-deps chromium
+
+   (The playwright browser install is a one-time step - HACOM and Phong Vu
+   load their product grids via client-side JS, so those two categories
+   are rendered in a real headless Chromium tab rather than fetched with
+   a plain HTTP GET. MemoryZone doesn't need this - its pages are
+   server-rendered - but installing it doesn't hurt.)
 
 2. Create a Gmail "App Password" (regular Gmail passwords won't work with SMTP):
     - Go to https://myaccount.google.com/apppasswords
@@ -102,11 +109,19 @@ cards, then update parse_listing() below. It matches by *text adjacency*
 (product name line immediately followed by a "X.XXX.XXX ₫" price line),
 not by exact HTML structure, which should make it reasonably resilient
 across different storefront templates - but no guarantees, and it can't
-distinguish "in stock" from "sold out" items or catch prices rendered
-only after JavaScript runs. Because this is now pointed at three
-different sites, it's worth doing a first manual `generate` run and
-checking the parsed item counts for each retailer/category before relying
-on the schedule.
+distinguish "in stock" from "sold out" items.
+
+MemoryZone server-renders its product grid, so a plain HTTP GET is
+enough. HACOM does not - its product grid is fetched by client-side JS
+after the page loads, so this script renders that page in a real headless
+Chromium tab (via Playwright) first and parses the resulting HTML.
+Phong Vu is attempted the same way, but that site also runs active bot
+detection that may block even a real headless browser - if so, it will
+show up as a fetch/render error in the logs for that category, not a
+silent 0-items result. Because this now spans three sites with two
+different fetch strategies, it's worth doing a first manual `generate`
+run and checking the parsed item counts for each retailer/category before
+relying on the schedule.
 
 This is a personal price-watch tool, not investment or purchase advice -
 always confirm the actual price on the retailer's site before buying.
@@ -143,6 +158,9 @@ if os.environ.get("ALLOW_INSECURE_SSL_FALLBACK", "false").lower() == "true":
 RETAILER_DEFAULTS = {
     "memoryzone": {
         "label": "MemoryZone",
+        # MemoryZone server-renders its product grid, so a plain HTTP GET
+        # already contains the prices - no browser needed.
+        "needs_browser": False,
         "categories": {
             "ram": ("RAM Laptop", "https://memoryzone.com.vn/ram-laptop"),
             "ssd": ("SSD", "https://memoryzone.com.vn/ssd"),
@@ -151,6 +169,12 @@ RETAILER_DEFAULTS = {
     },
     "hacom": {
         "label": "HACOM (Hà Nội)",
+        # HACOM runs on Next.js: the initial HTML is just page chrome
+        # (filters/nav/FAQ), and the product grid itself is fetched by
+        # client-side JS after the page loads. A plain requests.get() sees
+        # 0 products every time - this needs a real (headless) browser to
+        # execute that JS before the price data exists in the DOM.
+        "needs_browser": True,
         "categories": {
             "ram": ("RAM Laptop", "https://hacom.vn/ram-laptop"),
             "ssd": ("SSD", "https://hacom.vn/o-cung-ssd"),
@@ -159,6 +183,12 @@ RETAILER_DEFAULTS = {
     },
     "phongvu": {
         "label": "Phong Vũ",
+        # Phong Vu actively blocks non-browser requests (bot detection
+        # fires on a plain GET). A real headless browser may or may not
+        # get through depending on how strict their check is on the day -
+        # this is attempted the same way as HACOM, but is more likely to
+        # fail; see fetch_category()'s error handling.
+        "needs_browser": True,
         "categories": {
             "ram": ("RAM Laptop", "https://phongvu.vn/c/ram-laptop"),
             "ssd": ("SSD", "https://phongvu.vn/c/o-cung-ssd"),
@@ -206,6 +236,7 @@ def build_categories():
                     "key": cat_key,
                     "label": cat_label,
                     "url": url,
+                    "needs_browser": defaults.get("needs_browser", False),
                 }
             )
     return categories
@@ -226,6 +257,11 @@ STATE_FILE = os.environ.get("STATE_FILE", "state/last_price.json")
 SEND_ONLY_ON_CHANGE = os.environ.get("SEND_ONLY_ON_CHANGE", "false").lower() == "true"
 ALLOW_INSECURE_SSL_FALLBACK = os.environ.get("ALLOW_INSECURE_SSL_FALLBACK", "false").lower() == "true"
 MAX_ITEMS_PER_CATEGORY = int(os.environ.get("MAX_ITEMS_PER_CATEGORY", "12"))
+# How long to let a headless-browser page (HACOM/Phong Vu) finish loading +
+# running its client-side product-fetch JS before giving up on that
+# category. These pages are slower than a plain HTTP GET, so this is
+# generous by design.
+BROWSER_TIMEOUT_MS = int(os.environ.get("BROWSER_TIMEOUT_MS", "45000"))
 
 # Matches Vietnamese-formatted currency like "1.990.000 ₫" (dot as thousands
 # separator, ₫ as the currency mark). A listing/discount line often has two
@@ -382,6 +418,63 @@ def fetch_page(url):
         return resp.text
 
 
+def fetch_rendered_page(url, timeout_ms=BROWSER_TIMEOUT_MS):
+    """
+    Load `url` in a real (headless) Chromium tab via Playwright and return
+    the fully-rendered HTML, for sites like HACOM whose product grid is
+    fetched by client-side JS after the initial page load and therefore
+    never appears in a plain requests.get() response.
+
+    Requires `pip install playwright` + a one-time
+    `python -m playwright install --with-deps chromium` (see requirements.txt
+    / the GitHub Actions workflow, which already does this).
+    """
+    try:
+        from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
+        from playwright.sync_api import sync_playwright
+    except ImportError as e:
+        raise RuntimeError(
+            "This category needs a headless browser to render (Playwright), "
+            "but the 'playwright' package isn't installed. Run: "
+            "pip install playwright && python -m playwright install --with-deps chromium"
+        ) from e
+
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+            headless=True,
+            args=["--no-sandbox", "--disable-blink-features=AutomationControlled"],
+        )
+        try:
+            context = browser.new_context(
+                user_agent=HEADERS["User-Agent"],
+                locale="vi-VN",
+                viewport={"width": 1366, "height": 900},
+            )
+            page = context.new_page()
+            page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+            # The shell loads fast; the product grid itself comes in via a
+            # later XHR/fetch call. "networkidle" waits for that network
+            # activity to quiet down before we consider the page "loaded".
+            try:
+                page.wait_for_load_state("networkidle", timeout=timeout_ms)
+            except PlaywrightTimeoutError:
+                pass  # some pages keep background polling forever - proceed anyway
+            # Extra belt-and-suspenders wait: give the page a few more
+            # seconds if the currency symbol hasn't shown up multiple times
+            # yet (i.e. the product grid specifically, not just page chrome).
+            try:
+                page.wait_for_function(
+                    "document.body.innerText.split('\u20ab').length > 5",
+                    timeout=10000,
+                )
+            except PlaywrightTimeoutError:
+                pass
+            html = page.content()
+        finally:
+            browser.close()
+    return html
+
+
 def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     """
     Parse a product-listing category page into a list of
@@ -448,8 +541,8 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     return items
 
 
-def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY):
-    html = fetch_page(url)
+def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False):
+    html = fetch_rendered_page(url) if needs_browser else fetch_page(url)
     items = parse_listing(html, max_items=max_items)
     extractor = SPEC_EXTRACTORS.get(key)
     if extractor:
@@ -609,11 +702,28 @@ def cmd_generate():
     had_fetch_error = False
 
     for cat in CATEGORIES:
-        print(f"Fetching {cat['site_label']} - {cat['label']} ({cat['url']}) ...")
+        via = " (via headless browser)" if cat.get("needs_browser") else ""
+        print(f"Fetching {cat['site_label']} - {cat['label']} ({cat['url']}){via} ...")
         try:
-            items = fetch_category(cat["key"], cat["url"])
+            items = fetch_category(
+                cat["key"], cat["url"], needs_browser=cat.get("needs_browser", False)
+            )
         except requests.RequestException as e:
             print(f"  Failed to fetch {cat['url']}: {e}", file=sys.stderr)
+            had_fetch_error = True
+            items = []
+        except RuntimeError as e:
+            # Playwright not installed, or similar setup problem.
+            print(f"  {e}", file=sys.stderr)
+            had_fetch_error = True
+            items = []
+        except Exception as e:  # noqa: BLE001 - Playwright raises its own error types
+            print(
+                f"  Failed to render {cat['url']} with headless browser: {e}\n"
+                f"  (If this is {cat['site_label']}, the site may be blocking automated "
+                f"browsers - see README.)",
+                file=sys.stderr,
+            )
             had_fetch_error = True
             items = []
         print(f"  Parsed {len(items)} item(s).")
