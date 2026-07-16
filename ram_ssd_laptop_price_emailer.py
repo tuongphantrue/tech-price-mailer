@@ -304,6 +304,11 @@ JUNK_NAME_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Catches stray JS/script syntax that shouldn't reach here (script/style
+# tags are stripped before parsing) but is cheap to guard against anyway -
+# e.g. Next.js RSC streaming payloads like self.__next_f.push([1,"153:...]).
+JS_SYNTAX_RE = re.compile(r"__next_f|\.push\(\[|function\s*\(|=>\s*\{|<script|</script")
+
 # ---------------------------------------------------------------------------
 # Spec extraction: product titles pack the spec sheet into the name itself
 # (e.g. "RAM Laptop Kingston DDR4 16GB 3200MHz 1.2v KVR32...",
@@ -506,8 +511,19 @@ def _extract_ordered_lines(soup):
     to miss. Interleaving alt text back into the sequence (in the same
     position it occupies in the DOM) lets the name-immediately-before-price
     heuristic in parse_listing() find the real title again.
+
+    <script>/<style>/<noscript>/<template> contents are stripped first -
+    BeautifulSoup's text walk otherwise includes raw <script> text too
+    (a well-known gotcha), and on a Next.js site like HACOM that text
+    includes RSC streaming payloads such as
+    `self.__next_f.push([1,"153:T622,"])` for every chunk of the page -
+    which are just plausible-length/shape enough to occasionally get
+    mistaken for a product name sitting near a real price.
     """
     from bs4 import NavigableString
+
+    for tag in soup(["script", "style", "noscript", "template"]):
+        tag.decompose()
 
     lines = []
     for node in soup.descendants:
@@ -552,7 +568,7 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
 
         is_price_line = bool(PRICE_RE.search(name)) or bool(BARE_NUMBER_RE.match(name))
         too_short_or_long = not (10 <= len(name) <= 150)
-        is_junk = name.lower().startswith(JUNK_NAME_PREFIXES) or JUNK_NAME_RE.match(name)
+        is_junk = name.lower().startswith(JUNK_NAME_PREFIXES) or JUNK_NAME_RE.match(name) or JS_SYNTAX_RE.search(name)
 
         if is_price_line or too_short_or_long or is_junk or name in seen:
             i += 1
