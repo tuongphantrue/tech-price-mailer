@@ -43,7 +43,7 @@ jobs:
 
       - name: Generate email
         env:
-          SEND_ONLY_ON_CHANGE: "true"
+          SEND_ONLY_ON_CHANGE: "false"
           TIMEZONE: "Asia/Ho_Chi_Minh"
         run: python ram_ssd_laptop_price_emailer.py generate
 
