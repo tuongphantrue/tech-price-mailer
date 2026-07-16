@@ -480,6 +480,38 @@ def fetch_rendered_page(url, timeout_ms=BROWSER_TIMEOUT_MS):
                 page.wait_for_load_state("networkidle", timeout=timeout_ms)
             except PlaywrightTimeoutError:
                 pass  # some pages keep background polling forever - proceed anyway
+
+            # Some sites (Phong Vu) sit behind a Cloudflare JS challenge:
+            # an interstitial "verifying you're not a bot" page that
+            # auto-resolves after a few seconds and then redirects to the
+            # real page. A real headless browser generally passes this
+            # automatic check fine - the previous "networkidle" wait above
+            # just often lands *during* that interstitial, before its
+            # redirect has fired. Detect that case and wait specifically
+            # for it to clear, rather than reading the interstitial itself.
+            try:
+                is_still_challenge = page.evaluate(
+                    "() => /xác minh bảo mật|checking your browser|just a moment|ray id/i"
+                    ".test(document.body.innerText)"
+                )
+            except Exception:
+                is_still_challenge = False
+            if is_still_challenge:
+                for _ in range(3):
+                    try:
+                        page.wait_for_load_state("networkidle", timeout=8000)
+                    except PlaywrightTimeoutError:
+                        pass
+                    try:
+                        still_there = page.evaluate(
+                            "() => /xác minh bảo mật|checking your browser|just a moment|ray id/i"
+                            ".test(document.body.innerText)"
+                        )
+                    except Exception:
+                        still_there = False
+                    if not still_there:
+                        break
+
             # Extra belt-and-suspenders wait: give the page a few more
             # seconds if a currency marker hasn't shown up multiple times
             # yet (i.e. the product grid specifically, not just page
