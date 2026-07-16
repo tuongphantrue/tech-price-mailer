@@ -264,10 +264,25 @@ MAX_ITEMS_PER_CATEGORY = int(os.environ.get("MAX_ITEMS_PER_CATEGORY", "12"))
 BROWSER_TIMEOUT_MS = int(os.environ.get("BROWSER_TIMEOUT_MS", "45000"))
 
 # Matches Vietnamese-formatted currency like "1.990.000 ₫" (dot as thousands
-# separator, ₫ as the currency mark). A listing/discount line often has two
-# of these back to back: "1.990.000 ₫ 2.350.000 ₫" (sale price, then the
-# crossed-out original price).
-PRICE_RE = re.compile(r"([\d]{1,3}(?:\.[\d]{3})+)\s*\u20ab")
+# separator). The currency mark varies by site: MemoryZone/HACOM use the
+# actual currency symbol "₫" (U+20AB DONG SIGN), but Phong Vu renders it as
+# the plain Vietnamese letter "đ"/"Đ" (U+0111/U+0110) instead - visually
+# near-identical but a different character, so both are matched here or
+# Phong Vu prices are invisible to this regex entirely. A listing/discount
+# line often has two of these back to back: "1.990.000 ₫ 2.350.000 ₫"
+# (sale price, then the crossed-out original price).
+PRICE_RE = re.compile(
+    r"([\d]{1,3}(?:\.[\d]{3})+)\s*(?:\u20ab|[đĐ](?![A-Za-zÀ-ỹ0-9_]))"
+)
+
+# A price-formatted number with NO currency mark at all - e.g. a
+# crossed-out original price rendered as a bare "26.999.000" text node on
+# its own line, separate from the marked-up sale price. This is matched
+# against a *whole stripped line* (not searched within a larger line like
+# PRICE_RE), specifically so these lines get excluded from product-name
+# candidacy - otherwise a bare old-price line gets mistaken for the next
+# product's name, paired with that next product's real price.
+BARE_NUMBER_RE = re.compile(r"^\d{1,3}(?:\.\d{3}){1,3}$")
 
 # Lines that are clearly chrome/navigation/filters, not product names -
 # skip these even if a price happens to follow within lookahead range.
@@ -284,7 +299,8 @@ JUNK_NAME_PREFIXES = (
 # next price gets paired with a review sentence instead of a product name.
 JUNK_NAME_RE = re.compile(
     r"^(là người đánh giá đầu tiên|xem \d+ đánh giá|-?\d+\s*%|hết hàng|"
-    r"chỉ bán build pc|còn hàng|hữu ích\s*\(\d+\)|tặng |quà tặng|khuyến mại)",
+    r"chỉ bán build pc|còn hàng|hữu ích\s*\(\d+\)|tặng |quà tặng|khuyến mại|"
+    r"mã:\s*\S+|\(tiết kiệm|tiết kiệm\s*\d+\s*%)",
     re.IGNORECASE,
 )
 
@@ -475,6 +491,37 @@ def fetch_rendered_page(url, timeout_ms=BROWSER_TIMEOUT_MS):
     return html
 
 
+def _extract_ordered_lines(soup):
+    """
+    Like soup.get_text("\\n").split("\\n"), but also emits each <img>'s alt
+    text (if any) at its position in document order.
+
+    Many storefronts - HACOM included - render the product title only as
+    an <img alt="..."> for SEO/lazy-loading reasons, with no matching
+    plain-text node anywhere on the card (the visible on-page text next to
+    the price ends up being just the SKU code, e.g. "Mã: RAKT0273").
+    soup.get_text() only sees text nodes, so it silently skips the real
+    title and this script would otherwise "successfully" pair the price
+    with the SKU line instead - wrong, but not a 0-items failure, so easy
+    to miss. Interleaving alt text back into the sequence (in the same
+    position it occupies in the DOM) lets the name-immediately-before-price
+    heuristic in parse_listing() find the real title again.
+    """
+    from bs4 import NavigableString
+
+    lines = []
+    for node in soup.descendants:
+        if isinstance(node, NavigableString):
+            t = norm(str(node))
+            if t:
+                lines.append(t)
+        elif getattr(node, "name", None) == "img":
+            alt = norm(node.get("alt", "") or "")
+            if alt:
+                lines.append(alt)
+    return lines
+
+
 def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     """
     Parse a product-listing category page into a list of
@@ -495,8 +542,7 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     that site's particular chrome text.
     """
     soup = BeautifulSoup(html, "html.parser")
-    text = soup.get_text("\n")
-    lines = [norm(l) for l in text.split("\n") if norm(l)]
+    lines = _extract_ordered_lines(soup)
 
     items = []
     seen = set()
@@ -504,7 +550,7 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     while i < len(lines) and len(items) < max_items:
         name = lines[i]
 
-        is_price_line = bool(PRICE_RE.search(name))
+        is_price_line = bool(PRICE_RE.search(name)) or bool(BARE_NUMBER_RE.match(name))
         too_short_or_long = not (10 <= len(name) <= 150)
         is_junk = name.lower().startswith(JUNK_NAME_PREFIXES) or JUNK_NAME_RE.match(name)
 
@@ -512,11 +558,12 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
             i += 1
             continue
 
-        # Look ahead up to 3 lines (skipping nothing in between except more
-        # text) for the first price-shaped line - that's the product's
-        # price line on these storefront card layouts.
+        # Look ahead a handful of lines (skipping over SKU-code/badge lines,
+        # which are filtered out as junk above but can still sit between a
+        # product's name and its price) for the first price-shaped line -
+        # that's the product's price line on these storefront card layouts.
         match = None
-        for j in range(i + 1, min(i + 4, len(lines))):
+        for j in range(i + 1, min(i + 7, len(lines))):
             m = PRICE_RE.findall(lines[j])
             if m:
                 match = (j, m)
@@ -524,7 +571,7 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
             # If we hit what looks like *another* product name before
             # finding a price, this line probably wasn't a product name -
             # bail out rather than pairing it with a distant price.
-            if len(lines[j]) >= 10 and not PRICE_RE.search(lines[j]):
+            if len(lines[j]) >= 10 and not PRICE_RE.search(lines[j]) and not BARE_NUMBER_RE.match(lines[j]):
                 continue
 
         if not match:
@@ -534,6 +581,14 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
         j, prices = match
         price = prices[0]
         old_price = prices[1] if len(prices) > 1 and prices[1] != prices[0] else None
+        if old_price is None and j + 1 < len(lines):
+            # The crossed-out original price is sometimes its own text node
+            # with no currency mark at all (e.g. "26.999.000" on its own
+            # line right after "29.999.000 ₫") rather than appearing
+            # alongside the sale price on the same line.
+            bare = BARE_NUMBER_RE.match(lines[j + 1])
+            if bare and lines[j + 1] != price:
+                old_price = lines[j + 1]
         seen.add(name)
         items.append({"name": name, "price": price, "old_price": old_price})
         i = j + 1
