@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-RAM / SSD / Laptop Prices (MemoryZone.vn) -> Email
+RAM / SSD / Laptop Prices (MemoryZone.vn + HACOM.vn + PhongVu.vn) -> Email
 (runs on GitHub Actions, no local computer needed)
 
 Same shape as the gold-price-emailer / house-price-emailer this is modeled
@@ -9,27 +9,35 @@ two phases so the workflow can persist dedup state *between* them (see the
 accompanying GitHub Actions workflow):
 
     python ram_ssd_laptop_price_emailer.py generate
-        -> scrapes the three category pages, writes the composed email
-           (subject/html/text) under ./email/, and updates the
-           "last sent price" state file
+        -> scrapes each retailer's three category pages, writes the
+           composed email (subject/html/text) under ./email/, and updates
+           the "last sent price" state file
 
     python ram_ssd_laptop_price_emailer.py send
         -> reads ./email/* and sends it via Gmail SMTP
 
-SOURCE & AN IMPORTANT CAVEAT
+SOURCES & AN IMPORTANT CAVEAT
 -----------------------------
 Vietnamese gold prices have a clean daily aggregator (giavang.org) with one
 simple table per seller. RAM/SSD/laptop prices don't have a real
 equivalent: there's no single site that publishes a clean, structured,
 frequently-updated "market price" table the way giavang.org does for gold.
 
-What this script does instead is scrape the live *listing prices* off one
-retailer's category pages: MemoryZone.vn's "RAM Laptop", "SSD", and
-"Laptop" pages. These are one store's asking prices (often with an active
-discount), NOT a market-average and NOT a price-comparison across
-retailers. Treat this as "what MemoryZone is currently charging for the
-items on page 1 of each category", not as an authoritative RAM/SSD/laptop
-market index.
+What this script does instead is scrape the live *listing prices* off
+several retailers' category pages, currently:
+
+    - MemoryZone.vn  (memoryzone.com.vn)
+    - HACOM.vn       (hacom.vn)          - Hanoi-headquartered, showrooms
+                                            across Hanoi (Hai Ba Trung,
+                                            Dong Da, Cau Giay, Ha Dong, ...)
+    - Phong Vu       (phongvu.vn)        - nationwide chain, Hanoi showrooms
+
+These are each store's own asking prices (often with an active discount),
+NOT a market-average and NOT a single unified price-comparison - the email
+just lays each retailer's listings out side by side so you can eyeball
+them. Treat this as "what each store is currently charging for the items
+on page 1 of each category", not as an authoritative RAM/SSD/laptop market
+index.
 
 If you want a true cross-retailer comparison, a price-comparison site
 (e.g. websosanh.vn) would be a better source, but those tend to load
@@ -44,41 +52,61 @@ when the scraped set of prices actually changes.
 SETUP
 -----
 1. Install dependencies:
-   pip install requests beautifulsoup4 certifi
+
+    pip install requests beautifulsoup4 certifi
 
 2. Create a Gmail "App Password" (regular Gmail passwords won't work with SMTP):
-   - Go to https://myaccount.google.com/apppasswords
-   - You need 2-Step Verification turned on first.
-   - Create an app password for "Mail" and copy the 16-character code.
+    - Go to https://myaccount.google.com/apppasswords
+    - You need 2-Step Verification turned on first.
+    - Create an app password for "Mail" and copy the 16-character code.
 
 3. Set these as environment variables (see README.md for GitHub Actions
    secrets instead, if running in the cloud):
 
-   export GMAIL_ADDRESS="youraddress@gmail.com"
-   export GMAIL_APP_PASSWORD="16-char-app-password"
-   export TECH_RECIPIENT="where-to-send@example.com"
-   export SEND_ONLY_ON_CHANGE="false"                     # optional, default false
-   export TIMEZONE="Asia/Ho_Chi_Minh"                      # optional, for the subject line
-   export RAM_URL="https://memoryzone.com.vn/ram-laptop"   # optional
-   export SSD_URL="https://memoryzone.com.vn/ssd"          # optional
-   export LAPTOP_URL="https://memoryzone.com.vn/laptop"    # optional
-   export MAX_ITEMS_PER_CATEGORY="12"                      # optional
-   export STATE_FILE="state/last_price.json"               # optional, dedup state file
-   export ALLOW_INSECURE_SSL_FALLBACK="false"               # optional, last-resort TLS bypass
+    export GMAIL_ADDRESS="youraddress@gmail.com"
+    export GMAIL_APP_PASSWORD="16-char-app-password"
+    export TECH_RECIPIENT="where-to-send@example.com"
+    export SEND_ONLY_ON_CHANGE="false"          # optional, default false
+    export TIMEZONE="Asia/Ho_Chi_Minh"          # optional, for the subject line
+    export ENABLED_RETAILERS="memoryzone,hacom,phongvu"   # optional, default all three
+    export MAX_ITEMS_PER_CATEGORY="12"          # optional
+    export STATE_FILE="state/last_price.json"   # optional, dedup state file
+    export ALLOW_INSECURE_SSL_FALLBACK="false"  # optional, last-resort TLS bypass
+
+    # Optional per-retailer category URL overrides (defaults shown):
+    export MEMORYZONE_RAM_URL="https://memoryzone.com.vn/ram-laptop"
+    export MEMORYZONE_SSD_URL="https://memoryzone.com.vn/ssd"
+    export MEMORYZONE_LAPTOP_URL="https://memoryzone.com.vn/laptop"
+    export HACOM_RAM_URL="https://hacom.vn/ram-laptop"
+    export HACOM_SSD_URL="https://hacom.vn/o-cung-ssd"
+    export HACOM_LAPTOP_URL="https://hacom.vn/laptop"
+    export PHONGVU_RAM_URL="https://phongvu.vn/c/ram-laptop"
+    export PHONGVU_SSD_URL="https://phongvu.vn/c/o-cung-ssd"
+    export PHONGVU_LAPTOP_URL="https://phongvu.vn/c/laptop"
+
+    # Backward-compatible aliases (apply to MemoryZone only, kept so
+    # existing workflows that already set these don't break):
+    export RAM_URL / SSD_URL / LAPTOP_URL
 
 NOTE ON SCRAPING
 -----------------
-Always worth checking the current robots.txt / terms of whatever site this
-is pointed at before running it unattended long-term, e.g.:
-https://memoryzone.com.vn/robots.txt
+Always worth checking each site's current robots.txt / terms before
+running this unattended long-term, e.g.:
+    https://memoryzone.com.vn/robots.txt
+    https://hacom.vn/robots.txt
+    https://phongvu.vn/robots.txt
 
 The page markup can change at any time - if `generate` reports 0 parsed
 items for a category, open that category's URL and inspect the product
 cards, then update parse_listing() below. It matches by *text adjacency*
 (product name line immediately followed by a "X.XXX.XXX ₫" price line),
-not by exact HTML structure, which should make it reasonably resilient -
-but no guarantees, and it can't distinguish "in stock" from "sold out"
-items or catch prices rendered only after JavaScript runs.
+not by exact HTML structure, which should make it reasonably resilient
+across different storefront templates - but no guarantees, and it can't
+distinguish "in stock" from "sold out" items or catch prices rendered
+only after JavaScript runs. Because this is now pointed at three
+different sites, it's worth doing a first manual `generate` run and
+checking the parsed item counts for each retailer/category before relying
+on the schedule.
 
 This is a personal price-watch tool, not investment or purchase advice -
 always confirm the actual price on the retailer's site before buying.
@@ -105,11 +133,85 @@ from bs4 import BeautifulSoup
 if os.environ.get("ALLOW_INSECURE_SSL_FALLBACK", "false").lower() == "true":
     urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-CATEGORIES = [
-    {"key": "ram", "label": "RAM Laptop", "url": os.environ.get("RAM_URL", "https://memoryzone.com.vn/ram-laptop")},
-    {"key": "ssd", "label": "SSD", "url": os.environ.get("SSD_URL", "https://memoryzone.com.vn/ssd")},
-    {"key": "laptop", "label": "Laptop", "url": os.environ.get("LAPTOP_URL", "https://memoryzone.com.vn/laptop")},
-]
+# ---------------------------------------------------------------------------
+# Retailers & categories
+# ---------------------------------------------------------------------------
+# Each retailer has the same three category keys (ram/ssd/laptop) so the
+# spec extractors below can be shared across sites. URLs are individually
+# overridable via env vars, e.g. HACOM_SSD_URL.
+
+RETAILER_DEFAULTS = {
+    "memoryzone": {
+        "label": "MemoryZone",
+        "categories": {
+            "ram": ("RAM Laptop", "https://memoryzone.com.vn/ram-laptop"),
+            "ssd": ("SSD", "https://memoryzone.com.vn/ssd"),
+            "laptop": ("Laptop", "https://memoryzone.com.vn/laptop"),
+        },
+    },
+    "hacom": {
+        "label": "HACOM (Hà Nội)",
+        "categories": {
+            "ram": ("RAM Laptop", "https://hacom.vn/ram-laptop"),
+            "ssd": ("SSD", "https://hacom.vn/o-cung-ssd"),
+            "laptop": ("Laptop", "https://hacom.vn/laptop"),
+        },
+    },
+    "phongvu": {
+        "label": "Phong Vũ",
+        "categories": {
+            "ram": ("RAM Laptop", "https://phongvu.vn/c/ram-laptop"),
+            "ssd": ("SSD", "https://phongvu.vn/c/o-cung-ssd"),
+            "laptop": ("Laptop", "https://phongvu.vn/c/laptop"),
+        },
+    },
+}
+
+# Backward-compatible env var aliases - only apply to MemoryZone, since
+# that's what the original single-retailer script used.
+_LEGACY_URL_ENV = {
+    "ram": "RAM_URL",
+    "ssd": "SSD_URL",
+    "laptop": "LAPTOP_URL",
+}
+
+
+def _retailer_url_env(site_key, cat_key):
+    """Env var name for a given retailer/category URL override,
+    e.g. HACOM_SSD_URL."""
+    return f"{site_key.upper()}_{cat_key.upper()}_URL"
+
+
+def build_categories():
+    enabled = os.environ.get("ENABLED_RETAILERS", "memoryzone,hacom,phongvu")
+    enabled_sites = [s.strip().lower() for s in enabled.split(",") if s.strip()]
+
+    categories = []
+    for site_key in enabled_sites:
+        defaults = RETAILER_DEFAULTS.get(site_key)
+        if not defaults:
+            print(f" Unknown retailer '{site_key}' in ENABLED_RETAILERS - skipping.", file=sys.stderr)
+            continue
+        for cat_key, (cat_label, default_url) in defaults["categories"].items():
+            env_name = _retailer_url_env(site_key, cat_key)
+            url = os.environ.get(env_name)
+            if url is None and site_key == "memoryzone":
+                url = os.environ.get(_LEGACY_URL_ENV[cat_key])
+            if url is None:
+                url = default_url
+            categories.append(
+                {
+                    "site": site_key,
+                    "site_label": defaults["label"],
+                    "key": cat_key,
+                    "label": cat_label,
+                    "url": url,
+                }
+            )
+    return categories
+
+
+CATEGORIES = build_categories()
 
 HEADERS = {
     "User-Agent": (
@@ -133,9 +235,12 @@ PRICE_RE = re.compile(r"([\d]{1,3}(?:\.[\d]{3})+)\s*\u20ab")
 
 # Lines that are clearly chrome/navigation/filters, not product names -
 # skip these even if a price happens to follow within lookahead range.
+# Collected across MemoryZone/HACOM/Phong Vu category pages.
 JUNK_NAME_PREFIXES = (
     "trang chủ", "giỏ hàng", "tài khoản", "đăng nhập", "so sánh",
     "sắp xếp", "thứ tự", "lọc giá", "bỏ hết", "xem thêm", "hãng sản xuất",
+    "khoảng giá", "thương hiệu", "nhu cầu", "dung lượng", "thế hệ",
+    "chuẩn", "bus ram", "danh mục", "chính sách", "hướng dẫn", "tra cứu",
 )
 
 # Review/stock/discount-badge lines that sit between one product's price
@@ -143,19 +248,20 @@ JUNK_NAME_PREFIXES = (
 # next price gets paired with a review sentence instead of a product name.
 JUNK_NAME_RE = re.compile(
     r"^(là người đánh giá đầu tiên|xem \d+ đánh giá|-?\d+\s*%|hết hàng|"
-    r"chỉ bán build pc|còn hàng)",
+    r"chỉ bán build pc|còn hàng|hữu ích\s*\(\d+\)|tặng |quà tặng|khuyến mại)",
     re.IGNORECASE,
 )
 
 # ---------------------------------------------------------------------------
-# Spec extraction: MemoryZone product titles pack the spec sheet into the
-# name itself (e.g. "RAM Laptop Kingston DDR4 16GB 3200MHz 1.2v KVR32...",
+# Spec extraction: product titles pack the spec sheet into the name itself
+# (e.g. "RAM Laptop Kingston DDR4 16GB 3200MHz 1.2v KVR32...",
 # "Laptop Asus Vivobook X1504VA (i5-1334U/8GB/512GB SSD/15.6 FHD/Win11)").
 # There's no separate structured spec field to scrape, so these pull the
 # capacity/type/CPU/etc. back out of the title text with best-effort regex.
-# A field that can't be found renders as "—" rather than guessing.
+# A field that can't be found renders as "—" rather than guessing. Same
+# extractors are reused across all retailers since naming conventions are
+# similar enough (brand + spec string) on Vietnamese PC-parts storefronts.
 # ---------------------------------------------------------------------------
-
 CPU_RE = re.compile(
     r"(Core\s*i[3579][\w-]*|i[3579]-[\w]+|Ryzen\s*(?:AI\s*)?[3579][\w-]*|"
     r"Ultra\s*[579][\w-]*|Celeron[\w-]*|Pentium[\w-]*|M[1-4](?:\s*(?:Pro|Max|Ultra))?)",
@@ -194,7 +300,6 @@ def extract_ssd_specs(name):
 def extract_laptop_specs(name):
     cpu_match = CPU_RE.search(name)
     cpu = cpu_match.group(1) if cpu_match else "—"
-
     ram, rom = None, None
     for m in CAPACITY_RE.finditer(name):
         value, unit, _, storage_kind = m.groups()
@@ -211,7 +316,6 @@ def extract_laptop_specs(name):
             # that's almost always the storage figure written without an
             # explicit SSD/HDD suffix (e.g. "8GB/512GB").
             rom = label
-
     return {"CPU": cpu, "RAM": ram or "—", "ROM (Lưu trữ)": rom or "—"}
 
 
@@ -240,7 +344,7 @@ def load_last_hash(path=STATE_FILE):
         with open(path) as f:
             return json.load(f).get("hash")
     except (json.JSONDecodeError, OSError) as e:
-        print(f"  could not read {path} ({e}) - starting with empty dedup state", file=sys.stderr)
+        print(f" could not read {path} ({e}) - starting with empty dedup state", file=sys.stderr)
         return None
 
 
@@ -264,15 +368,15 @@ def fetch_page(url):
         resp.raise_for_status()
         return resp.text
     except requests.exceptions.SSLError as e:
-        print(f"  TLS verification failed with certifi's CA bundle: {e}", file=sys.stderr)
+        print(f" TLS verification failed with certifi's CA bundle: {e}", file=sys.stderr)
         if not ALLOW_INSECURE_SSL_FALLBACK:
             print(
-                "  Set ALLOW_INSECURE_SSL_FALLBACK=true to retry without verification "
+                " Set ALLOW_INSECURE_SSL_FALLBACK=true to retry without verification "
                 "as a last resort.",
                 file=sys.stderr,
             )
             raise
-        print("  ALLOW_INSECURE_SSL_FALLBACK=true - retrying with TLS verification disabled.", file=sys.stderr)
+        print(" ALLOW_INSECURE_SSL_FALLBACK=true - retrying with TLS verification disabled.", file=sys.stderr)
         resp = requests.get(url, headers=HEADERS, timeout=15, verify=False)
         resp.raise_for_status()
         return resp.text
@@ -280,18 +384,22 @@ def fetch_page(url):
 
 def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     """
-    Parse a MemoryZone.vn category page into a list of
+    Parse a product-listing category page into a list of
     {name, price, old_price} rows (old_price is None if not on sale).
 
-    The page isn't cleanly separated in the DOM in an obvious way we can
-    rely on long-term (product-card class names on storefront templates
-    change with theme updates), so rather than depend on exact structure,
-    this walks the page's flattened text and looks for a plausible product
+    Works across MemoryZone.vn / HACOM.vn / PhongVu.vn (and likely other
+    similarly-templated Vietnamese PC-parts storefronts), since none of
+    them are cleanly separated in the DOM in a way we can rely on
+    long-term (product-card class names on storefront templates change
+    with theme updates). Instead of depending on exact structure, this
+    walks the page's flattened text and looks for a plausible product
     name line immediately followed - within a couple of lines - by a
     "X.XXX.XXX ₫" price line. This is more resilient to markup changes
     than a strict DOM walk, at the cost of being a bit more heuristic - if
-    a run parses 0 items, open the category URL and check product cards
-    still show the name directly above the price.
+    a run parses 0 items for a given retailer/category, open that URL and
+    check product cards still show the name directly above/near the
+    price, then extend JUNK_NAME_PREFIXES / JUNK_NAME_RE as needed for
+    that site's particular chrome text.
     """
     soup = BeautifulSoup(html, "html.parser")
     text = soup.get_text("\n")
@@ -333,7 +441,6 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
         j, prices = match
         price = prices[0]
         old_price = prices[1] if len(prices) > 1 and prices[1] != prices[0] else None
-
         seen.add(name)
         items.append({"name": name, "price": price, "old_price": old_price})
         i = j + 1
@@ -376,50 +483,65 @@ def _price_text(price, old_price):
 
 
 def build_html(categories_data, timestamp):
-    sections = []
+    # Group by retailer so each store gets its own section header, with
+    # its three categories nested underneath.
+    sites = []
+    seen_sites = set()
     for cat in categories_data:
-        spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
+        if cat["site"] not in seen_sites:
+            seen_sites.add(cat["site"])
+            sites.append((cat["site"], cat["site_label"]))
 
-        if not cat["items"]:
-            body = (
-                f"<p>Could not parse any items this run. "
-                f"Check <a href='{escape(cat['url'])}'>{escape(cat['url'])}</a> directly.</p>"
-            )
-        else:
-            header_cells = "".join(
-                f"<th style='padding:8px 12px;text-align:left;'>{escape(col)}</th>" for col in spec_cols
-            )
-            row_html = "\n".join(
-                f"<tr>"
-                f"<td style='padding:6px 12px;border-bottom:1px solid #eee'>{escape(item['name'])}</td>"
-                + "".join(
-                    f"<td style='padding:6px 12px;border-bottom:1px solid #eee;white-space:nowrap'>"
-                    f"{escape(item.get('specs', {}).get(col, '—'))}</td>"
-                    for col in spec_cols
+    site_sections = []
+    for site_key, site_label in sites:
+        cat_sections = []
+        for cat in [c for c in categories_data if c["site"] == site_key]:
+            spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
+            if not cat["items"]:
+                body = (
+                    f"<p>Could not parse any items this run. "
+                    f"Check <a href='{escape(cat['url'])}'>{escape(cat['url'])}</a> directly.</p>"
                 )
-                + f"<td style='padding:6px 12px;border-bottom:1px solid #eee;text-align:right;white-space:nowrap'>"
-                f"{_price_html(item['price'], item['old_price'])}</td>"
-                f"</tr>"
-                for item in cat["items"]
+            else:
+                header_cells = "".join(
+                    f"<th style='padding:8px 12px;text-align:left;'>{escape(col)}</th>" for col in spec_cols
+                )
+                row_html = "\n".join(
+                    f"<tr>"
+                    f"<td style='padding:6px 12px;border-bottom:1px solid #eee'>{escape(item['name'])}</td>"
+                    + "".join(
+                        f"<td style='padding:6px 12px;border-bottom:1px solid #eee;white-space:nowrap'>"
+                        f"{escape(item.get('specs', {}).get(col, '—'))}</td>"
+                        for col in spec_cols
+                    )
+                    + f"<td style='padding:6px 12px;border-bottom:1px solid #eee;text-align:right;white-space:nowrap'>"
+                    f"{_price_html(item['price'], item['old_price'])}</td>"
+                    f"</tr>"
+                    for item in cat["items"]
+                )
+                body = f"""
+                <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:720px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                  <thead>
+                    <tr style="background:#f5f5f5;">
+                      <th style="padding:8px 12px;text-align:left;">Sản phẩm</th>
+                      {header_cells}
+                      <th style="padding:8px 12px;text-align:right;">Giá</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {row_html}
+                  </tbody>
+                </table>"""
+            cat_sections.append(
+                f"<h3 style='color:#1a5fb4;margin-top:20px;'>{escape(cat['label'])}</h3>"
+                f"<p style='color:#999;font-size:12px;margin:4px 0 8px;'>"
+                f"Nguồn: <a href='{escape(cat['url'])}'>{escape(cat['url'])}</a></p>"
+                f"{body}"
             )
-            body = f"""
-<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:720px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
-<thead>
-<tr style="background:#f5f5f5;">
-<th style="padding:8px 12px;text-align:left;">Sản phẩm</th>
-{header_cells}
-<th style="padding:8px 12px;text-align:right;">Giá</th>
-</tr>
-</thead>
-<tbody>
-{row_html}
-</tbody>
-</table>"""
-        sections.append(
-            f"<h2 style='color:#1a5fb4;margin-top:28px;'>{escape(cat['label'])}</h2>"
-            f"<p style='color:#999;font-size:12px;margin:4px 0 8px;'>"
-            f"Nguồn: <a href='{escape(cat['url'])}'>{escape(cat['url'])}</a></p>"
-            f"{body}"
+        site_sections.append(
+            f"<h2 style='color:#111;border-bottom:2px solid #1a5fb4;padding-bottom:4px;margin-top:32px;'>"
+            f"{escape(site_label)}</h2>"
+            f"{''.join(cat_sections)}"
         )
 
     return f"""\
@@ -427,12 +549,13 @@ def build_html(categories_data, timestamp):
 <body style="margin:0; padding:20px; background:#f4f4f4; font-family:Arial,Helvetica,sans-serif;">
 <h1 style="color:#1a5fb4;">Giá RAM / SSD / Laptop hôm nay</h1>
 <p style="color:#555;">Cập nhật {escape(timestamp)}</p>
-{''.join(sections)}
+{''.join(site_sections)}
 <p style="color:#999; font-size:12px; margin-top:24px;">
-Đây là giá niêm yết tại một cửa hàng (MemoryZone.vn) tại thời điểm quét,
-không phải giá thị trường trung bình hay so sánh nhiều nhà bán · Email tự
-động, chỉ mang tính tham khảo, không phải lời khuyên mua hàng - vui lòng
-kiểm tra lại giá trên website trước khi đặt hàng.
+Đây là giá niêm yết tại các cửa hàng ở thời điểm quét, không phải giá thị
+trường trung bình · Mỗi mục vẫn là giá riêng của từng cửa hàng, đặt cạnh
+nhau để tiện so sánh, không phải một chỉ số thị trường thống nhất · Email
+tự động, chỉ mang tính tham khảo, không phải lời khuyên mua hàng - vui
+lòng kiểm tra lại giá trên website trước khi đặt hàng.
 </p>
 </body>
 </html>"""
@@ -440,18 +563,23 @@ kiểm tra lại giá trên website trước khi đặt hàng.
 
 def build_plain_text(categories_data, timestamp):
     lines = [f"Gia RAM/SSD/Laptop - cap nhat {timestamp}", ""]
+    current_site = None
     for cat in categories_data:
+        if cat["site"] != current_site:
+            current_site = cat["site"]
+            lines.append(f"########## {cat['site_label']} ##########")
+            lines.append("")
         spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
         lines.append(f"== {cat['label']} ({cat['url']}) ==")
         if not cat["items"]:
-            lines.append("  Could not parse any items this run.")
+            lines.append(" Could not parse any items this run.")
         else:
             for item in cat["items"]:
                 specs = item.get("specs", {})
                 spec_str = ", ".join(f"{col}: {specs.get(col, '—')}" for col in spec_cols)
                 price_str = _price_text(item["price"], item["old_price"])
-                lines.append(f"  - {item['name']}")
-                lines.append(f"      {spec_str} | Gia: {price_str}")
+                lines.append(f" - {item['name']}")
+                lines.append(f"   {spec_str} | Gia: {price_str}")
         lines.append("")
     return "\n".join(lines)
 
@@ -472,11 +600,16 @@ def cmd_generate():
             os.remove(os.path.join(EMAIL_DIR, f))
     os.makedirs(EMAIL_DIR, exist_ok=True)
 
+    if not CATEGORIES:
+        print("No retailers/categories enabled (check ENABLED_RETAILERS). Aborting.", file=sys.stderr)
+        sys.exit(1)
+
     categories_data = []
     total_items = 0
     had_fetch_error = False
+
     for cat in CATEGORIES:
-        print(f"Fetching {cat['label']} ({cat['url']}) ...")
+        print(f"Fetching {cat['site_label']} - {cat['label']} ({cat['url']}) ...")
         try:
             items = fetch_category(cat["key"], cat["url"])
         except requests.RequestException as e:
@@ -486,8 +619,8 @@ def cmd_generate():
         print(f"  Parsed {len(items)} item(s).")
         if not items:
             print(
-                f"  0 items parsed for {cat['label']} - the page markup may have changed. "
-                f"Open {cat['url']} and check parse_listing().",
+                f"  0 items parsed for {cat['site_label']} - {cat['label']} - the page markup may "
+                f"have changed. Open {cat['url']} and check parse_listing().",
                 file=sys.stderr,
             )
         categories_data.append({**cat, "items": items})
@@ -497,7 +630,9 @@ def cmd_generate():
         print("All categories failed to fetch. Aborting without sending.", file=sys.stderr)
         sys.exit(1)
 
-    price_hash = hash_data([{"label": c["label"], "items": c["items"]} for c in categories_data])
+    price_hash = hash_data(
+        [{"site": c["site"], "label": c["label"], "items": c["items"]} for c in categories_data]
+    )
     last_hash = load_last_hash()
 
     if total_items and SEND_ONLY_ON_CHANGE and price_hash == last_hash:
@@ -521,7 +656,7 @@ def cmd_generate():
         json.dump({"send": True, "items": total_items}, f)
 
     save_last_hash(price_hash)
-    print(f"Generated email ({total_items} item(s) total). Saved to ./{EMAIL_DIR}/")
+    print(f"Generated email ({total_items} item(s) total across {len(set(c['site'] for c in categories_data))} retailer(s)). Saved to ./{EMAIL_DIR}/")
 
 
 def cmd_send():
@@ -542,7 +677,6 @@ def cmd_send():
     if not os.path.exists(meta_path):
         print("No meta.json found - run 'generate' first.", file=sys.stderr)
         sys.exit(1)
-
     with open(meta_path) as f:
         meta = json.load(f)
 
@@ -568,6 +702,7 @@ def cmd_send():
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         server.login(sender, app_password)
         server.send_message(msg)
+
     print(f"Sent to {recipient}!")
 
 
