@@ -2,7 +2,7 @@ name: Send RAM/SSD/Laptop Price Email
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   
+    - cron: "*/30 * * * *"
   workflow_dispatch:        # lets you trigger it manually from the Actions tab
 
 permissions:
@@ -24,6 +24,14 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Install Playwright browser (Chromium)
+        # HACOM and Phong Vu load their product grids via client-side JS,
+        # so those two categories are rendered in a real headless
+        # Chromium tab rather than fetched with a plain HTTP GET.
+        # --with-deps also installs the OS-level libraries Chromium needs
+        # on the ubuntu-latest runner.
+        run: python -m playwright install --with-deps chromium
 
       - name: Restore dedup state from state branch (if it exists)
         run: |
