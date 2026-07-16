@@ -36,13 +36,29 @@ index - always check the live page before buying anything.
 The parser (`parse_listing()` in the script) matches by *text adjacency* -
 a product-name-looking line immediately followed by a "X.XXX.XXX ₫"
 price line - rather than by exact HTML structure, so it should survive
-minor theme/markup changes and works reasonably across all three sites'
-similar storefront templates. If a run reports 0 parsed items for a
-retailer/category, that site's page layout has probably changed more than
-that; open the category URL and check `parse_listing()`, and the
-`JUNK_NAME_PREFIXES` / `JUNK_NAME_RE` filters near the top of the file
-(these were tuned by hand for each site's nav/filter text, so a new site
-or a redesign may need a line or two added there).
+minor theme/markup changes.
+
+**MemoryZone** server-renders its product grid, so a plain HTTP GET
+already contains the data - fast, no browser needed.
+
+**HACOM** does not: it runs on Next.js, and the product grid is fetched
+by client-side JS after the page loads, so a plain GET always sees an
+empty grid. This script renders HACOM's category pages in a real headless
+Chromium tab (via [Playwright](https://playwright.dev/)) first, then
+parses the resulting HTML the same way.
+
+**Phong Vũ** is attempted the same headless-browser way, but that site
+also runs active bot detection that can block even a real browser - if
+so, you'll see a fetch/render error in the logs for that category (not a
+silent "0 items parsed"). This script does not attempt to defeat that
+detection (no fingerprint spoofing, proxies, CAPTCHA solving, etc.) - if
+it keeps failing, the practical option is to drop Phong Vũ from
+`ENABLED_RETAILERS`.
+
+If a run reports 0 parsed items for a retailer/category, open the
+category URL and check `parse_listing()`, and the `JUNK_NAME_PREFIXES` /
+`JUNK_NAME_RE` filters near the top of the file (tuned by hand per site's
+nav/filter text, so a redesign may need a line or two added there).
 
 ## One-time setup (~5 minutes)
 
@@ -81,11 +97,15 @@ or a redesign may need a line or two added there).
    - Go to the "Actions" tab in your repo
    - Click "Send RAM/SSD/Laptop Price Email" on the left
    - Click "Run workflow" -> "Run workflow" (green button)
-   - Wait ~20-30 seconds (three retailers now, a bit slower than before),
-     refresh, click into the run to see logs / confirm success
+   - Wait **1-3 minutes** (installing the Chromium browser for HACOM/Phong
+     Vũ, on top of rendering 6 categories through it, takes noticeably
+     longer than the original MemoryZone-only version), refresh, click
+     into the run to see logs / confirm success
    - Check the logs for each retailer/category line and confirm none of
-     them say "0 items parsed" - if one does, see the note above about
-     `parse_listing()`
+     them say "0 items parsed" or show a render error - if one does, see
+     the note above about `parse_listing()` (HACOM) or dropping the
+     retailer from `ENABLED_RETAILERS` (Phong Vũ, if it's the bot
+     detection)
    - Check the recipient inbox for the email
 
 That's it - from now on it runs automatically on the schedule below.
@@ -95,18 +115,23 @@ That's it - from now on it runs automatically on the schedule below.
 Open `.github/workflows/send-tech-price.yml` and edit this line:
 
 ```
-- cron: "0 1 * * *"
+- cron: "*/30 * * * *"
 ```
 
 Cron format is `minute hour day month weekday`, always in **UTC**.
 
-- `0 1 * * *` -> once a day at 1am UTC (8am Vietnam, UTC+7) - current setting
+- `*/30 * * * *` -> every 30 minutes - current setting
+- `0 1 * * *` -> once a day at 1am UTC (8am Vietnam, UTC+7)
 - `0 1 * * 1` -> once a week, Monday 1am UTC
 - `0 */6 * * *` -> every 6 hours
 
 Retail listing prices don't move nearly as often as gold, so daily or
 weekly is probably plenty - and keeps `SEND_ONLY_ON_CHANGE` (below) doing
-useful work instead of just discarding runs.
+useful work instead of just discarding runs. It's also worth considering
+now that two of the three retailers render through a headless browser:
+every-30-minutes means Chromium gets installed and six category pages get
+rendered every half hour, which eats into your Actions minutes faster
+than the original MemoryZone-only version did.
 
 ## Only emailing on price changes
 
@@ -162,6 +187,11 @@ existing workflows that already set those don't need to change anything.
 
 ## Notes
 
+- HACOM and Phong Vũ need a real headless browser (Chromium via
+  Playwright) since their product grids are client-rendered by JS rather
+  than present in the initial HTML. This makes each run slower and uses
+  more Actions minutes than the original MemoryZone-only version - see
+  the schedule note above if you're on the free tier's 2,000 min/month.
 - The workflow needs write access to push its dedup state branch. It
   requests this itself (`permissions: contents: write` at the top of
   `send-tech-price.yml`), but some accounts/orgs override that and force
@@ -189,6 +219,7 @@ existing workflows that already set those don't need to change anything.
 
 ```
 pip install -r requirements.txt
+python -m playwright install --with-deps chromium   # one-time, for HACOM/Phong Vu
 export GMAIL_ADDRESS="you@gmail.com"
 export GMAIL_APP_PASSWORD="xxxx xxxx xxxx xxxx"
 export TECH_RECIPIENT="you@gmail.com"
