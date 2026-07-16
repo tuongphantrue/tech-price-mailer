@@ -481,15 +481,28 @@ def fetch_rendered_page(url, timeout_ms=BROWSER_TIMEOUT_MS):
             except PlaywrightTimeoutError:
                 pass  # some pages keep background polling forever - proceed anyway
             # Extra belt-and-suspenders wait: give the page a few more
-            # seconds if the currency symbol hasn't shown up multiple times
-            # yet (i.e. the product grid specifically, not just page chrome).
+            # seconds if a currency marker hasn't shown up multiple times
+            # yet (i.e. the product grid specifically, not just page
+            # chrome). Checks both currency marks used across these sites -
+            # the "₫" symbol (MemoryZone/HACOM) and the plain "đ" letter
+            # (Phong Vu) - missing either one here was a real past bug.
             try:
                 page.wait_for_function(
-                    "document.body.innerText.split('\u20ab').length > 5",
+                    "(document.body.innerText.match(/[\u20abđĐ]/g) || []).length > 5",
                     timeout=10000,
                 )
             except PlaywrightTimeoutError:
                 pass
+            # Some grids are populated by scroll-triggered lazy loading
+            # (IntersectionObserver) rather than loading everything
+            # up-front - nudge that along before reading the final HTML.
+            try:
+                for _ in range(3):
+                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    page.wait_for_timeout(800)
+                page.evaluate("window.scrollTo(0, 0)")
+            except Exception:
+                pass  # non-critical - proceed with whatever loaded
             html = page.content()
         finally:
             browser.close()
@@ -612,7 +625,41 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     return items
 
 
-def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False):
+def diagnose_empty_render(html):
+    """
+    When a browser-rendered category parses to 0 items, this can't
+    distinguish "page structure changed" from "we got a bot-check/
+    interstitial page instead of the real one" from log output alone -
+    and this script's sandboxed dev environment has no way to load these
+    sites directly to check. This builds a short diagnostic summary from
+    the rendered HTML so the next run's logs carry enough information to
+    tell the difference without needing to reproduce the failure by hand.
+    """
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup(["script", "style", "noscript", "template"]):
+        tag.decompose()
+    body_text = norm(soup.get_text(" "))[:400]
+
+    dong_count = len(re.findall(r"[\u20abđĐ]", body_text))
+    suspect_terms = [
+        term
+        for term in (
+            "captcha", "cloudflare", "just a moment", "checking your browser",
+            "are you human", "access denied", "403 forbidden", "verify you are",
+            "bạn không phải", "xác minh", "vui lòng chờ",
+        )
+        if term in body_text.lower()
+    ]
+
+    return (
+        f"    html length: {len(html)} chars | body text sample (first 400 chars): "
+        f"{body_text!r}\n"
+        f"    currency-mark occurrences (₫/đ) in that sample: {dong_count}\n"
+        f"    possible bot-check/interstitial keywords found: {suspect_terms or 'none'}"
+    )
+
+
+def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False, return_html=False):
     html = fetch_rendered_page(url) if needs_browser else fetch_page(url)
     items = parse_listing(html, max_items=max_items)
     extractor = SPEC_EXTRACTORS.get(key)
@@ -620,6 +667,8 @@ def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=Fal
         extract_fn, _ = extractor
         for item in items:
             item["specs"] = extract_fn(item["name"])
+    if return_html:
+        return items, html
     return items
 
 
@@ -775,9 +824,10 @@ def cmd_generate():
     for cat in CATEGORIES:
         via = " (via headless browser)" if cat.get("needs_browser") else ""
         print(f"Fetching {cat['site_label']} - {cat['label']} ({cat['url']}){via} ...")
+        rendered_html = None
         try:
-            items = fetch_category(
-                cat["key"], cat["url"], needs_browser=cat.get("needs_browser", False)
+            items, rendered_html = fetch_category(
+                cat["key"], cat["url"], needs_browser=cat.get("needs_browser", False), return_html=True
             )
         except requests.RequestException as e:
             print(f"  Failed to fetch {cat['url']}: {e}", file=sys.stderr)
@@ -804,6 +854,8 @@ def cmd_generate():
                 f"have changed. Open {cat['url']} and check parse_listing().",
                 file=sys.stderr,
             )
+            if cat.get("needs_browser") and rendered_html:
+                print(diagnose_empty_render(rendered_html), file=sys.stderr)
         categories_data.append({**cat, "items": items})
         total_items += len(items)
 
