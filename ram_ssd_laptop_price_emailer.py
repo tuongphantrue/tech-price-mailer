@@ -653,17 +653,37 @@ def _best_img_src(img_tag, base_url):
     return None
 
 
+def _nearest_link(node, base_url):
+    """The href of the nearest ancestor <a> tag wrapping this node, or
+    None. Storefront product cards are almost always wrapped in a single
+    <a href="/product-slug"> that contains the thumbnail, name, and price
+    together, so walking up to the enclosing anchor (rather than tracking
+    "last <a> seen" the way images are tracked) gets the right link even
+    when a page has other unrelated links between product cards."""
+    a = node.find_parent("a")
+    if not a:
+        return None
+    href = (a.get("href") or "").strip()
+    if not href or href.startswith("javascript:") or href == "#":
+        return None
+    return urljoin(base_url, href)
+
+
 def _extract_ordered_lines(soup, base_url=""):
     """
     Like soup.get_text("\\n").split("\\n"), but also emits each <img>'s alt
-    text (if any) at its position in document order, and returns a
-    parallel list of "the most recently seen product image URL" for every
-    line - so each parsed name/price pair in parse_listing() can carry a
-    thumbnail along with it. A line inherits the nearest *preceding*
-    image in the DOM, which lines up with how these storefront cards are
-    laid out (thumbnail, then title/SKU, then price) whether the name
-    itself came from an <img alt> (HACOM-style) or a plain text node
-    (MemoryZone-style).
+    text (if any) at its position in document order, and returns two
+    parallel lists alongside the text lines:
+
+    - image_urls: "the most recently seen product image URL" for each
+      line, so a name/price pair can carry a thumbnail along with it. A
+      line inherits the nearest *preceding* image in the DOM, which lines
+      up with how these storefront cards are laid out (thumbnail, then
+      title/SKU, then price) whether the name itself came from an
+      <img alt> (HACOM-style) or a plain text node (MemoryZone-style).
+    - link_urls: the href of the nearest *enclosing* <a> tag for each
+      line (see _nearest_link) - i.e. the product page link, since these
+      cards are normally one big <a> wrapping the thumbnail/name/price.
 
     Many storefronts - HACOM included - render the product title only as
     an <img alt="..."> for SEO/lazy-loading reasons, with no matching
@@ -691,13 +711,20 @@ def _extract_ordered_lines(soup, base_url=""):
 
     lines = []
     image_urls = []
+    link_urls = []
     last_img_src = None
     for node in soup.descendants:
-        if isinstance(node, NavigableString):
+        # Exact-type check (not isinstance): NavigableString subclasses
+        # like Comment, CData, Declaration also satisfy isinstance() but
+        # aren't real page text - an HTML comment sitting near a price
+        # would otherwise occasionally get mistaken for a product name,
+        # the same class of bug as the earlier <script>-content one.
+        if type(node) is NavigableString:
             t = norm(str(node))
             if t:
                 lines.append(t)
                 image_urls.append(last_img_src)
+                link_urls.append(_nearest_link(node, base_url))
         elif getattr(node, "name", None) == "img":
             src = _best_img_src(node, base_url)
             if src:
@@ -706,7 +733,8 @@ def _extract_ordered_lines(soup, base_url=""):
             if alt:
                 lines.append(alt)
                 image_urls.append(src or last_img_src)
-    return lines, image_urls
+                link_urls.append(_nearest_link(node, base_url))
+    return lines, image_urls, link_urls
 
 
 def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY, base_url=""):
@@ -729,7 +757,7 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY, base_url=""):
     that site's particular chrome text.
     """
     soup = BeautifulSoup(html, "html.parser")
-    lines, image_urls = _extract_ordered_lines(soup, base_url=base_url)
+    lines, image_urls, link_urls = _extract_ordered_lines(soup, base_url=base_url)
 
     items = []
     seen = set()
@@ -777,7 +805,15 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY, base_url=""):
             if bare and lines[j + 1] != price:
                 old_price = lines[j + 1]
         seen.add(name)
-        items.append({"name": name, "price": price, "old_price": old_price, "image_url": image_urls[i]})
+        items.append(
+            {
+                "name": name,
+                "price": price,
+                "old_price": old_price,
+                "image_url": image_urls[i],
+                "product_url": link_urls[i],
+            }
+        )
         i = j + 1
 
     return items
@@ -943,15 +979,21 @@ def build_html(categories_data, timestamp):
                 for item in cat["items"]:
                     tags_html = _spec_tags_html(item, spec_cols)
                     tags_block = f"<div>{tags_html}</div>" if tags_html else ""
+                    # Fall back to the category page itself if no
+                    # product-specific link was found for this item, so
+                    # the row is still clickable rather than dead.
+                    link = item.get("product_url") or cat["url"]
+                    link_open = f"<a href='{escape(link)}' style='text-decoration:none;color:inherit;' target='_blank'>"
+                    link_close = "</a>"
                     rows.append(
                         f"<tr>"
                         f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;width:60px;vertical-align:top;'>"
-                        f"{_thumb_html(item)}</td>"
+                        f"{link_open}{_thumb_html(item)}{link_close}</td>"
                         f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;'>"
-                        f"<div style='font-size:13.5px;font-weight:600;color:#1f2937;line-height:1.35;'>"
-                        f"{escape(item['name'])}</div>{tags_block}</td>"
+                        f"{link_open}<div style='font-size:13.5px;font-weight:600;color:#1f2937;line-height:1.35;'>"
+                        f"{escape(item['name'])}</div>{link_close}{tags_block}</td>"
                         f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;text-align:right;'>"
-                        f"{_price_block_html(item['price'], item['old_price'])}</td>"
+                        f"{link_open}{_price_block_html(item['price'], item['old_price'])}{link_close}</td>"
                         f"</tr>"
                     )
                 body = (
@@ -1021,6 +1063,8 @@ def build_plain_text(categories_data, timestamp):
                 price_str = _price_text(item["price"], item["old_price"])
                 lines.append(f" - {item['name']}")
                 lines.append(f"   {spec_str} | Gia: {price_str}")
+                if item.get("product_url"):
+                    lines.append(f"   Link: {item['product_url']}")
         lines.append("")
     return "\n".join(lines)
 
