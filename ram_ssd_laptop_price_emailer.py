@@ -210,12 +210,13 @@ RETAILER_DEFAULTS = {
     },
     "gearvn": {
         "label": "GEARVN",
-        # Shopify storefront (collections/... URLs) - classic Shopify
-        # Liquid themes server-render their collection/product grids, so
-        # this is assumed not to need a browser. Not verified against the
-        # live site from this environment - if a run reports 0 items here,
-        # that assumption was wrong; set needs_browser to True instead.
-        "needs_browser": False,
+        # NOT Shopify despite the /collections/ URLs - actually runs on
+        # Haravan (a Vietnamese e-commerce platform). Confirmed by fetching
+        # the raw page directly: the initial HTML has page chrome (nav,
+        # filters, footer) but the product grid itself is completely empty -
+        # it is populated by client-side JS after load, same situation as
+        # HACOM. Confirmed needs a browser.
+        "needs_browser": True,
         "categories": {
             "ram": ("RAM Laptop", "https://gearvn.com/collections/ram-laptop"),
             "ssd": ("SSD", "https://gearvn.com/collections/ssd-o-cung-the-ran"),
@@ -224,10 +225,13 @@ RETAILER_DEFAULTS = {
     },
     "anphat": {
         "label": "An Phát Computer (Hà Nội)",
-        # Classic multi-page .html storefront (not a JS SPA framework) -
-        # assumed server-rendered like MemoryZone. Not verified against
-        # the live site from this environment.
-        "needs_browser": False,
+        # Despite the classic .html URL style, this site turned out to have
+        # an enormous, deeply-nested mega-menu on every page (thousands of
+        # category links) that could not be confirmed to give way to a
+        # server-rendered product grid from this environment. Given GEARVN
+        # already turned out to need a browser despite looking similarly
+        # "classic" at a glance, this defaults to the safer assumption too.
+        "needs_browser": True,
         "categories": {
             "ram": ("RAM Laptop", "https://www.anphatpc.com.vn/ram-laptop.html"),
             "ssd": ("SSD", "https://www.anphatpc.com.vn/o-cung-hdd-ssd_dm1314.html"),
@@ -236,11 +240,11 @@ RETAILER_DEFAULTS = {
     },
     "phucanh": {
         "label": "Phúc Anh",
-        # Classic multi-page .html storefront, same reasoning as An Phat.
-        # A basic fetch of the homepage showed real prices in the raw
-        # response during research, which is a good (though not
-        # conclusive) sign this is server-rendered.
-        "needs_browser": False,
+        # Not individually confirmed either way from this environment -
+        # defaults to the safer (browser) assumption given GEARVN and
+        # An Phat both turned out to need one despite superficially
+        # "classic" URLs.
+        "needs_browser": True,
         "categories": {
             "ram": ("RAM Laptop", "https://www.phucanh.vn/bo-nho-trong-linh-kien-pc.html"),
             "ssd": ("SSD", "https://www.phucanh.vn/o-cung-ssd.html"),
@@ -250,10 +254,9 @@ RETAILER_DEFAULTS = {
     "thinkpro": {
         "label": "ThinkPro",
         # Clean-path URLs (no .html, e.g. /o-cung) suggest a modern JS
-        # framework similar to HACOM's, so this defaults to needing a
-        # browser as the safer assumption. Not verified against the live
-        # site - if it turns out to be server-rendered, this can be
-        # switched to False for a faster run.
+        # framework similar to HACOM's. Not individually confirmed from
+        # this environment, but consistent with every other site checked
+        # so far needing a browser.
         "needs_browser": True,
         "categories": {
             "ram": ("RAM", "https://thinkpro.vn/ram"),
