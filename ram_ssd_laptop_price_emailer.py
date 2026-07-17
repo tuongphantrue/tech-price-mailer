@@ -830,10 +830,22 @@ def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=Fal
     return items
 
 
-def _thumb_html(item, size=48):
+SITE_COLORS = [
+    "#4F46E5",  # indigo
+    "#0EA5E9",  # sky
+    "#059669",  # emerald
+    "#DC2626",  # red
+    "#D97706",  # amber
+    "#7C3AED",  # violet
+    "#DB2777",  # pink
+    "#0891B2",  # cyan
+]
+
+
+def _thumb_html(item, size=52):
     """
-    A small product-thumbnail <img>, or a blank placeholder box if no
-    image URL was found for this item. Email clients commonly block
+    A small rounded product-thumbnail <img>, or a blank placeholder box if
+    no image URL was found for this item. Email clients commonly block
     remote images until the person clicks "display images" - that's
     normal, expected behavior for any email with images, not something
     this script can or should try to bypass.
@@ -841,31 +853,61 @@ def _thumb_html(item, size=48):
     url = item.get("image_url")
     if not url:
         return (
-            f"<div style='width:{size}px;height:{size}px;background:#f0f0f0;"
-            f"border-radius:4px;'></div>"
+            f"<div style='width:{size}px;height:{size}px;background:#f1f3f5;"
+            f"border-radius:10px;'></div>"
         )
     return (
         f"<img src='{escape(url)}' alt='' width='{size}' height='{size}' "
         f"style='width:{size}px;height:{size}px;object-fit:contain;"
-        f"border-radius:4px;background:#f8f8f8;display:block;' />"
+        f"border-radius:10px;border:1px solid #eef0f3;background:#ffffff;display:block;' />"
     )
 
 
-def _price_html(price, old_price):
+def _spec_tags_html(item, spec_cols):
+    """Small pill-style tags for whatever specs were extracted, skipping
+    any that came back as '—' (not found) rather than showing a row of
+    placeholder dashes."""
+    specs = item.get("specs", {})
+    tags = [
+        f"<span style='display:inline-block;background:#f1f5f9;color:#475569;"
+        f"font-size:10.5px;line-height:1.4;padding:2px 8px;border-radius:10px;"
+        f"margin:3px 4px 0 0;white-space:nowrap;'>{escape(specs[col])}</span>"
+        for col in spec_cols
+        if specs.get(col, "—") != "—"
+    ]
+    return "".join(tags)
+
+
+def _price_block_html(price, old_price):
+    """Right-aligned price stack: discount badge (if on sale) above the
+    current price, crossed-out original price below it."""
+    badge = ""
+    old_line = ""
     if old_price:
         try:
             cur = int(price.replace(".", ""))
             old = int(old_price.replace(".", ""))
             pct = round((1 - cur / old) * 100)
-            discount = f" <span style='color:#cf222e'>-{pct}%</span>"
+            if pct > 0:
+                badge = (
+                    f"<span style='display:inline-block;background:#fee2e2;color:#dc2626;"
+                    f"font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:6px;"
+                    f"margin-bottom:3px;'>-{pct}%</span><br/>"
+                )
         except (ValueError, ZeroDivisionError):
-            discount = ""
-        return (
-            f"{escape(price)} \u20ab "
-            f"<span style='color:#999;text-decoration:line-through'>{escape(old_price)} \u20ab</span>"
-            f"{discount}"
+            pass
+        old_line = (
+            f"<div style='font-size:11px;color:#9ca3af;text-decoration:line-through;"
+            f"margin-top:2px;'>{escape(old_price)} \u20ab</div>"
         )
-    return f"{escape(price)} \u20ab"
+    return (
+        f"<div style='text-align:right;'>"
+        f"{badge}"
+        f"<div style='font-size:14.5px;font-weight:700;color:#111827;white-space:nowrap;'>"
+        f"{escape(price)} \u20ab</div>"
+        f"{old_line}"
+        f"</div>"
+    )
 
 
 def _price_text(price, old_price):
@@ -875,8 +917,8 @@ def _price_text(price, old_price):
 
 
 def build_html(categories_data, timestamp):
-    # Group by retailer so each store gets its own section header, with
-    # its three categories nested underneath.
+    # Group by retailer so each store gets its own section, with its
+    # categories nested underneath, in the order categories were fetched.
     sites = []
     seen_sites = set()
     for cat in categories_data:
@@ -884,73 +926,78 @@ def build_html(categories_data, timestamp):
             seen_sites.add(cat["site"])
             sites.append((cat["site"], cat["site_label"]))
 
-    site_sections = []
-    for site_key, site_label in sites:
-        cat_sections = []
+    site_blocks = []
+    for site_idx, (site_key, site_label) in enumerate(sites):
+        color = SITE_COLORS[site_idx % len(SITE_COLORS)]
+        cat_blocks = []
         for cat in [c for c in categories_data if c["site"] == site_key]:
             spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
             if not cat["items"]:
                 body = (
-                    f"<p>Could not parse any items this run. "
-                    f"Check <a href='{escape(cat['url'])}'>{escape(cat['url'])}</a> directly.</p>"
+                    f"<div style='font-size:13px;color:#6b7280;padding:12px 0;'>"
+                    f"Không lấy được sản phẩm nào trong lần chạy này. Xem trực tiếp tại "
+                    f"<a href='{escape(cat['url'])}' style='color:{color};'>{escape(cat['url'])}</a>.</div>"
                 )
             else:
-                header_cells = "".join(
-                    f"<th style='padding:8px 12px;text-align:left;'>{escape(col)}</th>" for col in spec_cols
-                )
-                row_html = "\n".join(
-                    f"<tr>"
-                    f"<td style='padding:6px 12px;border-bottom:1px solid #eee'>{_thumb_html(item)}</td>"
-                    f"<td style='padding:6px 12px;border-bottom:1px solid #eee'>{escape(item['name'])}</td>"
-                    + "".join(
-                        f"<td style='padding:6px 12px;border-bottom:1px solid #eee;white-space:nowrap'>"
-                        f"{escape(item.get('specs', {}).get(col, '—'))}</td>"
-                        for col in spec_cols
+                rows = []
+                for item in cat["items"]:
+                    tags_html = _spec_tags_html(item, spec_cols)
+                    tags_block = f"<div>{tags_html}</div>" if tags_html else ""
+                    rows.append(
+                        f"<tr>"
+                        f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;width:60px;vertical-align:top;'>"
+                        f"{_thumb_html(item)}</td>"
+                        f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;'>"
+                        f"<div style='font-size:13.5px;font-weight:600;color:#1f2937;line-height:1.35;'>"
+                        f"{escape(item['name'])}</div>{tags_block}</td>"
+                        f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;text-align:right;'>"
+                        f"{_price_block_html(item['price'], item['old_price'])}</td>"
+                        f"</tr>"
                     )
-                    + f"<td style='padding:6px 12px;border-bottom:1px solid #eee;text-align:right;white-space:nowrap'>"
-                    f"{_price_html(item['price'], item['old_price'])}</td>"
-                    f"</tr>"
-                    for item in cat["items"]
+                body = (
+                    "<table role='presentation' width='100%' cellpadding='0' cellspacing='0' "
+                    "style='border-collapse:collapse;'>" + "".join(rows) + "</table>"
                 )
-                body = f"""
-                <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:720px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
-                  <thead>
-                    <tr style="background:#f5f5f5;">
-                      <th style="padding:8px 12px;text-align:left;width:56px;"></th>
-                      <th style="padding:8px 12px;text-align:left;">Sản phẩm</th>
-                      {header_cells}
-                      <th style="padding:8px 12px;text-align:right;">Giá</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {row_html}
-                  </tbody>
-                </table>"""
-            cat_sections.append(
-                f"<h3 style='color:#1a5fb4;margin-top:20px;'>{escape(cat['label'])}</h3>"
-                f"<p style='color:#999;font-size:12px;margin:4px 0 8px;'>"
-                f"Nguồn: <a href='{escape(cat['url'])}'>{escape(cat['url'])}</a></p>"
+            cat_blocks.append(
+                f"<tr><td style='padding:14px 28px 2px;'>"
+                f"<div style='font-size:12.5px;font-weight:700;color:{color};"
+                f"text-transform:uppercase;letter-spacing:0.04em;'>{escape(cat['label'])}</div>"
+                f"<div style='font-size:11px;color:#9ca3af;margin:2px 0 6px;'>"
+                f"Nguồn: <a href='{escape(cat['url'])}' style='color:#9ca3af;'>{escape(cat['url'])}</a></div>"
                 f"{body}"
+                f"</td></tr>"
             )
-        site_sections.append(
-            f"<h2 style='color:#111;border-bottom:2px solid #1a5fb4;padding-bottom:4px;margin-top:32px;'>"
-            f"{escape(site_label)}</h2>"
-            f"{''.join(cat_sections)}"
+        site_blocks.append(
+            f"<tr><td style='padding:22px 28px 0;'>"
+            f"<div style='border-left:4px solid {color};padding-left:12px;'>"
+            f"<div style='font-size:17px;font-weight:700;color:#111827;'>{escape(site_label)}</div>"
+            f"</div></td></tr>"
+            + "".join(cat_blocks)
         )
 
     return f"""\
 <html>
-<body style="margin:0; padding:20px; background:#f4f4f4; font-family:Arial,Helvetica,sans-serif;">
-<h1 style="color:#1a5fb4;">Giá RAM / SSD / Laptop hôm nay</h1>
-<p style="color:#555;">Cập nhật {escape(timestamp)}</p>
-{''.join(site_sections)}
-<p style="color:#999; font-size:12px; margin-top:24px;">
+<body style="margin:0;padding:0;background:#eef1f5;font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f5;padding:24px 0;">
+<tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:680px;background:#ffffff;border-radius:16px;overflow:hidden;">
+<tr><td style="background-color:#4338CA;background-image:linear-gradient(135deg,#4338CA,#6366F1);padding:30px 28px;">
+<div style="font-size:21px;font-weight:700;color:#ffffff;">💻 Bảng giá RAM · SSD · Laptop</div>
+<div style="font-size:13px;color:#E0E7FF;margin-top:6px;">Cập nhật {escape(timestamp)}</div>
+</td></tr>
+{''.join(site_blocks)}
+<tr><td style="padding:22px 28px;background:#f8fafc;border-top:1px solid #eef0f3;margin-top:20px;">
+<div style="font-size:11px;color:#94a3b8;line-height:1.6;">
 Đây là giá niêm yết tại các cửa hàng ở thời điểm quét, không phải giá thị
-trường trung bình · Mỗi mục vẫn là giá riêng của từng cửa hàng, đặt cạnh
-nhau để tiện so sánh, không phải một chỉ số thị trường thống nhất · Email
+trường trung bình. Mỗi mục vẫn là giá riêng của từng cửa hàng, đặt cạnh
+nhau để tiện so sánh, không phải một chỉ số thị trường thống nhất. Email
 tự động, chỉ mang tính tham khảo, không phải lời khuyên mua hàng - vui
 lòng kiểm tra lại giá trên website trước khi đặt hàng.
-</p>
+</div>
+</td></tr>
+</table>
+</td></tr>
+</table>
 </body>
 </html>"""
 
