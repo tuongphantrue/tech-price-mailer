@@ -952,69 +952,100 @@ def _price_text(price, old_price):
     return f"{price} d"
 
 
-def build_html(categories_data, timestamp):
-    # Group by retailer so each store gets its own section, with its
-    # categories nested underneath, in the order categories were fetched.
-    sites = []
-    seen_sites = set()
-    for cat in categories_data:
-        if cat["site"] not in seen_sites:
-            seen_sites.add(cat["site"])
-            sites.append((cat["site"], cat["site_label"]))
+TYPE_META = {
+    "ram": ("RAM Laptop", "🧠"),
+    "ssd": ("SSD", "💾"),
+    "laptop": ("Laptop", "💻"),
+}
+TYPE_ORDER = ["ram", "ssd", "laptop"]
 
-    site_blocks = []
-    for site_idx, (site_key, site_label) in enumerate(sites):
-        color = SITE_COLORS[site_idx % len(SITE_COLORS)]
-        cat_blocks = []
-        for cat in [c for c in categories_data if c["site"] == site_key]:
-            spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
-            if not cat["items"]:
-                body = (
-                    f"<div style='font-size:13px;color:#6b7280;padding:12px 0;'>"
-                    f"Không lấy được sản phẩm nào trong lần chạy này. Xem trực tiếp tại "
-                    f"<a href='{escape(cat['url'])}' style='color:{color};'>{escape(cat['url'])}</a>.</div>"
-                )
-            else:
-                rows = []
-                for item in cat["items"]:
-                    tags_html = _spec_tags_html(item, spec_cols)
-                    tags_block = f"<div>{tags_html}</div>" if tags_html else ""
-                    # Fall back to the category page itself if no
-                    # product-specific link was found for this item, so
-                    # the row is still clickable rather than dead.
-                    link = item.get("product_url") or cat["url"]
-                    link_open = f"<a href='{escape(link)}' style='text-decoration:none;color:inherit;' target='_blank'>"
-                    link_close = "</a>"
-                    rows.append(
-                        f"<tr>"
-                        f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;width:60px;vertical-align:top;'>"
-                        f"{link_open}{_thumb_html(item)}{link_close}</td>"
-                        f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;'>"
-                        f"{link_open}<div style='font-size:13.5px;font-weight:600;color:#1f2937;line-height:1.35;'>"
-                        f"{escape(item['name'])}</div>{link_close}{tags_block}</td>"
-                        f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;text-align:right;'>"
-                        f"{link_open}{_price_block_html(item['price'], item['old_price'])}{link_close}</td>"
-                        f"</tr>"
-                    )
-                body = (
-                    "<table role='presentation' width='100%' cellpadding='0' cellspacing='0' "
-                    "style='border-collapse:collapse;'>" + "".join(rows) + "</table>"
-                )
-            cat_blocks.append(
-                f"<tr><td style='padding:14px 28px 2px;'>"
-                f"<div style='font-size:12.5px;font-weight:700;color:{color};"
-                f"text-transform:uppercase;letter-spacing:0.04em;'>{escape(cat['label'])}</div>"
-                f"<div style='font-size:11px;color:#9ca3af;margin:2px 0 6px;'>"
-                f"Nguồn: <a href='{escape(cat['url'])}' style='color:#9ca3af;'>{escape(cat['url'])}</a></div>"
-                f"{body}"
-                f"</td></tr>"
+
+def _render_offer_rows(cat, color):
+    """The source line + product-rows table for one (retailer, category)
+    pairing - i.e. one retailer's offers within a type section."""
+    spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
+    if not cat["items"]:
+        body = (
+            f"<div style='font-size:13px;color:#6b7280;padding:8px 0 4px;'>"
+            f"Không lấy được sản phẩm nào trong lần chạy này. Xem trực tiếp tại "
+            f"<a href='{escape(cat['url'])}' style='color:{color};'>{escape(cat['url'])}</a>.</div>"
+        )
+    else:
+        rows = []
+        for item in cat["items"]:
+            tags_html = _spec_tags_html(item, spec_cols)
+            tags_block = f"<div>{tags_html}</div>" if tags_html else ""
+            # Fall back to the category page itself if no product-specific
+            # link was found for this item, so the row is still clickable
+            # rather than dead.
+            link = item.get("product_url") or cat["url"]
+            link_open = f"<a href='{escape(link)}' style='text-decoration:none;color:inherit;' target='_blank'>"
+            link_close = "</a>"
+            rows.append(
+                f"<tr>"
+                f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;width:60px;vertical-align:top;'>"
+                f"{link_open}{_thumb_html(item)}{link_close}</td>"
+                f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;'>"
+                f"{link_open}<div style='font-size:13.5px;font-weight:600;color:#1f2937;line-height:1.35;'>"
+                f"{escape(item['name'])}</div>{link_close}{tags_block}</td>"
+                f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;text-align:right;'>"
+                f"{link_open}{_price_block_html(item['price'], item['old_price'])}{link_close}</td>"
+                f"</tr>"
             )
-        site_blocks.append(
-            f"<tr><td style='padding:22px 28px 0;'>"
-            f"<div style='border-left:4px solid {color};padding-left:12px;'>"
-            f"<div style='font-size:17px;font-weight:700;color:#111827;'>{escape(site_label)}</div>"
-            f"</div></td></tr>"
-            + "".join(cat_blocks)
+        body = (
+            "<table role='presentation' width='100%' cellpadding='0' cellspacing='0' "
+            "style='border-collapse:collapse;'>" + "".join(rows) + "</table>"
+        )
+    return (
+        f"<div style='margin:16px 0 4px;padding:12px 14px 4px;background:#fafbfc;"
+        f"border:1px solid #f0f1f3;border-radius:10px;'>"
+        f"<div style='display:block;'>"
+        f"<span style='font-size:13px;font-weight:700;color:{color};'>{escape(cat['site_label'])}</span>"
+        f"<span style='font-size:11px;color:#9ca3af;margin-left:8px;'>"
+        f"<a href='{escape(cat['url'])}' style='color:#9ca3af;'>{escape(cat['url'])}</a></span>"
+        f"</div>"
+        f"{body}"
+        f"</div>"
+    )
+
+
+def build_html(categories_data, timestamp):
+    # Assign each retailer a stable color, in the order it first appears,
+    # regardless of how sections get grouped below.
+    site_colors = {}
+    for cat in categories_data:
+        if cat["site"] not in site_colors:
+            site_colors[cat["site"]] = SITE_COLORS[len(site_colors) % len(SITE_COLORS)]
+
+    # Group by item TYPE first (ram/ssd/laptop), not by retailer, so
+    # offers for the same kind of item from every retailer sit together -
+    # much easier to eyeball-compare than scrolling through each
+    # retailer's full catalog separately. Within a type, retailers appear
+    # in the order they were fetched.
+    types_present = []
+    by_type = {}
+    for cat in categories_data:
+        key = cat["key"]
+        if key not in by_type:
+            by_type[key] = []
+            types_present.append(key)
+        by_type[key].append(cat)
+    ordered_types = [t for t in TYPE_ORDER if t in by_type] + [
+        t for t in types_present if t not in TYPE_ORDER
+    ]
+
+    type_blocks = []
+    for type_key in ordered_types:
+        label, icon = TYPE_META.get(type_key, (type_key.title(), "🛒"))
+        offer_blocks = "".join(
+            _render_offer_rows(cat, site_colors[cat["site"]]) for cat in by_type[type_key]
+        )
+        type_blocks.append(
+            f"<tr><td style='padding:26px 28px 0;'>"
+            f"<div style='font-size:18px;font-weight:800;color:#111827;'>{icon} {escape(label)}</div>"
+            f"<div style='height:2px;background:#eef0f3;margin-top:10px;'></div>"
+            f"{offer_blocks}"
+            f"</td></tr>"
         )
 
     return f"""\
@@ -1027,7 +1058,7 @@ def build_html(categories_data, timestamp):
 <div style="font-size:21px;font-weight:700;color:#ffffff;">💻 Bảng giá RAM · SSD · Laptop</div>
 <div style="font-size:13px;color:#E0E7FF;margin-top:6px;">Cập nhật {escape(timestamp)}</div>
 </td></tr>
-{''.join(site_blocks)}
+{''.join(type_blocks)}
 <tr><td style="padding:22px 28px;background:#f8fafc;border-top:1px solid #eef0f3;margin-top:20px;">
 <div style="font-size:11px;color:#94a3b8;line-height:1.6;">
 Đây là giá niêm yết tại các cửa hàng ở thời điểm quét, không phải giá thị
@@ -1046,26 +1077,38 @@ lòng kiểm tra lại giá trên website trước khi đặt hàng.
 
 def build_plain_text(categories_data, timestamp):
     lines = [f"Gia RAM/SSD/Laptop - cap nhat {timestamp}", ""]
-    current_site = None
+
+    types_present = []
+    by_type = {}
     for cat in categories_data:
-        if cat["site"] != current_site:
-            current_site = cat["site"]
-            lines.append(f"########## {cat['site_label']} ##########")
-            lines.append("")
-        spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
-        lines.append(f"== {cat['label']} ({cat['url']}) ==")
-        if not cat["items"]:
-            lines.append(" Could not parse any items this run.")
-        else:
-            for item in cat["items"]:
-                specs = item.get("specs", {})
-                spec_str = ", ".join(f"{col}: {specs.get(col, '—')}" for col in spec_cols)
-                price_str = _price_text(item["price"], item["old_price"])
-                lines.append(f" - {item['name']}")
-                lines.append(f"   {spec_str} | Gia: {price_str}")
-                if item.get("product_url"):
-                    lines.append(f"   Link: {item['product_url']}")
+        key = cat["key"]
+        if key not in by_type:
+            by_type[key] = []
+            types_present.append(key)
+        by_type[key].append(cat)
+    ordered_types = [t for t in TYPE_ORDER if t in by_type] + [
+        t for t in types_present if t not in TYPE_ORDER
+    ]
+
+    for type_key in ordered_types:
+        label, _icon = TYPE_META.get(type_key, (type_key.title(), ""))
+        lines.append(f"########## {label} ##########")
         lines.append("")
+        for cat in by_type[type_key]:
+            spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
+            lines.append(f"== {cat['site_label']} ({cat['url']}) ==")
+            if not cat["items"]:
+                lines.append(" Could not parse any items this run.")
+            else:
+                for item in cat["items"]:
+                    specs = item.get("specs", {})
+                    spec_str = ", ".join(f"{col}: {specs.get(col, '—')}" for col in spec_cols)
+                    price_str = _price_text(item["price"], item["old_price"])
+                    lines.append(f" - {item['name']}")
+                    lines.append(f"   {spec_str} | Gia: {price_str}")
+                    if item.get("product_url"):
+                        lines.append(f"   Link: {item['product_url']}")
+            lines.append("")
     return "\n".join(lines)
 
 
