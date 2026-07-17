@@ -26,11 +26,22 @@ frequently-updated "market price" table the way giavang.org does for gold.
 What this script does instead is scrape the live *listing prices* off
 several retailers' category pages, currently:
 
-    - MemoryZone.vn  (memoryzone.com.vn)
-    - HACOM.vn       (hacom.vn)          - Hanoi-headquartered, showrooms
-                                            across Hanoi (Hai Ba Trung,
-                                            Dong Da, Cau Giay, Ha Dong, ...)
-    - Phong Vu       (phongvu.vn)        - nationwide chain, Hanoi showrooms
+    - MemoryZone.vn       (memoryzone.com.vn)
+    - HACOM.vn             (hacom.vn)          - Hanoi-headquartered, showrooms
+                                                  across Hanoi (Hai Ba Trung,
+                                                  Dong Da, Cau Giay, Ha Dong, ...)
+    - Phong Vu             (phongvu.vn)        - nationwide chain, Hanoi showrooms.
+                                                  Disabled by default - sits behind a
+                                                  Cloudflare challenge that hasn't
+                                                  cleared even for a real headless
+                                                  browser in testing; see the note
+                                                  further down and in README.md.
+    - GEARVN               (gearvn.com)        - nationwide chain, Hanoi showrooms
+    - An Phat Computer      (anphatpc.com.vn)   - Hanoi-headquartered
+    - Phuc Anh              (phucanh.vn)        - nationwide chain, Hanoi showrooms
+    - ThinkPro              (thinkpro.vn)       - nationwide chain, Hanoi showrooms
+    - Hoang Ha PC           (hoanghapc.vn)      - Hanoi-headquartered (Cau Giay,
+                                                  Dong Da showrooms)
 
 These are each store's own asking prices (often with an active discount),
 NOT a market-average and NOT a single unified price-comparison - the email
@@ -75,7 +86,8 @@ SETUP
     export TECH_RECIPIENT="where-to-send@example.com"
     export SEND_ONLY_ON_CHANGE="false"          # optional, default false
     export TIMEZONE="Asia/Ho_Chi_Minh"          # optional, for the subject line
-    export ENABLED_RETAILERS="memoryzone,hacom,phongvu"   # optional, default all three
+    export ENABLED_RETAILERS="memoryzone,hacom,gearvn,anphat,phucanh,thinkpro,hoangha"
+                                                 # optional, default is all EXCEPT phongvu (see note below)
     export MAX_ITEMS_PER_CATEGORY="12"          # optional
     export STATE_FILE="state/last_price.json"   # optional, dedup state file
     export ALLOW_INSECURE_SSL_FALLBACK="false"  # optional, last-resort TLS bypass
@@ -195,6 +207,70 @@ RETAILER_DEFAULTS = {
             "laptop": ("Laptop", "https://phongvu.vn/c/laptop"),
         },
     },
+    "gearvn": {
+        "label": "GEARVN",
+        # Shopify storefront (collections/... URLs) - classic Shopify
+        # Liquid themes server-render their collection/product grids, so
+        # this is assumed not to need a browser. Not verified against the
+        # live site from this environment - if a run reports 0 items here,
+        # that assumption was wrong; set needs_browser to True instead.
+        "needs_browser": False,
+        "categories": {
+            "ram": ("RAM Laptop", "https://gearvn.com/collections/ram-laptop"),
+            "ssd": ("SSD", "https://gearvn.com/collections/ssd-o-cung-the-ran"),
+            "laptop": ("Laptop", "https://gearvn.com/collections/laptop"),
+        },
+    },
+    "anphat": {
+        "label": "An Phát Computer (Hà Nội)",
+        # Classic multi-page .html storefront (not a JS SPA framework) -
+        # assumed server-rendered like MemoryZone. Not verified against
+        # the live site from this environment.
+        "needs_browser": False,
+        "categories": {
+            "ram": ("RAM Laptop", "https://www.anphatpc.com.vn/ram-laptop.html"),
+            "ssd": ("SSD", "https://www.anphatpc.com.vn/o-cung-hdd-ssd_dm1314.html"),
+            "laptop": ("Laptop", "https://www.anphatpc.com.vn/may-tinh-xach-tay-laptop.html"),
+        },
+    },
+    "phucanh": {
+        "label": "Phúc Anh",
+        # Classic multi-page .html storefront, same reasoning as An Phat.
+        # A basic fetch of the homepage showed real prices in the raw
+        # response during research, which is a good (though not
+        # conclusive) sign this is server-rendered.
+        "needs_browser": False,
+        "categories": {
+            "ram": ("RAM Laptop", "https://www.phucanh.vn/bo-nho-trong-linh-kien-pc.html"),
+            "ssd": ("SSD", "https://www.phucanh.vn/o-cung-ssd.html"),
+            "laptop": ("Laptop", "https://www.phucanh.vn/may-tinh-xach-tay-laptop.html"),
+        },
+    },
+    "thinkpro": {
+        "label": "ThinkPro",
+        # Clean-path URLs (no .html, e.g. /o-cung) suggest a modern JS
+        # framework similar to HACOM's, so this defaults to needing a
+        # browser as the safer assumption. Not verified against the live
+        # site - if it turns out to be server-rendered, this can be
+        # switched to False for a faster run.
+        "needs_browser": True,
+        "categories": {
+            "ram": ("RAM", "https://thinkpro.vn/ram"),
+            "ssd": ("SSD / Ổ cứng", "https://thinkpro.vn/o-cung"),
+            "laptop": ("Laptop", "https://thinkpro.vn/laptop"),
+        },
+    },
+    "hoangha": {
+        "label": "Hoàng Hà PC (Hà Nội)",
+        # Same reasoning as ThinkPro - clean-path URLs suggest a modern JS
+        # framework, so this defaults to needing a browser.
+        "needs_browser": True,
+        "categories": {
+            "ram": ("RAM", "https://hoanghapc.vn/ram-bo-nho-trong"),
+            "ssd": ("SSD", "https://hoanghapc.vn/o-cung-the-ran-ssd"),
+            "laptop": ("Laptop", "https://hoanghapc.vn/laptop"),
+        },
+    },
 }
 
 # Backward-compatible env var aliases - only apply to MemoryZone, since
@@ -213,7 +289,14 @@ def _retailer_url_env(site_key, cat_key):
 
 
 def build_categories():
-    enabled = os.environ.get("ENABLED_RETAILERS", "memoryzone,hacom,phongvu")
+    # phongvu is deliberately excluded from the default list: confirmed
+    # (see README) to sit behind a Cloudflare challenge that doesn't clear
+    # even for a real headless browser, at least from the environments
+    # this was tested from. It's still a valid value here if you want to
+    # try it anyway - e.g. from a residential home connection.
+    enabled = os.environ.get(
+        "ENABLED_RETAILERS", "memoryzone,hacom,gearvn,anphat,phucanh,thinkpro,hoangha"
+    )
     enabled_sites = [s.strip().lower() for s in enabled.split(",") if s.strip()]
 
     categories = []
