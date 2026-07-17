@@ -1,9 +1,8 @@
 # RAM / SSD / Laptop Price Emailer (runs on GitHub Actions, no local computer needed)
 
-Emails you a digest of current RAM, SSD, and laptop listing prices at
-**MemoryZone.vn**, **HACOM.vn** (Hanoi-headquartered, showrooms across
-Hanoi), and **Phong Vũ (phongvu.vn)**, automatically, via GitHub's free
-scheduled-workflow runners.
+Emails you a digest of current RAM, SSD, and laptop listing prices across
+several Vietnamese retailers (most with Hanoi showrooms), automatically,
+via GitHub's free scheduled-workflow runners.
 
 Modeled on [gold-price-emailer](https://github.com/tuongphantrue/gold-price-emailer) and [house-price-emailer](https://github.com/tuongphantrue/house-price-emailer) -
 same generate/send two-phase shape, same Gmail-SMTP delivery, same
@@ -22,11 +21,16 @@ What this script does instead is scrape the *listing prices* directly off
 each retailer's own category pages - RAM Laptop, SSD, and Laptop - for:
 
 - [MemoryZone.vn](https://memoryzone.com.vn/)
-- [HACOM.vn](https://hacom.vn/)
-- [Phong Vũ](https://phongvu.vn/)
+- [HACOM.vn](https://hacom.vn/) - Hanoi-headquartered
+- [GEARVN](https://gearvn.com/) - Hanoi showrooms
+- [An Phát Computer](https://www.anphatpc.com.vn/) - Hanoi-headquartered
+- [Phúc Anh](https://www.phucanh.vn/) - Hanoi showrooms
+- [ThinkPro](https://thinkpro.vn/) - Hanoi showrooms
+- [Hoàng Hà PC](https://hoanghapc.vn/) - Hanoi-headquartered
+- [Phong Vũ](https://phongvu.vn/) - **disabled by default**, see below
 
 These are **each store's current asking prices** (often already
-discounted), not a market average. The email lays all three retailers'
+discounted), not a market average. The email lays each retailer's
 listings out side by side, section by section, so you can eyeball and
 compare them yourself - it is **not** a single blended price index across
 retailers. Treat the email as "what each store is charging right now for
@@ -34,31 +38,57 @@ the items on page 1 of each category," not as an authoritative price
 index - always check the live page before buying anything.
 
 The parser (`parse_listing()` in the script) matches by *text adjacency* -
-a product-name-looking line immediately followed by a "X.XXX.XXX ₫"
-price line - rather than by exact HTML structure, so it should survive
-minor theme/markup changes.
+a product-name-looking line immediately followed by a "X.XXX.XXX ₫" (or
+"đ") price line - rather than by exact HTML structure, so it should
+survive minor theme/markup changes. It also reads product titles out of
+`<img alt="...">` where a site puts the name there instead of in visible
+text (true of HACOM), and strips `<script>`/`<style>` content first so
+injected JS/CSS never gets mistaken for a product name.
 
-**MemoryZone** server-renders its product grid, so a plain HTTP GET
-already contains the data - fast, no browser needed.
+**Render mode per retailer** - some sites server-render their product
+grid (a plain HTTP GET already contains the prices - fast, no browser
+needed); others fetch it via client-side JS after the page loads (a plain
+GET sees an empty grid, so this script renders those pages in a real
+headless Chromium tab via [Playwright](https://playwright.dev/) first).
 
-**HACOM** does not: it runs on Next.js, and the product grid is fetched
-by client-side JS after the page loads, so a plain GET always sees an
-empty grid. This script renders HACOM's category pages in a real headless
-Chromium tab (via [Playwright](https://playwright.dev/)) first, then
-parses the resulting HTML the same way.
+| Retailer | Render mode | Confidence |
+|---|---|---|
+| MemoryZone | plain HTTP | confirmed working |
+| HACOM | headless browser | confirmed working |
+| GEARVN | plain HTTP | assumed (Shopify) - not yet run against the live site |
+| An Phát Computer | plain HTTP | assumed (classic multi-page site) - not yet run |
+| Phúc Anh | plain HTTP | assumed (classic multi-page site) - not yet run |
+| ThinkPro | headless browser | assumed (modern JS framework) - not yet run |
+| Hoàng Hà PC | headless browser | assumed (modern JS framework) - not yet run |
+| Phong Vũ | headless browser | confirmed blocked - see below |
 
-**Phong Vũ** is attempted the same headless-browser way, but that site
-also runs active bot detection that can block even a real browser - if
-so, you'll see a fetch/render error in the logs for that category (not a
-silent "0 items parsed"). This script does not attempt to defeat that
-detection (no fingerprint spoofing, proxies, CAPTCHA solving, etc.) - if
-it keeps failing, the practical option is to drop Phong Vũ from
-`ENABLED_RETAILERS`.
+The five newest retailers (GEARVN, An Phát, Phúc Anh, ThinkPro, Hoàng Hà
+PC) haven't been run against yet - their render mode is a best guess from
+their URL structure and platform (Shopify vs. classic CMS vs. a modern JS
+framework), not something observed directly. **Run `generate` once after
+adding them and check the logs before trusting the schedule** - if a
+plain-HTTP retailer shows "0 items parsed" every time, it probably
+actually needs the headless-browser path; flip its `needs_browser` flag
+in `RETAILER_DEFAULTS` in the script and try again.
+
+**Phong Vũ** sits behind a Cloudflare challenge. Testing showed the
+challenge page itself reporting "verification successful," but the run
+still never got past the interstitial - across two separate runs, several
+retries with extra wait time each, it stayed stuck at the exact same
+"waiting for phongvu.vn to respond" point. That consistency points to
+Cloudflare correctly identifying the automation rather than a one-off
+timing issue. This script does not attempt to defeat that detection (no
+fingerprint spoofing, proxies, CAPTCHA solving, etc.), so Phong Vũ is
+**excluded from the default `ENABLED_RETAILERS` list**. It's still
+defined in the script if you want to try it anyway (e.g. from a
+residential connection rather than a GitHub Actions runner) - see
+"Choosing which retailers get scraped" below.
 
 If a run reports 0 parsed items for a retailer/category, open the
 category URL and check `parse_listing()`, and the `JUNK_NAME_PREFIXES` /
 `JUNK_NAME_RE` filters near the top of the file (tuned by hand per site's
-nav/filter text, so a redesign may need a line or two added there).
+nav/filter text, so a redesign - or a new site - may need a line or two
+added there).
 
 ## One-time setup (~5 minutes)
 
@@ -145,14 +175,21 @@ on every scheduled run regardless.
 
 ## Choosing which retailers get scraped
 
-By default all three retailers run. To narrow it down, add an
-`ENABLED_RETAILERS` environment variable to the "Generate email" step in
-the workflow, as a comma-separated list of `memoryzone`, `hacom`,
-`phongvu`. For example, to skip MemoryZone and only check the two
-Hanoi-heavy retailers:
+By default 7 of the 8 retailers run (all except Phong Vũ - see above). To
+change that, add an `ENABLED_RETAILERS` environment variable to the
+"Generate email" step in the workflow, as a comma-separated list from:
+`memoryzone`, `hacom`, `gearvn`, `anphat`, `phucanh`, `thinkpro`,
+`hoangha`, `phongvu`. For example, to only check the fastest
+(non-browser) retailers:
 
 ```
-ENABLED_RETAILERS: "hacom,phongvu"
+ENABLED_RETAILERS: "memoryzone,gearvn,anphat,phucanh"
+```
+
+Or to try Phong Vũ again despite the note above:
+
+```
+ENABLED_RETAILERS: "memoryzone,hacom,gearvn,anphat,phucanh,thinkpro,hoangha,phongvu"
 ```
 
 ## Configuring which pages get scraped
@@ -173,7 +210,32 @@ HACOM_RAM_URL: "https://hacom.vn/ram-laptop"
 HACOM_SSD_URL: "https://hacom.vn/o-cung-ssd"
 HACOM_LAPTOP_URL: "https://hacom.vn/laptop"
 
-# Phong Vu
+# GEARVN
+GEARVN_RAM_URL: "https://gearvn.com/collections/ram-laptop"
+GEARVN_SSD_URL: "https://gearvn.com/collections/ssd-o-cung-the-ran"
+GEARVN_LAPTOP_URL: "https://gearvn.com/collections/laptop"
+
+# An Phat Computer
+ANPHAT_RAM_URL: "https://www.anphatpc.com.vn/ram-laptop.html"
+ANPHAT_SSD_URL: "https://www.anphatpc.com.vn/o-cung-hdd-ssd_dm1314.html"
+ANPHAT_LAPTOP_URL: "https://www.anphatpc.com.vn/may-tinh-xach-tay-laptop.html"
+
+# Phuc Anh
+PHUCANH_RAM_URL: "https://www.phucanh.vn/bo-nho-trong-linh-kien-pc.html"
+PHUCANH_SSD_URL: "https://www.phucanh.vn/o-cung-ssd.html"
+PHUCANH_LAPTOP_URL: "https://www.phucanh.vn/may-tinh-xach-tay-laptop.html"
+
+# ThinkPro
+THINKPRO_RAM_URL: "https://thinkpro.vn/ram"
+THINKPRO_SSD_URL: "https://thinkpro.vn/o-cung"
+THINKPRO_LAPTOP_URL: "https://thinkpro.vn/laptop"
+
+# Hoang Ha PC
+HOANGHA_RAM_URL: "https://hoanghapc.vn/ram-bo-nho-trong"
+HOANGHA_SSD_URL: "https://hoanghapc.vn/o-cung-the-ran-ssd"
+HOANGHA_LAPTOP_URL: "https://hoanghapc.vn/laptop"
+
+# Phong Vu (excluded by default - see above)
 PHONGVU_RAM_URL: "https://phongvu.vn/c/ram-laptop"
 PHONGVU_SSD_URL: "https://phongvu.vn/c/o-cung-ssd"
 PHONGVU_LAPTOP_URL: "https://phongvu.vn/c/laptop"
