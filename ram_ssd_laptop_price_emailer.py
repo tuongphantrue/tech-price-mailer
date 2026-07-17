@@ -86,8 +86,8 @@ SETUP
     export TECH_RECIPIENT="where-to-send@example.com"
     export SEND_ONLY_ON_CHANGE="false"          # optional, default false
     export TIMEZONE="Asia/Ho_Chi_Minh"          # optional, for the subject line
-    export ENABLED_RETAILERS="memoryzone,hacom,gearvn,anphat,phucanh,thinkpro,hoangha"
-                                                 # optional, default is all EXCEPT phongvu (see note below)
+    export ENABLED_RETAILERS="memoryzone,hacom,gearvn,anphat,thinkpro,hoangha"
+                                                 # optional, default is all EXCEPT phongvu and phucanh (see notes below)
     export MAX_ITEMS_PER_CATEGORY="12"          # optional
     export STATE_FILE="state/last_price.json"   # optional, dedup state file
     export ALLOW_INSECURE_SSL_FALLBACK="false"  # optional, last-resort TLS bypass
@@ -240,10 +240,11 @@ RETAILER_DEFAULTS = {
     },
     "phucanh": {
         "label": "Phúc Anh",
-        # Not individually confirmed either way from this environment -
-        # defaults to the safer (browser) assumption given GEARVN and
-        # An Phat both turned out to need one despite superficially
-        # "classic" URLs.
+        # Confirmed to sit behind a Cloudflare challenge that doesn't
+        # clear even for a real headless browser (same "verification
+        # successful, still waiting" stuck state as Phong Vu) - excluded
+        # from the default ENABLED_RETAILERS list. Left defined here in
+        # case someone wants to retry it from a different network.
         "needs_browser": True,
         "categories": {
             "ram": ("RAM Laptop", "https://www.phucanh.vn/bo-nho-trong-linh-kien-pc.html"),
@@ -299,7 +300,7 @@ def build_categories():
     # this was tested from. It's still a valid value here if you want to
     # try it anyway - e.g. from a residential home connection.
     enabled = os.environ.get(
-        "ENABLED_RETAILERS", "memoryzone,hacom,gearvn,anphat,phucanh,thinkpro,hoangha"
+        "ENABLED_RETAILERS", "memoryzone,hacom,gearvn,anphat,thinkpro,hoangha"
     )
     enabled_sites = [s.strip().lower() for s in enabled.split(",") if s.strip()]
 
@@ -785,6 +786,14 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY, base_url=""):
             m = PRICE_RE.findall(lines[j])
             if m:
                 match = (j, m)
+                break
+            if BARE_NUMBER_RE.match(lines[j]):
+                # No currency mark glued to this number in the same DOM
+                # text node (e.g. ThinkPro renders the "đ" as a separate
+                # sibling element from the digits) - a dot-grouped 6+
+                # digit number sitting this close to a product name is
+                # still, in context, almost certainly its price.
+                match = (j, [lines[j]])
                 break
             # If we hit what looks like *another* product name before
             # finding a price, this line probably wasn't a product name -
