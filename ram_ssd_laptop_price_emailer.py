@@ -151,6 +151,7 @@ from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from html import escape
+from urllib.parse import urljoin
 
 import certifi
 import requests
@@ -624,10 +625,45 @@ def fetch_rendered_page(url, timeout_ms=BROWSER_TIMEOUT_MS):
     return html
 
 
-def _extract_ordered_lines(soup):
+def _best_img_src(img_tag, base_url):
+    """
+    Pick the most plausible real image URL off an <img> tag. Many
+    storefronts lazy-load images: the `src` attribute holds a tiny
+    placeholder (a blank/base64 pixel) until JS swaps in the real URL from
+    a `data-src`/`data-lazy-src`/`data-original`/`srcset` attribute once
+    the browser paints it. Playwright already waited for the page to
+    settle before this runs, but the placeholder attribute can still be
+    left behind in the DOM alongside the now-populated one, so this
+    checks the lazy-load attributes first and falls back to `src` last.
+    Relative and protocol-relative URLs are resolved against the category
+    page's URL so they work standalone in an email client.
+    """
+    for attr in ("data-src", "data-lazy-src", "data-original", "srcset", "data-srcset", "src"):
+        val = img_tag.get(attr)
+        if not val:
+            continue
+        val = val.strip()
+        if not val or val.startswith("data:"):
+            continue  # inline base64 placeholder - not a usable standalone URL
+        if "," in val and " " in val:
+            # srcset format: "url1 1x, url2 2x" - take the first candidate
+            val = val.split(",")[0].strip().split(" ")[0]
+        if val:
+            return urljoin(base_url, val)
+    return None
+
+
+def _extract_ordered_lines(soup, base_url=""):
     """
     Like soup.get_text("\\n").split("\\n"), but also emits each <img>'s alt
-    text (if any) at its position in document order.
+    text (if any) at its position in document order, and returns a
+    parallel list of "the most recently seen product image URL" for every
+    line - so each parsed name/price pair in parse_listing() can carry a
+    thumbnail along with it. A line inherits the nearest *preceding*
+    image in the DOM, which lines up with how these storefront cards are
+    laid out (thumbnail, then title/SKU, then price) whether the name
+    itself came from an <img alt> (HACOM-style) or a plain text node
+    (MemoryZone-style).
 
     Many storefronts - HACOM included - render the product title only as
     an <img alt="..."> for SEO/lazy-loading reasons, with no matching
@@ -654,19 +690,26 @@ def _extract_ordered_lines(soup):
         tag.decompose()
 
     lines = []
+    image_urls = []
+    last_img_src = None
     for node in soup.descendants:
         if isinstance(node, NavigableString):
             t = norm(str(node))
             if t:
                 lines.append(t)
+                image_urls.append(last_img_src)
         elif getattr(node, "name", None) == "img":
+            src = _best_img_src(node, base_url)
+            if src:
+                last_img_src = src
             alt = norm(node.get("alt", "") or "")
             if alt:
                 lines.append(alt)
-    return lines
+                image_urls.append(src or last_img_src)
+    return lines, image_urls
 
 
-def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
+def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY, base_url=""):
     """
     Parse a product-listing category page into a list of
     {name, price, old_price} rows (old_price is None if not on sale).
@@ -686,7 +729,7 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
     that site's particular chrome text.
     """
     soup = BeautifulSoup(html, "html.parser")
-    lines = _extract_ordered_lines(soup)
+    lines, image_urls = _extract_ordered_lines(soup, base_url=base_url)
 
     items = []
     seen = set()
@@ -734,7 +777,7 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY):
             if bare and lines[j + 1] != price:
                 old_price = lines[j + 1]
         seen.add(name)
-        items.append({"name": name, "price": price, "old_price": old_price})
+        items.append({"name": name, "price": price, "old_price": old_price, "image_url": image_urls[i]})
         i = j + 1
 
     return items
@@ -776,7 +819,7 @@ def diagnose_empty_render(html):
 
 def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False, return_html=False):
     html = fetch_rendered_page(url) if needs_browser else fetch_page(url)
-    items = parse_listing(html, max_items=max_items)
+    items = parse_listing(html, max_items=max_items, base_url=url)
     extractor = SPEC_EXTRACTORS.get(key)
     if extractor:
         extract_fn, _ = extractor
@@ -785,6 +828,27 @@ def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=Fal
     if return_html:
         return items, html
     return items
+
+
+def _thumb_html(item, size=48):
+    """
+    A small product-thumbnail <img>, or a blank placeholder box if no
+    image URL was found for this item. Email clients commonly block
+    remote images until the person clicks "display images" - that's
+    normal, expected behavior for any email with images, not something
+    this script can or should try to bypass.
+    """
+    url = item.get("image_url")
+    if not url:
+        return (
+            f"<div style='width:{size}px;height:{size}px;background:#f0f0f0;"
+            f"border-radius:4px;'></div>"
+        )
+    return (
+        f"<img src='{escape(url)}' alt='' width='{size}' height='{size}' "
+        f"style='width:{size}px;height:{size}px;object-fit:contain;"
+        f"border-radius:4px;background:#f8f8f8;display:block;' />"
+    )
 
 
 def _price_html(price, old_price):
@@ -836,6 +900,7 @@ def build_html(categories_data, timestamp):
                 )
                 row_html = "\n".join(
                     f"<tr>"
+                    f"<td style='padding:6px 12px;border-bottom:1px solid #eee'>{_thumb_html(item)}</td>"
                     f"<td style='padding:6px 12px;border-bottom:1px solid #eee'>{escape(item['name'])}</td>"
                     + "".join(
                         f"<td style='padding:6px 12px;border-bottom:1px solid #eee;white-space:nowrap'>"
@@ -851,6 +916,7 @@ def build_html(categories_data, timestamp):
                 <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;width:100%;max-width:720px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
                   <thead>
                     <tr style="background:#f5f5f5;">
+                      <th style="padding:8px 12px;text-align:left;width:56px;"></th>
                       <th style="padding:8px 12px;text-align:left;">Sản phẩm</th>
                       {header_cells}
                       <th style="padding:8px 12px;text-align:right;">Giá</th>
