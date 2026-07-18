@@ -388,7 +388,8 @@ JUNK_NAME_PREFIXES = (
 JUNK_NAME_RE = re.compile(
     r"^(là người đánh giá đầu tiên|xem \d+ đánh giá|-?\d+\s*%|hết hàng|"
     r"chỉ bán build pc|còn hàng|hữu ích\s*\(\d+\)|tặng |quà tặng|khuyến mại|"
-    r"mã:\s*\S+|\(tiết kiệm|tiết kiệm\s*\d+\s*%)",
+    r"mã:\s*\S+|\(tiết kiệm|tiết kiệm\s*\d+\s*%|"
+    r"giá (tăng|giảm) dần|\(\d+\s*(đánh giá|sản phẩm)\)|giá khuyến mãi:?$)",
     re.IGNORECASE,
 )
 
@@ -783,23 +784,34 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY, base_url=""):
         # that's the product's price line on these storefront card layouts.
         match = None
         for j in range(i + 1, min(i + 7, len(lines))):
-            m = PRICE_RE.findall(lines[j])
+            line_j = lines[j]
+            m = PRICE_RE.findall(line_j)
             if m:
                 match = (j, m)
                 break
-            if BARE_NUMBER_RE.match(lines[j]):
+            if BARE_NUMBER_RE.match(line_j):
                 # No currency mark glued to this number in the same DOM
                 # text node (e.g. ThinkPro renders the "đ" as a separate
                 # sibling element from the digits) - a dot-grouped 6+
                 # digit number sitting this close to a product name is
                 # still, in context, almost certainly its price.
-                match = (j, [lines[j]])
+                match = (j, [line_j])
                 break
-            # If we hit what looks like *another* product name before
-            # finding a price, this line probably wasn't a product name -
-            # bail out rather than pairing it with a distant price.
-            if len(lines[j]) >= 10 and not PRICE_RE.search(lines[j]) and not BARE_NUMBER_RE.match(lines[j]):
-                continue
+            # If we hit a substantial line that isn't recognized junk
+            # before finding a price, this candidate probably wasn't a
+            # real product name after all (or it's the *next* product's
+            # name) - stop searching rather than reaching past it to pair
+            # with some later, unrelated price. Recognized junk (SKU
+            # codes, discount badges, spec-filter chips like "Bus:
+            # 3200MHz" sitting between one product's price and the next
+            # product's name) is still skipped over, same as before.
+            is_junk_j = (
+                line_j.lower().startswith(JUNK_NAME_PREFIXES)
+                or JUNK_NAME_RE.match(line_j)
+                or JS_SYNTAX_RE.search(line_j)
+            )
+            if len(line_j) >= 10 and not is_junk_j:
+                break
 
         if not match:
             i += 1
@@ -873,6 +885,20 @@ def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=Fal
         extract_fn, _ = extractor
         for item in items:
             item["specs"] = extract_fn(item["name"])
+        with_specs = [it for it in items if any(v != "—" for v in it["specs"].values())]
+        # A genuine RAM/SSD/Laptop listing title reliably contains
+        # extractable spec info (capacity, DDR generation, CPU model...)
+        # on every site checked so far - an item with *zero* matched
+        # fields is almost always off-topic content that leaked in from
+        # an unrelated part of the page (a cross-department "hot deals"
+        # sidebar, a category nav link, a review-count/sort-option line
+        # that slipped past the junk filters) rather than a real product
+        # this extractor just doesn't understand. Only drop them if doing
+        # so doesn't wipe out the whole result, so a site whose naming
+        # convention genuinely isn't covered by the regex yet still
+        # surfaces *something* instead of silently going to 0 items.
+        if with_specs and len(with_specs) >= max(2, len(items) // 3):
+            items = with_specs
     if return_html:
         return items, html
     return items
