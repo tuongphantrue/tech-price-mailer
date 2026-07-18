@@ -88,7 +88,7 @@ SETUP
     export TIMEZONE="Asia/Ho_Chi_Minh"          # optional, for the subject line
     export ENABLED_RETAILERS="memoryzone,hacom,gearvn,anphat,thinkpro,hoangha"
                                                  # optional, default is all EXCEPT phongvu and phucanh (see notes below)
-    export MAX_ITEMS_PER_CATEGORY="12"          # optional
+    export MAX_ITEMS_PER_CATEGORY="24"          # optional
     export STATE_FILE="state/last_price.json"   # optional, dedup state file
     export ALLOW_INSECURE_SSL_FALLBACK="false"  # optional, last-resort TLS bypass
 
@@ -344,7 +344,7 @@ EMAIL_DIR = "email"
 STATE_FILE = os.environ.get("STATE_FILE", "state/last_price.json")
 SEND_ONLY_ON_CHANGE = os.environ.get("SEND_ONLY_ON_CHANGE", "false").lower() == "true"
 ALLOW_INSECURE_SSL_FALLBACK = os.environ.get("ALLOW_INSECURE_SSL_FALLBACK", "false").lower() == "true"
-MAX_ITEMS_PER_CATEGORY = int(os.environ.get("MAX_ITEMS_PER_CATEGORY", "12"))
+MAX_ITEMS_PER_CATEGORY = int(os.environ.get("MAX_ITEMS_PER_CATEGORY", "24"))
 # How long to let a headless-browser page (HACOM/Phong Vu) finish loading +
 # running its client-side product-fetch JS before giving up on that
 # category. These pages are slower than a plain HTTP GET, so this is
