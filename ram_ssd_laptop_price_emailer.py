@@ -388,8 +388,8 @@ JUNK_NAME_PREFIXES = (
 JUNK_NAME_RE = re.compile(
     r"^(là người đánh giá đầu tiên|xem \d+ đánh giá|-?\d+\s*%|hết hàng|"
     r"chỉ bán build pc|còn hàng|hữu ích\s*\(\d+\)|tặng |quà tặng|khuyến mại|"
-    r"mã:\s*\S+|\(tiết kiệm|tiết kiệm\s*\d+\s*%|"
-    r"giá (tăng|giảm) dần|\(\d+\s*(đánh giá|sản phẩm)\)|giá khuyến mãi:?$)",
+    r"mã\s*(sp|sản phẩm)?\s*:\s*\S+|\(tiết kiệm|tiết kiệm\s*\d+\s*%|"
+    r"giá (tăng|giảm) dần|\(\d+\s*(đánh giá|sản phẩm)\)|giá (khuyến mãi|niêm yết):?$)",
     re.IGNORECASE,
 )
 
