@@ -879,8 +879,16 @@ def diagnose_empty_render(html):
 
 def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False, return_html=False):
     html = fetch_rendered_page(url) if needs_browser else fetch_page(url)
-    items = parse_listing(html, max_items=max_items, base_url=url)
     extractor = SPEC_EXTRACTORS.get(key)
+    # Collect a larger batch of raw candidates than we actually want to
+    # show: if the page has a run of off-topic junk (a cross-department
+    # "hot deals" sidebar, category nav links, etc.) mixed in before or
+    # between real products, stopping collection right at max_items would
+    # often mean stopping on mostly junk, before reaching enough real
+    # products further down the page. Over-collect, spec-filter, then
+    # truncate to what was actually asked for.
+    raw_cap = max_items * 4 if extractor else max_items
+    items = parse_listing(html, max_items=raw_cap, base_url=url)
     if extractor:
         extract_fn, _ = extractor
         for item in items:
@@ -890,15 +898,12 @@ def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=Fal
         # extractable spec info (capacity, DDR generation, CPU model...)
         # on every site checked so far - an item with *zero* matched
         # fields is almost always off-topic content that leaked in from
-        # an unrelated part of the page (a cross-department "hot deals"
-        # sidebar, a category nav link, a review-count/sort-option line
-        # that slipped past the junk filters) rather than a real product
-        # this extractor just doesn't understand. Only drop them if doing
-        # so doesn't wipe out the whole result, so a site whose naming
-        # convention genuinely isn't covered by the regex yet still
-        # surfaces *something* instead of silently going to 0 items.
-        if with_specs and len(with_specs) >= max(2, len(items) // 3):
-            items = with_specs
+        # an unrelated part of the page rather than a real product this
+        # extractor just doesn't understand. Keep only those, unless
+        # literally none matched at all - in that edge case, showing the
+        # unfiltered raw batch is better than showing nothing.
+        items = with_specs if with_specs else items
+        items = items[:max_items]
     if return_html:
         return items, html
     return items
