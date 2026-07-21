@@ -39,11 +39,12 @@ jobs:
           if git show-ref --quiet refs/remotes/origin/tech-price-state; then
             mkdir -p state
             git show origin/tech-price-state:state/last_price.json > state/last_price.json 2>/dev/null || true
+            git show origin/tech-price-state:state/price_history.json > state/price_history.json 2>/dev/null || true
           fi
 
       - name: Generate email
         env:
-          SEND_ONLY_ON_CHANGE: "false"
+          SEND_ONLY_ON_CHANGE: "true"
           TIMEZONE: "Asia/Ho_Chi_Minh"
         run: python ram_ssd_laptop_price_emailer.py generate
 
@@ -62,5 +63,6 @@ jobs:
           git rm -rf --cached . > /dev/null
           mkdir -p state
           git add -f state/last_price.json
+          git add -f state/price_history.json
           git commit -m "Update price state [skip ci]" || echo "No state to commit"
           git push origin tech-price-state-tmp:tech-price-state --force
