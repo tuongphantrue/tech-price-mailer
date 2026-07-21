@@ -102,7 +102,8 @@ may need a line or two added there).
 
 ## What the email looks like
 
-Items are grouped by **type first** (RAM Laptop → SSD → Laptop), each
+Items are grouped by **type first** (Laptop → RAM → SSD → HDD → VGA →
+Mainboard → PSU → Màn hình), each
 with every enabled retailer's offers listed underneath - makes it easy to
 compare the same kind of item across retailers without scrolling through
 each store's full catalog separately. Each row has a product thumbnail
@@ -112,6 +113,15 @@ original price when on sale), and a 7-day/1-month/6-month/1-year price
 trend line (see below). The thumbnail, name, and price all link to the
 product's page where one was found, falling back to the category page
 otherwise.
+
+Not every retailer has every category - most have all 8, but **ThinkPro**
+only has RAM/SSD/Laptop/Monitor (they don't sell VGA, Mainboard, or PSU
+as separate PC-building components; they're a laptop/gadget retailer
+rather than a PC-parts one). The full list of category URLs per retailer
+lives in `RETAILER_DEFAULTS` near the top of the script - each is also
+individually overridable via an environment variable, e.g.
+`HACOM_VGA_URL`, following the same `<RETAILER>_<CATEGORY>_URL` pattern
+as the RAM/SSD/Laptop examples further down this README.
 
 ## One-time setup (~5 minutes)
 
