@@ -147,7 +147,7 @@ import smtplib
 import ssl
 import sys
 import unicodedata
-from datetime import datetime
+from datetime import datetime, timedelta
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from html import escape
@@ -342,6 +342,12 @@ HEADERS = {
 
 EMAIL_DIR = "email"
 STATE_FILE = os.environ.get("STATE_FILE", "state/last_price.json")
+PRICE_HISTORY_FILE = os.environ.get("PRICE_HISTORY_FILE", "state/price_history.json")
+# Trend windows shown in the email, as (label, days-ago).
+TREND_WINDOWS = [("7 ngày", 7), ("1 tháng", 30), ("6 tháng", 180), ("1 năm", 365)]
+# Prune history points older than this so the state file doesn't grow
+# forever - a bit past the longest trend window (1 year) is plenty.
+HISTORY_MAX_AGE_DAYS = 400
 SEND_ONLY_ON_CHANGE = os.environ.get("SEND_ONLY_ON_CHANGE", "false").lower() == "true"
 ALLOW_INSECURE_SSL_FALLBACK = os.environ.get("ALLOW_INSECURE_SSL_FALLBACK", "false").lower() == "true"
 MAX_ITEMS_PER_CATEGORY = int(os.environ.get("MAX_ITEMS_PER_CATEGORY", "24"))
@@ -503,6 +509,88 @@ def save_last_hash(price_hash, path=STATE_FILE):
 def hash_data(data):
     canonical = json.dumps(data, sort_keys=True, ensure_ascii=False)
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def load_price_history(path=PRICE_HISTORY_FILE):
+    """
+    {item_key: [{"date": "YYYY-MM-DD", "price": int}, ...]}, sorted
+    ascending by date per item. Missing/corrupt state is treated as "no
+    history yet", not fatal - trends just won't be available until enough
+    runs have accumulated data.
+    """
+    if not os.path.exists(path):
+        return {}
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError) as e:
+        print(f" could not read {path} ({e}) - starting with empty price history", file=sys.stderr)
+        return {}
+
+
+def save_price_history(history, path=PRICE_HISTORY_FILE):
+    os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+    with open(path, "w") as f:
+        json.dump(history, f, ensure_ascii=False)
+
+
+def item_history_key(site, cat_key, item):
+    """
+    A stable identifier for tracking one item's price across runs. The
+    product page URL is the most reliable choice (survives re-orderings,
+    price-driven title changes, etc.) - falls back to
+    site+category+current-name for items no product link was found for,
+    which is less stable (a name tweak on the retailer's side breaks
+    continuity) but still workable.
+    """
+    if item.get("product_url"):
+        return item["product_url"]
+    return f"{site}|{cat_key}|{item['name']}"
+
+
+def _price_to_int(price_str):
+    try:
+        return int(price_str.replace(".", ""))
+    except (ValueError, AttributeError):
+        return None
+
+
+def update_history_and_get_trends(history, site, cat_key, items, today):
+    """
+    For each item: look up trend info (% change vs the closest available
+    price point at or before each of the TREND_WINDOWS) using the
+    *existing* history (i.e. not counting today's own price), attach it
+    as item["trend"], then record today's price into history for future
+    runs. Mutates `history` in place; returns nothing.
+    """
+    today_str = today.isoformat()
+    cutoff_str = (today - timedelta(days=HISTORY_MAX_AGE_DAYS)).isoformat()
+
+    for item in items:
+        current = _price_to_int(item["price"])
+        key = item_history_key(site, cat_key, item)
+        entries = history.get(key, [])
+
+        trends = {}
+        if current is not None:
+            for label, days in TREND_WINDOWS:
+                target_str = (today - timedelta(days=days)).isoformat()
+                # Most recent entry at or before the target date - the
+                # closest available reference point for "N days ago".
+                candidates = [e for e in entries if e["date"] <= target_str]
+                if candidates:
+                    ref = max(candidates, key=lambda e: e["date"])
+                    if ref["price"]:
+                        pct = round((current - ref["price"]) / ref["price"] * 100, 1)
+                        trends[label] = pct
+        item["trend"] = trends
+
+        if current is not None:
+            entries = [e for e in entries if e["date"] != today_str]
+            entries.append({"date": today_str, "price": current})
+            entries = [e for e in entries if e["date"] >= cutoff_str]
+            entries.sort(key=lambda e: e["date"])
+            history[key] = entries
 
 
 def fetch_page(url):
@@ -942,6 +1030,43 @@ def _thumb_html(item, size=52):
     )
 
 
+def _trend_html(item):
+    """
+    Compact, colored price-trend line: % change vs the closest available
+    price point for each of TREND_WINDOWS. Green/down = price dropped
+    since then (good for a buyer), red/up = price rose. A window shows
+    "—" instead of a percentage when there isn't yet a price point old
+    enough to compare against (e.g. the workflow hasn't been running for
+    a full year yet) - this is normal in the early days of running this
+    script and fills in on its own as history accumulates, not an error.
+    """
+    trend = item.get("trend") or {}
+    parts = []
+    for label, _days in TREND_WINDOWS:
+        pct = trend.get(label)
+        if pct is None:
+            parts.append(
+                f"<span style='color:#c0c5cc;'>{escape(label)} —</span>"
+            )
+        elif pct > 0:
+            parts.append(
+                f"<span style='color:#dc2626;'>{escape(label)} ▲{pct:g}%</span>"
+            )
+        elif pct < 0:
+            parts.append(
+                f"<span style='color:#16a34a;'>{escape(label)} ▼{abs(pct):g}%</span>"
+            )
+        else:
+            parts.append(
+                f"<span style='color:#9ca3af;'>{escape(label)} •0%</span>"
+            )
+    return (
+        "<div style='font-size:10px;margin-top:5px;line-height:1.6;'>"
+        + "&nbsp;&nbsp;·&nbsp;&nbsp;".join(parts)
+        + "</div>"
+    )
+
+
 def _spec_tags_html(item, spec_cols):
     """Small pill-style tags for whatever specs were extracted, skipping
     any that came back as '—' (not found) rather than showing a row of
@@ -1018,6 +1143,7 @@ def _render_offer_rows(cat, color):
         for item in cat["items"]:
             tags_html = _spec_tags_html(item, spec_cols)
             tags_block = f"<div>{tags_html}</div>" if tags_html else ""
+            trend_block = _trend_html(item)
             # Fall back to the category page itself if no product-specific
             # link was found for this item, so the row is still clickable
             # rather than dead.
@@ -1030,7 +1156,7 @@ def _render_offer_rows(cat, color):
                 f"{link_open}{_thumb_html(item)}{link_close}</td>"
                 f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;'>"
                 f"{link_open}<div style='font-size:13.5px;font-weight:600;color:#1f2937;line-height:1.35;'>"
-                f"{escape(item['name'])}</div>{link_close}{tags_block}</td>"
+                f"{escape(item['name'])}</div>{link_close}{tags_block}{trend_block}</td>"
                 f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;text-align:right;'>"
                 f"{link_open}{_price_block_html(item['price'], item['old_price'])}{link_close}</td>"
                 f"</tr>"
@@ -1149,6 +1275,15 @@ def build_plain_text(categories_data, timestamp):
                     price_str = _price_text(item["price"], item["old_price"])
                     lines.append(f" - {item['name']}")
                     lines.append(f"   {spec_str} | Gia: {price_str}")
+                    trend = item.get("trend") or {}
+                    if trend:
+                        trend_str = ", ".join(
+                            f"{label}: {'+' if trend[label] > 0 else ''}{trend[label]:g}%"
+                            for label, _days in TREND_WINDOWS
+                            if trend.get(label) is not None
+                        )
+                        if trend_str:
+                            lines.append(f"   Bien dong gia: {trend_str}")
                     if item.get("product_url"):
                         lines.append(f"   Link: {item['product_url']}")
             lines.append("")
@@ -1221,8 +1356,25 @@ def cmd_generate():
         print("All categories failed to fetch. Aborting without sending.", file=sys.stderr)
         sys.exit(1)
 
+    if total_items:
+        price_history = load_price_history()
+        today = resolve_timestamp()[0].date()
+        for cat in categories_data:
+            update_history_and_get_trends(price_history, cat["site"], cat["key"], cat["items"], today)
+        save_price_history(price_history)
+
     price_hash = hash_data(
-        [{"site": c["site"], "label": c["label"], "items": c["items"]} for c in categories_data]
+        [
+            {
+                "site": c["site"],
+                "label": c["label"],
+                "items": [
+                    {"name": it["name"], "price": it["price"], "old_price": it["old_price"]}
+                    for it in c["items"]
+                ],
+            }
+            for c in categories_data
+        ]
     )
     last_hash = load_last_hash()
 
