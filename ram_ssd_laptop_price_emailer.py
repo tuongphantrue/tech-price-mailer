@@ -178,6 +178,11 @@ RETAILER_DEFAULTS = {
             "ram": ("RAM Laptop", "https://memoryzone.com.vn/ram-laptop"),
             "ssd": ("SSD", "https://memoryzone.com.vn/ssd"),
             "laptop": ("Laptop", "https://memoryzone.com.vn/laptop"),
+            "hdd": ("HDD", "https://memoryzone.com.vn/hdd"),
+            "vga": ("VGA - Card màn hình", "https://memoryzone.com.vn/vga"),
+            "mainboard": ("Mainboard", "https://memoryzone.com.vn/mainboard-pc"),
+            "psu": ("PSU - Nguồn máy tính", "https://memoryzone.com.vn/psu-nguon-may-tinh"),
+            "monitor": ("Màn hình", "https://memoryzone.com.vn/man-hinh"),
         },
     },
     "hacom": {
@@ -192,6 +197,11 @@ RETAILER_DEFAULTS = {
             "ram": ("RAM Laptop", "https://hacom.vn/ram-laptop"),
             "ssd": ("SSD", "https://hacom.vn/o-cung-ssd"),
             "laptop": ("Laptop", "https://hacom.vn/laptop"),
+            "hdd": ("HDD", "https://hacom.vn/o-cung-hdd-desktop"),
+            "vga": ("VGA - Card màn hình", "https://hacom.vn/vga-card-man-hinh"),
+            "mainboard": ("Mainboard", "https://hacom.vn/mainboard-bo-mach-chu"),
+            "psu": ("PSU - Nguồn máy tính", "https://hacom.vn/nguon-may-tinh"),
+            "monitor": ("Màn hình", "https://hacom.vn/man-hinh-may-tinh"),
         },
     },
     "phongvu": {
@@ -221,6 +231,11 @@ RETAILER_DEFAULTS = {
             "ram": ("RAM Laptop", "https://gearvn.com/collections/ram-laptop"),
             "ssd": ("SSD", "https://gearvn.com/collections/ssd-o-cung-the-ran"),
             "laptop": ("Laptop", "https://gearvn.com/collections/laptop"),
+            "hdd": ("HDD", "https://gearvn.com/collections/hdd-o-cung-pc"),
+            "vga": ("VGA - Card màn hình", "https://gearvn.com/collections/vga-card-man-hinh"),
+            "mainboard": ("Mainboard", "https://gearvn.com/collections/mainboard-bo-mach-chu"),
+            "psu": ("PSU - Nguồn máy tính", "https://gearvn.com/collections/psu-nguon-may-tinh"),
+            "monitor": ("Màn hình", "https://gearvn.com/collections/man-hinh"),
         },
     },
     "anphat": {
@@ -236,6 +251,11 @@ RETAILER_DEFAULTS = {
             "ram": ("RAM Laptop", "https://www.anphatpc.com.vn/ram-laptop.html"),
             "ssd": ("SSD", "https://www.anphatpc.com.vn/o-cung-hdd-ssd_dm1314.html"),
             "laptop": ("Laptop", "https://www.anphatpc.com.vn/may-tinh-xach-tay-laptop.html"),
+            "hdd": ("HDD", "https://www.anphatpc.com.vn/o-cung-desktop_dm1047.html"),
+            "vga": ("VGA - Card màn hình", "https://www.anphatpc.com.vn/vga-card-man-hinh.html"),
+            "mainboard": ("Mainboard", "https://www.anphatpc.com.vn/mainboard-theo-hang.html"),
+            "psu": ("PSU - Nguồn máy tính", "https://www.anphatpc.com.vn/nguon-dien-may-tinh-psu_dm1051.html"),
+            "monitor": ("Màn hình", "https://www.anphatpc.com.vn/man-hinh-may-tinh.html-1"),
         },
     },
     "phucanh": {
@@ -263,6 +283,10 @@ RETAILER_DEFAULTS = {
             "ram": ("RAM", "https://thinkpro.vn/ram"),
             "ssd": ("SSD / Ổ cứng", "https://thinkpro.vn/o-cung"),
             "laptop": ("Laptop", "https://thinkpro.vn/laptop"),
+            # ThinkPro doesn't sell VGA/mainboard/PSU/HDD as separate
+            # PC-building components (their own nav only lists Laptop,
+            # RAM/Ổ cứng, Màn hình, and accessories) - only Monitor added.
+            "monitor": ("Màn hình", "https://thinkpro.vn/man-hinh"),
         },
     },
     "hoangha": {
@@ -274,6 +298,11 @@ RETAILER_DEFAULTS = {
             "ram": ("RAM", "https://hoanghapc.vn/ram-bo-nho-trong"),
             "ssd": ("SSD", "https://hoanghapc.vn/o-cung-the-ran-ssd"),
             "laptop": ("Laptop", "https://hoanghapc.vn/laptop"),
+            "hdd": ("HDD", "https://hoanghapc.vn/o-cung-hdd"),
+            "vga": ("VGA - Card màn hình", "https://hoanghapc.vn/vga-card-man-hinh"),
+            "mainboard": ("Mainboard", "https://hoanghapc.vn/main-bo-mach-chu"),
+            "psu": ("PSU - Nguồn máy tính", "https://hoanghapc.vn/psu-nguon-may-tinh"),
+            "monitor": ("Màn hình", "https://hoanghapc.vn/man-hinh-may-tinh"),
         },
     },
 }
@@ -314,7 +343,8 @@ def build_categories():
             env_name = _retailer_url_env(site_key, cat_key)
             url = os.environ.get(env_name)
             if url is None and site_key == "memoryzone":
-                url = os.environ.get(_LEGACY_URL_ENV[cat_key])
+                legacy_env_name = _LEGACY_URL_ENV.get(cat_key)
+                url = os.environ.get(legacy_env_name) if legacy_env_name else None
             if url is None:
                 url = default_url
             categories.append(
@@ -471,11 +501,100 @@ def extract_laptop_specs(name):
     return {"CPU": cpu, "RAM": ram or "—", "ROM (Lưu trữ)": rom or "—"}
 
 
+HDD_SIZE_RE = re.compile(r"(2\.5|3\.5)\s*(?:inch|\")", re.IGNORECASE)
+HDD_RPM_RE = re.compile(r"(\d{4,5})\s*RPM", re.IGNORECASE)
+
+
+def extract_hdd_specs(name):
+    cap = re.search(r"(\d+(?:\.\d+)?)\s*(TB|GB)", name, re.IGNORECASE)
+    capacity = f"{cap.group(1)}{cap.group(2).upper()}" if cap else "—"
+    size = HDD_SIZE_RE.search(name)
+    rpm = HDD_RPM_RE.search(name)
+    return {
+        "Dung lượng": capacity,
+        "Kích thước": f'{size.group(1)}"' if size else "—",
+        "Tốc độ": f"{rpm.group(1)} RPM" if rpm else "—",
+    }
+
+
+VGA_CHIP_RE = re.compile(
+    r"(RTX\s?\d{3,4}(?:\s?Ti)?(?:\s?Super)?|GTX\s?\d{3,4}(?:\s?Ti)?(?:\s?Super)?|"
+    r"RX\s?\d{3,4}(?:\s?XT)?|Radeon\s?(?:RX\s?)?\d{3,4}(?:\s?XT)?|Quadro[\w\s]*|Arc\s?[AB]\d{3})",
+    re.IGNORECASE,
+)
+VGA_VRAM_RE = re.compile(r"(\d{1,2})\s*GB", re.IGNORECASE)
+
+
+def extract_vga_specs(name):
+    chip = VGA_CHIP_RE.search(name)
+    vram = VGA_VRAM_RE.search(name)
+    return {
+        "Chip": chip.group(1) if chip else "—",
+        "VRAM": f"{vram.group(1)}GB" if vram else "—",
+    }
+
+
+MAINBOARD_SOCKET_RE = re.compile(r"(LGA\s?\d{3,4}|AM[45]\+?|sTRX\d+|TRX\d+)", re.IGNORECASE)
+MAINBOARD_CHIPSET_RE = re.compile(r"\b([BHXZ]\d{3}[A-Z]?)\b")
+MAINBOARD_FORM_RE = re.compile(r"(E-?ATX|Micro-?ATX|mATX|Mini-?ITX|ITX|ATX)", re.IGNORECASE)
+
+
+def extract_mainboard_specs(name):
+    socket = MAINBOARD_SOCKET_RE.search(name)
+    chipset = MAINBOARD_CHIPSET_RE.search(name)
+    form = MAINBOARD_FORM_RE.search(name)
+    return {
+        "Socket": socket.group(1) if socket else "—",
+        "Chipset": chipset.group(1) if chipset else "—",
+        "Kích thước": form.group(1) if form else "—",
+    }
+
+
+PSU_WATT_RE = re.compile(r"(\d{3,4})\s?W\b", re.IGNORECASE)
+PSU_RATING_RE = re.compile(
+    r"80\s?Plus\s?(Titanium|Platinum|Gold|Silver|Bronze|White)?", re.IGNORECASE
+)
+
+
+def extract_psu_specs(name):
+    watt = PSU_WATT_RE.search(name)
+    rating = PSU_RATING_RE.search(name)
+    rating_label = "—"
+    if rating:
+        tier = rating.group(1)
+        rating_label = f"80 Plus {tier}" if tier else "80 Plus"
+    return {
+        "Công suất": f"{watt.group(1)}W" if watt else "—",
+        "Chuẩn": rating_label,
+    }
+
+
+MONITOR_SIZE_RE = re.compile(r'(\d{2}(?:\.\d)?)\s*(?:inch|")', re.IGNORECASE)
+MONITOR_RES_RE = re.compile(r"(FHD|QHD|UHD|4K|2K|8K|1920\s?x\s?1080|2560\s?x\s?1440|3840\s?x\s?2160)", re.IGNORECASE)
+MONITOR_HZ_RE = re.compile(r"(\d{2,3})\s?Hz", re.IGNORECASE)
+
+
+def extract_monitor_specs(name):
+    size = MONITOR_SIZE_RE.search(name)
+    res = MONITOR_RES_RE.search(name)
+    hz = MONITOR_HZ_RE.search(name)
+    return {
+        "Kích thước": f'{size.group(1)}"' if size else "—",
+        "Độ phân giải": res.group(1).upper() if res else "—",
+        "Tần số quét": f"{hz.group(1)}Hz" if hz else "—",
+    }
+
+
 # Maps category key -> (extractor function, ordered column labels to show).
 SPEC_EXTRACTORS = {
     "ram": (extract_ram_specs, ["Dung lượng", "Chuẩn", "Bus"]),
     "ssd": (extract_ssd_specs, ["Dung lượng", "Chuẩn"]),
     "laptop": (extract_laptop_specs, ["CPU", "RAM", "ROM (Lưu trữ)"]),
+    "hdd": (extract_hdd_specs, ["Dung lượng", "Kích thước", "Tốc độ"]),
+    "vga": (extract_vga_specs, ["Chip", "VRAM"]),
+    "mainboard": (extract_mainboard_specs, ["Socket", "Chipset", "Kích thước"]),
+    "psu": (extract_psu_specs, ["Công suất", "Chuẩn"]),
+    "monitor": (extract_monitor_specs, ["Kích thước", "Độ phân giải", "Tần số quét"]),
 }
 
 
@@ -1121,11 +1240,16 @@ def _price_text(price, old_price):
 
 
 TYPE_META = {
+    "laptop": ("Laptop", "💻"),
     "ram": ("RAM Laptop", "🧠"),
     "ssd": ("SSD", "💾"),
-    "laptop": ("Laptop", "💻"),
+    "hdd": ("HDD", "🗄️"),
+    "vga": ("VGA - Card màn hình", "🎮"),
+    "mainboard": ("Mainboard", "🔌"),
+    "psu": ("PSU - Nguồn máy tính", "🔋"),
+    "monitor": ("Màn hình", "🖥️"),
 }
-TYPE_ORDER = ["ram", "ssd", "laptop"]
+TYPE_ORDER = ["laptop", "ram", "ssd", "hdd", "vga", "mainboard", "psu", "monitor"]
 
 
 def _render_offer_rows(cat, color):
