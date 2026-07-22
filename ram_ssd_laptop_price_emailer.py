@@ -735,12 +735,19 @@ def fetch_page(url):
         return resp.text
 
 
-def fetch_rendered_page(url, timeout_ms=BROWSER_TIMEOUT_MS):
+def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
     """
     Load `url` in a real (headless) Chromium tab via Playwright and return
     the fully-rendered HTML, for sites like HACOM whose product grid is
     fetched by client-side JS after the initial page load and therefore
     never appears in a plain requests.get() response.
+
+    `browser` should be a Playwright Browser already launched by the
+    caller (see get_shared_browser() / cmd_generate) and reused across
+    every category that needs one in a run - launching a fresh Chromium
+    process per category (as this used to do) adds real overhead ~30-40
+    times over in a full run. If `browser` is None, one is launched and
+    torn down just for this call (kept as a fallback for standalone use).
 
     Requires `pip install playwright` + a one-time
     `python -m playwright install --with-deps chromium` (see requirements.txt
@@ -756,35 +763,39 @@ def fetch_rendered_page(url, timeout_ms=BROWSER_TIMEOUT_MS):
             "pip install playwright && python -m playwright install --with-deps chromium"
         ) from e
 
-    with sync_playwright() as p:
-        browser = p.chromium.launch(
-            headless=True,
-            args=["--no-sandbox", "--disable-blink-features=AutomationControlled"],
+    def _render(browser):
+        context = browser.new_context(
+            user_agent=HEADERS["User-Agent"],
+            locale="vi-VN",
+            viewport={"width": 1366, "height": 900},
         )
         try:
-            context = browser.new_context(
-                user_agent=HEADERS["User-Agent"],
-                locale="vi-VN",
-                viewport={"width": 1366, "height": 900},
-            )
             page = context.new_page()
             page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
             # The shell loads fast; the product grid itself comes in via a
-            # later XHR/fetch call. "networkidle" waits for that network
-            # activity to quiet down before we consider the page "loaded".
+            # later XHR/fetch call. A *short* networkidle wait catches
+            # pages that do go quiet quickly - but real commercial sites
+            # almost never go fully network-idle for a full 500ms (live
+            # chat widgets, analytics, ad trackers keep some connection
+            # open more or less permanently), so this deliberately does
+            # NOT wait anywhere near the full timeout_ms budget for it -
+            # that previously meant burning up to 45s per category on
+            # this alone, on nearly every page. The wait_for_function
+            # below, which checks for actual price content, is the real
+            # signal this cares about.
             try:
-                page.wait_for_load_state("networkidle", timeout=timeout_ms)
+                page.wait_for_load_state("networkidle", timeout=4000)
             except PlaywrightTimeoutError:
-                pass  # some pages keep background polling forever - proceed anyway
+                pass
 
             # Some sites (Phong Vu) sit behind a Cloudflare JS challenge:
             # an interstitial "verifying you're not a bot" page that
             # auto-resolves after a few seconds and then redirects to the
             # real page. A real headless browser generally passes this
-            # automatic check fine - the previous "networkidle" wait above
-            # just often lands *during* that interstitial, before its
-            # redirect has fired. Detect that case and wait specifically
-            # for it to clear, rather than reading the interstitial itself.
+            # automatic check fine - the wait above just often lands
+            # *during* that interstitial, before its redirect has fired.
+            # Detect that case and wait specifically for it to clear,
+            # rather than reading the interstitial itself.
             try:
                 is_still_challenge = page.evaluate(
                     "() => /xác minh bảo mật|checking your browser|just a moment|ray id/i"
@@ -831,10 +842,25 @@ def fetch_rendered_page(url, timeout_ms=BROWSER_TIMEOUT_MS):
                 page.evaluate("window.scrollTo(0, 0)")
             except Exception:
                 pass  # non-critical - proceed with whatever loaded
-            html = page.content()
+            return page.content()
+        finally:
+            context.close()
+
+    if browser is not None:
+        return _render(browser)
+
+    # Fallback: no shared browser was provided - launch + tear down our
+    # own, same as before. Slower if called many times, but keeps this
+    # function usable standalone (e.g. from a REPL or a test).
+    with sync_playwright() as p:
+        browser = p.chromium.launch(
+            headless=True,
+            args=["--no-sandbox", "--disable-blink-features=AutomationControlled"],
+        )
+        try:
+            return _render(browser)
         finally:
             browser.close()
-    return html
 
 
 def _best_img_src(img_tag, base_url):
@@ -1084,8 +1110,8 @@ def diagnose_empty_render(html):
     )
 
 
-def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False, return_html=False):
-    html = fetch_rendered_page(url) if needs_browser else fetch_page(url)
+def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False, return_html=False, browser=None):
+    html = fetch_rendered_page(url, browser=browser) if needs_browser else fetch_page(url)
     extractor = SPEC_EXTRACTORS.get(key)
     # Collect a larger batch of raw candidates than we actually want to
     # show: if the page has a run of off-topic junk (a cross-department
@@ -1140,12 +1166,13 @@ def _thumb_html(item, size=52):
     if not url:
         return (
             f"<div style='width:{size}px;height:{size}px;background:#f1f3f5;"
-            f"border-radius:10px;'></div>"
+            f"border-radius:10px;margin:0 auto;'></div>"
         )
     return (
         f"<img src='{escape(url)}' alt='' width='{size}' height='{size}' "
         f"style='width:{size}px;height:{size}px;object-fit:contain;"
-        f"border-radius:10px;border:1px solid #eef0f3;background:#ffffff;display:block;' />"
+        f"border-radius:10px;border:1px solid #eef0f3;background:#ffffff;"
+        f"display:block;margin:0 auto;' />"
     )
 
 
@@ -1163,25 +1190,18 @@ def _trend_html(item):
     parts = []
     for label, _days in TREND_WINDOWS:
         pct = trend.get(label)
+        label_html = escape(label).replace(" ", "&nbsp;")
         if pct is None:
-            parts.append(
-                f"<span style='color:#c0c5cc;'>{escape(label)} —</span>"
-            )
+            parts.append(f"<span style='color:#c0c5cc;'>{label_html}&nbsp;—</span>")
         elif pct > 0:
-            parts.append(
-                f"<span style='color:#dc2626;'>{escape(label)} ▲{pct:g}%</span>"
-            )
+            parts.append(f"<span style='color:#dc2626;'>{label_html}&nbsp;▲{pct:g}%</span>")
         elif pct < 0:
-            parts.append(
-                f"<span style='color:#16a34a;'>{escape(label)} ▼{abs(pct):g}%</span>"
-            )
+            parts.append(f"<span style='color:#16a34a;'>{label_html}&nbsp;▼{abs(pct):g}%</span>")
         else:
-            parts.append(
-                f"<span style='color:#9ca3af;'>{escape(label)} •0%</span>"
-            )
+            parts.append(f"<span style='color:#9ca3af;'>{label_html}&nbsp;•0%</span>")
     return (
-        "<div style='font-size:10px;margin-top:5px;line-height:1.6;'>"
-        + "&nbsp;&nbsp;·&nbsp;&nbsp;".join(parts)
+        "<div style='font-size:10px;margin-top:5px;line-height:1.7;'>"
+        + " · ".join(parts)
         + "</div>"
     )
 
@@ -1201,9 +1221,10 @@ def _spec_tags_html(item, spec_cols):
     return "".join(tags)
 
 
-def _price_block_html(price, old_price):
-    """Right-aligned price stack: discount badge (if on sale) above the
-    current price, crossed-out original price below it."""
+def _price_block_html(price, old_price, align="right"):
+    """Price stack: discount badge (if on sale) above the current price,
+    crossed-out original price below it. `align` controls text alignment
+    (right for the list-row layout, center for the card-grid layout)."""
     badge = ""
     old_line = ""
     if old_price:
@@ -1224,9 +1245,9 @@ def _price_block_html(price, old_price):
             f"margin-top:2px;'>{escape(old_price)} \u20ab</div>"
         )
     return (
-        f"<div style='text-align:right;'>"
+        f"<div style='text-align:{align};'>"
         f"{badge}"
-        f"<div style='font-size:14.5px;font-weight:700;color:#111827;white-space:nowrap;'>"
+        f"<div style='font-size:14.5px;font-weight:700;color:#111827;'>"
         f"{escape(price)} \u20ab</div>"
         f"{old_line}"
         f"</div>"
@@ -1252,9 +1273,39 @@ TYPE_META = {
 TYPE_ORDER = ["laptop", "ram", "ssd", "hdd", "vga", "mainboard", "psu", "monitor"]
 
 
-def _render_offer_rows(cat, color):
-    """The source line + product-rows table for one (retailer, category)
-    pairing - i.e. one retailer's offers within a type section."""
+def _card_html(item, spec_cols, fallback_url):
+    """One product card: thumbnail on top, name, spec tags, price, and
+    trend line below - all centered. Used inside a 2-column card grid."""
+    tags_html = _spec_tags_html(item, spec_cols)
+    tags_block = (
+        f"<div style='margin-top:6px;'>{tags_html}</div>" if tags_html else ""
+    )
+    trend_block = _trend_html(item)
+    link = item.get("product_url") or fallback_url
+    link_open = f"<a href='{escape(link)}' style='text-decoration:none;color:inherit;' target='_blank'>"
+    link_close = "</a>"
+    return (
+        f"<table role='presentation' width='100%' cellpadding='0' cellspacing='0' "
+        f"style='border:1px solid #eef0f3;border-radius:12px;background:#ffffff;'>"
+        f"<tr><td style='padding:14px;text-align:center;'>"
+        f"{link_open}"
+        f"{_thumb_html(item, size=100)}"
+        f"<div style='font-size:13px;font-weight:600;color:#1f2937;line-height:1.35;"
+        f"margin-top:10px;min-height:34px;'>{escape(item['name'])}</div>"
+        f"{link_close}"
+        f"{tags_block}"
+        f"<div style='margin-top:8px;'>{_price_block_html(item['price'], item['old_price'], align='center')}</div>"
+        f"{trend_block}"
+        f"</td></tr>"
+        f"</table>"
+    )
+
+
+def _render_offer_cards(cat, color, columns=2):
+    """The source line + a card-grid (built from nested tables, not
+    flexbox/CSS grid, so it degrades safely in Outlook and other
+    less-capable email clients) for one (retailer, category) pairing -
+    i.e. one retailer's offers within a type section."""
     spec_cols = SPEC_EXTRACTORS.get(cat["key"], (None, []))[1]
     if not cat["items"]:
         body = (
@@ -1263,36 +1314,28 @@ def _render_offer_rows(cat, color):
             f"<a href='{escape(cat['url'])}' style='color:{color};'>{escape(cat['url'])}</a>.</div>"
         )
     else:
-        rows = []
-        for item in cat["items"]:
-            tags_html = _spec_tags_html(item, spec_cols)
-            tags_block = f"<div>{tags_html}</div>" if tags_html else ""
-            trend_block = _trend_html(item)
-            # Fall back to the category page itself if no product-specific
-            # link was found for this item, so the row is still clickable
-            # rather than dead.
-            link = item.get("product_url") or cat["url"]
-            link_open = f"<a href='{escape(link)}' style='text-decoration:none;color:inherit;' target='_blank'>"
-            link_close = "</a>"
-            rows.append(
-                f"<tr>"
-                f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;width:60px;vertical-align:top;'>"
-                f"{link_open}{_thumb_html(item)}{link_close}</td>"
-                f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;'>"
-                f"{link_open}<div style='font-size:13.5px;font-weight:600;color:#1f2937;line-height:1.35;'>"
-                f"{escape(item['name'])}</div>{link_close}{tags_block}{trend_block}</td>"
-                f"<td style='padding:10px 6px;border-bottom:1px solid #f1f3f5;vertical-align:top;text-align:right;'>"
-                f"{link_open}{_price_block_html(item['price'], item['old_price'])}{link_close}</td>"
-                f"</tr>"
+        cards = [_card_html(item, spec_cols, cat["url"]) for item in cat["items"]]
+        # Pad to a full row so the last row doesn't stretch lopsidedly -
+        # an empty cell holds the column width instead.
+        while len(cards) % columns != 0:
+            cards.append("")
+        grid_rows = []
+        for i in range(0, len(cards), columns):
+            cells = "".join(
+                f"<td width='{100 // columns}%' style='padding:6px;vertical-align:top;'>{card}</td>"
+                for card in cards[i : i + columns]
             )
+            grid_rows.append(f"<tr>{cells}</tr>")
         body = (
             "<table role='presentation' width='100%' cellpadding='0' cellspacing='0' "
-            "style='border-collapse:collapse;'>" + "".join(rows) + "</table>"
+            "style='border-collapse:collapse;table-layout:fixed;'>"
+            + "".join(grid_rows)
+            + "</table>"
         )
     return (
-        f"<div style='margin:16px 0 4px;padding:12px 14px 4px;background:#fafbfc;"
+        f"<div style='margin:16px 0 4px;padding:12px 14px 14px;background:#fafbfc;"
         f"border:1px solid #f0f1f3;border-radius:10px;'>"
-        f"<div style='display:block;'>"
+        f"<div style='display:block;margin-bottom:4px;'>"
         f"<span style='font-size:13px;font-weight:700;color:{color};'>{escape(cat['site_label'])}</span>"
         f"<span style='font-size:11px;color:#9ca3af;margin-left:8px;'>"
         f"<a href='{escape(cat['url'])}' style='color:#9ca3af;'>{escape(cat['url'])}</a></span>"
@@ -1331,7 +1374,7 @@ def build_html(categories_data, timestamp):
     for type_key in ordered_types:
         label, icon = TYPE_META.get(type_key, (type_key.title(), "🛒"))
         offer_blocks = "".join(
-            _render_offer_rows(cat, site_colors[cat["site"]]) for cat in by_type[type_key]
+            _render_offer_cards(cat, site_colors[cat["site"]]) for cat in by_type[type_key]
         )
         type_blocks.append(
             f"<tr><td style='padding:26px 28px 0;'>"
@@ -1438,43 +1481,72 @@ def cmd_generate():
     total_items = 0
     had_fetch_error = False
 
-    for cat in CATEGORIES:
-        via = " (via headless browser)" if cat.get("needs_browser") else ""
-        print(f"Fetching {cat['site_label']} - {cat['label']} ({cat['url']}){via} ...")
-        rendered_html = None
+    # One browser for the whole run, reused across every category that
+    # needs one, rather than launching a fresh Chromium process ~30+
+    # times (once per browser-rendered category) - that relaunch
+    # overhead was adding real time on top of the network waits below.
+    needs_any_browser = any(cat.get("needs_browser") for cat in CATEGORIES)
+    playwright_ctx = None
+    shared_browser = None
+    if needs_any_browser:
         try:
-            items, rendered_html = fetch_category(
-                cat["key"], cat["url"], needs_browser=cat.get("needs_browser", False), return_html=True
+            from playwright.sync_api import sync_playwright
+
+            playwright_ctx = sync_playwright().start()
+            shared_browser = playwright_ctx.chromium.launch(
+                headless=True,
+                args=["--no-sandbox", "--disable-blink-features=AutomationControlled"],
             )
-        except requests.RequestException as e:
-            print(f"  Failed to fetch {cat['url']}: {e}", file=sys.stderr)
-            had_fetch_error = True
-            items = []
-        except RuntimeError as e:
-            # Playwright not installed, or similar setup problem.
-            print(f"  {e}", file=sys.stderr)
-            had_fetch_error = True
-            items = []
-        except Exception as e:  # noqa: BLE001 - Playwright raises its own error types
-            print(
-                f"  Failed to render {cat['url']} with headless browser: {e}\n"
-                f"  (If this is {cat['site_label']}, the site may be blocking automated "
-                f"browsers - see README.)",
-                file=sys.stderr,
-            )
-            had_fetch_error = True
-            items = []
-        print(f"  Parsed {len(items)} item(s).")
-        if not items:
-            print(
-                f"  0 items parsed for {cat['site_label']} - {cat['label']} - the page markup may "
-                f"have changed. Open {cat['url']} and check parse_listing().",
-                file=sys.stderr,
-            )
-            if cat.get("needs_browser") and rendered_html:
-                print(diagnose_empty_render(rendered_html), file=sys.stderr)
-        categories_data.append({**cat, "items": items})
-        total_items += len(items)
+        except ImportError:
+            pass  # surfaces as a clear RuntimeError per-category from fetch_rendered_page instead
+
+    try:
+        for cat in CATEGORIES:
+            via = " (via headless browser)" if cat.get("needs_browser") else ""
+            print(f"Fetching {cat['site_label']} - {cat['label']} ({cat['url']}){via} ...")
+            rendered_html = None
+            try:
+                items, rendered_html = fetch_category(
+                    cat["key"],
+                    cat["url"],
+                    needs_browser=cat.get("needs_browser", False),
+                    return_html=True,
+                    browser=shared_browser,
+                )
+            except requests.RequestException as e:
+                print(f"  Failed to fetch {cat['url']}: {e}", file=sys.stderr)
+                had_fetch_error = True
+                items = []
+            except RuntimeError as e:
+                # Playwright not installed, or similar setup problem.
+                print(f"  {e}", file=sys.stderr)
+                had_fetch_error = True
+                items = []
+            except Exception as e:  # noqa: BLE001 - Playwright raises its own error types
+                print(
+                    f"  Failed to render {cat['url']} with headless browser: {e}\n"
+                    f"  (If this is {cat['site_label']}, the site may be blocking automated "
+                    f"browsers - see README.)",
+                    file=sys.stderr,
+                )
+                had_fetch_error = True
+                items = []
+            print(f"  Parsed {len(items)} item(s).")
+            if not items:
+                print(
+                    f"  0 items parsed for {cat['site_label']} - {cat['label']} - the page markup may "
+                    f"have changed. Open {cat['url']} and check parse_listing().",
+                    file=sys.stderr,
+                )
+                if cat.get("needs_browser") and rendered_html:
+                    print(diagnose_empty_render(rendered_html), file=sys.stderr)
+            categories_data.append({**cat, "items": items})
+            total_items += len(items)
+    finally:
+        if shared_browser is not None:
+            shared_browser.close()
+        if playwright_ctx is not None:
+            playwright_ctx.stop()
 
     if total_items == 0 and had_fetch_error:
         print("All categories failed to fetch. Aborting without sending.", file=sys.stderr)
