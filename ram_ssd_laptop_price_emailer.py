@@ -1273,9 +1273,10 @@ TYPE_META = {
 TYPE_ORDER = ["laptop", "ram", "ssd", "hdd", "vga", "mainboard", "psu", "monitor"]
 
 
-def _card_html(item, spec_cols, fallback_url):
+def _card_html(item, spec_cols, fallback_url, thumb_size=100, padding=14, name_size=13):
     """One product card: thumbnail on top, name, spec tags, price, and
-    trend line below - all centered. Used inside a 2-column card grid."""
+    trend line below - all centered. Used inside a card grid; sizing
+    params let the grid shrink cards gracefully as columns increase."""
     tags_html = _spec_tags_html(item, spec_cols)
     tags_block = (
         f"<div style='margin-top:6px;'>{tags_html}</div>" if tags_html else ""
@@ -1287,11 +1288,11 @@ def _card_html(item, spec_cols, fallback_url):
     return (
         f"<table role='presentation' width='100%' cellpadding='0' cellspacing='0' "
         f"style='border:1px solid #eef0f3;border-radius:12px;background:#ffffff;'>"
-        f"<tr><td style='padding:14px;text-align:center;'>"
+        f"<tr><td style='padding:{padding}px;text-align:center;'>"
         f"{link_open}"
-        f"{_thumb_html(item, size=100)}"
-        f"<div style='font-size:13px;font-weight:600;color:#1f2937;line-height:1.35;"
-        f"margin-top:10px;min-height:34px;'>{escape(item['name'])}</div>"
+        f"{_thumb_html(item, size=thumb_size)}"
+        f"<div style='font-size:{name_size}px;font-weight:600;color:#1f2937;line-height:1.35;"
+        f"margin-top:8px;min-height:{round(name_size * 2.6)}px;'>{escape(item['name'])}</div>"
         f"{link_close}"
         f"{tags_block}"
         f"<div style='margin-top:8px;'>{_price_block_html(item['price'], item['old_price'], align='center')}</div>"
@@ -1301,7 +1302,7 @@ def _card_html(item, spec_cols, fallback_url):
     )
 
 
-def _render_offer_cards(cat, color, columns=2):
+def _render_offer_cards(cat, color, columns=4):
     """The source line + a card-grid (built from nested tables, not
     flexbox/CSS grid, so it degrades safely in Outlook and other
     less-capable email clients) for one (retailer, category) pairing -
@@ -1314,7 +1315,17 @@ def _render_offer_cards(cat, color, columns=2):
             f"<a href='{escape(cat['url'])}' style='color:{color};'>{escape(cat['url'])}</a>.</div>"
         )
     else:
-        cards = [_card_html(item, spec_cols, cat["url"]) for item in cat["items"]]
+        # Denser grids get smaller cards - a 100px thumbnail that looks
+        # right at 2-per-row would crowd out everything else at 4+.
+        thumb_size, padding, name_size = {
+            1: (140, 16, 14),
+            2: (100, 14, 13),
+            3: (80, 10, 12),
+        }.get(columns, (64, 8, 11))
+        cards = [
+            _card_html(item, spec_cols, cat["url"], thumb_size=thumb_size, padding=padding, name_size=name_size)
+            for item in cat["items"]
+        ]
         # Pad to a full row so the last row doesn't stretch lopsidedly -
         # an empty cell holds the column width instead.
         while len(cards) % columns != 0:
@@ -1322,7 +1333,7 @@ def _render_offer_cards(cat, color, columns=2):
         grid_rows = []
         for i in range(0, len(cards), columns):
             cells = "".join(
-                f"<td width='{100 // columns}%' style='padding:6px;vertical-align:top;'>{card}</td>"
+                f"<td width='{100 // columns}%' style='padding:5px;vertical-align:top;'>{card}</td>"
                 for card in cards[i : i + columns]
             )
             grid_rows.append(f"<tr>{cells}</tr>")
