@@ -1328,6 +1328,30 @@ def _card_html(item, spec_cols, fallback_url, thumb_size=100, padding=14, name_s
     )
 
 
+def _fold_html(fold_id, header_html, content_html, outer_style="", label_style=""):
+    """
+    A collapsible section built with the "checkbox hack" (a hidden
+    checkbox + <label> + a CSS sibling-selector rule in <head><style>)
+    rather than <details>/<summary>. This is the more established
+    technique for interactive/collapsible sections in HTML email
+    specifically - well-documented as working in Gmail (web and app) and
+    Apple Mail; Outlook desktop (Word rendering engine) doesn't support
+    the CSS combinators this needs, so it just shows everything expanded
+    there - content is never hidden outright in a client that can't
+    toggle it. Defaults to expanded (the checkbox starts `checked`) so
+    nothing is hidden unless the person actively collapses it.
+    """
+    return (
+        f"<div style='{outer_style}'>"
+        f"<input type='checkbox' id='{fold_id}' class='fold-toggle' checked>"
+        f"<label for='{fold_id}' class='fold-label' style='cursor:pointer;display:block;{label_style}'>"
+        f"<span class='fold-arrow'>&#9662;</span> {header_html}"
+        f"</label>"
+        f"<div class='fold-content'>{content_html}</div>"
+        f"</div>"
+    )
+
+
 def _render_offer_cards(cat, color, columns=4):
     """The source line + a card-grid (built from nested tables, not
     flexbox/CSS grid, so it degrades safely in Outlook and other
@@ -1369,17 +1393,20 @@ def _render_offer_cards(cat, color, columns=4):
             + "".join(grid_rows)
             + "</table>"
         )
-    return (
-        f"<details open style='margin:16px 0 4px;padding:12px 14px 14px;background:#fafbfc;"
-        f"border:1px solid #f0f1f3;border-radius:10px;outline:none;'>"
-        f"<summary style='font-size:13px;font-weight:700;color:{color};cursor:pointer;"
-        f"list-style:revert;outline:none;'>"
-        f"{escape(cat['site_label'])}"
+    header_html = (
+        f"<span style='font-size:13px;font-weight:700;color:{color};'>{escape(cat['site_label'])}</span>"
         f"<span style='font-size:11px;color:#9ca3af;font-weight:400;margin-left:8px;'>"
         f"<a href='{escape(cat['url'])}' style='color:#9ca3af;'>{escape(cat['url'])}</a></span>"
-        f"</summary>"
-        f"<div style='margin-top:8px;'>{body}</div>"
-        f"</details>"
+    )
+    fold_id = f"fold_{cat['site']}_{cat['key']}"
+    return _fold_html(
+        fold_id,
+        header_html,
+        f"<div style='margin-top:8px;'>{body}</div>",
+        outer_style=(
+            "margin:16px 0 4px;padding:12px 14px 14px;background:#fafbfc;"
+            "border:1px solid #f0f1f3;border-radius:10px;"
+        ),
     )
 
 
@@ -1414,19 +1441,25 @@ def build_html(categories_data, timestamp):
         offer_blocks = "".join(
             _render_offer_cards(cat, site_colors[cat["site"]]) for cat in by_type[type_key]
         )
+        header_html = f"<span style='font-size:18px;font-weight:800;color:#111827;'>{icon} {escape(label)}</span>"
+        content_html = f"<div style='height:2px;background:#eef0f3;margin-top:10px;'></div>{offer_blocks}"
         type_blocks.append(
             f"<tr><td style='padding:26px 28px 0;'>"
-            f"<details open style='outline:none;'>"
-            f"<summary style='font-size:18px;font-weight:800;color:#111827;cursor:pointer;"
-            f"list-style:revert;outline:none;'>{icon} {escape(label)}</summary>"
-            f"<div style='height:2px;background:#eef0f3;margin-top:10px;'></div>"
-            f"{offer_blocks}"
-            f"</details>"
+            f"{_fold_html(f'fold_type_{type_key}', header_html, content_html)}"
             f"</td></tr>"
         )
 
     return f"""\
 <html>
+<head>
+<style>
+  .fold-toggle {{ display:none !important; }}
+  .fold-content {{ display:none; }}
+  .fold-toggle:checked ~ .fold-content {{ display:block; }}
+  .fold-arrow {{ display:inline-block; transition:transform 0.15s; }}
+  .fold-toggle:not(:checked) ~ .fold-label .fold-arrow {{ transform:rotate(-90deg); }}
+</style>
+</head>
 <body style="margin:0;padding:0;background:#eef1f5;font-family:'Segoe UI',Helvetica,Arial,sans-serif;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef1f5;padding:24px 0;">
 <tr><td align="center">
