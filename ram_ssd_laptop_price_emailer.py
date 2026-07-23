@@ -1370,15 +1370,16 @@ def _render_offer_cards(cat, color, columns=4):
             + "</table>"
         )
     return (
-        f"<div style='margin:16px 0 4px;padding:12px 14px 14px;background:#fafbfc;"
-        f"border:1px solid #f0f1f3;border-radius:10px;'>"
-        f"<div style='display:block;margin-bottom:4px;'>"
-        f"<span style='font-size:13px;font-weight:700;color:{color};'>{escape(cat['site_label'])}</span>"
-        f"<span style='font-size:11px;color:#9ca3af;margin-left:8px;'>"
+        f"<details open style='margin:16px 0 4px;padding:12px 14px 14px;background:#fafbfc;"
+        f"border:1px solid #f0f1f3;border-radius:10px;outline:none;'>"
+        f"<summary style='font-size:13px;font-weight:700;color:{color};cursor:pointer;"
+        f"list-style:revert;outline:none;'>"
+        f"{escape(cat['site_label'])}"
+        f"<span style='font-size:11px;color:#9ca3af;font-weight:400;margin-left:8px;'>"
         f"<a href='{escape(cat['url'])}' style='color:#9ca3af;'>{escape(cat['url'])}</a></span>"
-        f"</div>"
-        f"{body}"
-        f"</div>"
+        f"</summary>"
+        f"<div style='margin-top:8px;'>{body}</div>"
+        f"</details>"
     )
 
 
@@ -1415,9 +1416,12 @@ def build_html(categories_data, timestamp):
         )
         type_blocks.append(
             f"<tr><td style='padding:26px 28px 0;'>"
-            f"<div style='font-size:18px;font-weight:800;color:#111827;'>{icon} {escape(label)}</div>"
+            f"<details open style='outline:none;'>"
+            f"<summary style='font-size:18px;font-weight:800;color:#111827;cursor:pointer;"
+            f"list-style:revert;outline:none;'>{icon} {escape(label)}</summary>"
             f"<div style='height:2px;background:#eef0f3;margin-top:10px;'></div>"
             f"{offer_blocks}"
+            f"</details>"
             f"</td></tr>"
         )
 
