@@ -139,6 +139,7 @@ This is a personal price-watch tool, not investment or purchase advice -
 always confirm the actual price on the retailer's site before buying.
 """
 
+import asyncio
 import hashlib
 import json
 import os
@@ -386,6 +387,12 @@ MAX_ITEMS_PER_CATEGORY = int(os.environ.get("MAX_ITEMS_PER_CATEGORY", "24"))
 # category. These pages are slower than a plain HTTP GET, so this is
 # generous by design.
 BROWSER_TIMEOUT_MS = int(os.environ.get("BROWSER_TIMEOUT_MS", "45000"))
+# How many browser-rendered categories to fetch concurrently. Higher is
+# faster wall-clock time but uses more memory (each concurrent page is a
+# real Chromium tab) - 5 is a reasonable default for a GitHub Actions
+# runner's usual 2-core/7GB spec. Plain-HTTP categories (MemoryZone)
+# aren't limited by this - they're cheap enough not to need it.
+BROWSER_CONCURRENCY = int(os.environ.get("BROWSER_CONCURRENCY", "5"))
 
 # Matches Vietnamese-formatted currency like "1.990.000 ₫" (dot as thousands
 # separator). The currency mark varies by site: MemoryZone/HACOM use the
@@ -735,27 +742,32 @@ def fetch_page(url):
         return resp.text
 
 
-def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
+async def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
     """
     Load `url` in a real (headless) Chromium tab via Playwright and return
     the fully-rendered HTML, for sites like HACOM whose product grid is
     fetched by client-side JS after the initial page load and therefore
     never appears in a plain requests.get() response.
 
+    Async (Playwright's async API) so cmd_generate can run many of these
+    concurrently via asyncio.gather() instead of one at a time - with
+    ~36 browser-rendered categories in a full run, doing them strictly
+    sequentially was the single biggest cost in total run time.
+
     `browser` should be a Playwright Browser already launched by the
-    caller (see get_shared_browser() / cmd_generate) and reused across
-    every category that needs one in a run - launching a fresh Chromium
-    process per category (as this used to do) adds real overhead ~30-40
-    times over in a full run. If `browser` is None, one is launched and
-    torn down just for this call (kept as a fallback for standalone use).
+    caller (see cmd_generate) and reused across every category that
+    needs one in a run - launching a fresh Chromium process per category
+    (as this used to do) adds real overhead ~30-40 times over in a full
+    run. If `browser` is None, one is launched and torn down just for
+    this call (kept as a fallback for standalone use).
 
     Requires `pip install playwright` + a one-time
     `python -m playwright install --with-deps chromium` (see requirements.txt
     / the GitHub Actions workflow, which already does this).
     """
     try:
-        from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
-        from playwright.sync_api import sync_playwright
+        from playwright.async_api import TimeoutError as PlaywrightTimeoutError
+        from playwright.async_api import async_playwright
     except ImportError as e:
         raise RuntimeError(
             "This category needs a headless browser to render (Playwright), "
@@ -763,15 +775,15 @@ def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
             "pip install playwright && python -m playwright install --with-deps chromium"
         ) from e
 
-    def _render(browser):
-        context = browser.new_context(
+    async def _render(browser):
+        context = await browser.new_context(
             user_agent=HEADERS["User-Agent"],
             locale="vi-VN",
             viewport={"width": 1366, "height": 900},
         )
         try:
-            page = context.new_page()
-            page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+            page = await context.new_page()
+            await page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
             # The shell loads fast; the product grid itself comes in via a
             # later XHR/fetch call. A *short* networkidle wait catches
             # pages that do go quiet quickly - but real commercial sites
@@ -784,7 +796,7 @@ def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
             # below, which checks for actual price content, is the real
             # signal this cares about.
             try:
-                page.wait_for_load_state("networkidle", timeout=4000)
+                await page.wait_for_load_state("networkidle", timeout=4000)
             except PlaywrightTimeoutError:
                 pass
 
@@ -797,7 +809,7 @@ def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
             # Detect that case and wait specifically for it to clear,
             # rather than reading the interstitial itself.
             try:
-                is_still_challenge = page.evaluate(
+                is_still_challenge = await page.evaluate(
                     "() => /xác minh bảo mật|checking your browser|just a moment|ray id/i"
                     ".test(document.body.innerText)"
                 )
@@ -806,11 +818,11 @@ def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
             if is_still_challenge:
                 for _ in range(3):
                     try:
-                        page.wait_for_load_state("networkidle", timeout=8000)
+                        await page.wait_for_load_state("networkidle", timeout=8000)
                     except PlaywrightTimeoutError:
                         pass
                     try:
-                        still_there = page.evaluate(
+                        still_there = await page.evaluate(
                             "() => /xác minh bảo mật|checking your browser|just a moment|ray id/i"
                             ".test(document.body.innerText)"
                         )
@@ -826,7 +838,7 @@ def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
             # the "₫" symbol (MemoryZone/HACOM) and the plain "đ" letter
             # (Phong Vu) - missing either one here was a real past bug.
             try:
-                page.wait_for_function(
+                await page.wait_for_function(
                     "(document.body.innerText.match(/[\u20abđĐ]/g) || []).length > 5",
                     timeout=10000,
                 )
@@ -837,30 +849,30 @@ def fetch_rendered_page(url, browser=None, timeout_ms=BROWSER_TIMEOUT_MS):
             # up-front - nudge that along before reading the final HTML.
             try:
                 for _ in range(3):
-                    page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-                    page.wait_for_timeout(800)
-                page.evaluate("window.scrollTo(0, 0)")
+                    await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
+                    await page.wait_for_timeout(800)
+                await page.evaluate("window.scrollTo(0, 0)")
             except Exception:
                 pass  # non-critical - proceed with whatever loaded
-            return page.content()
+            return await page.content()
         finally:
-            context.close()
+            await context.close()
 
     if browser is not None:
-        return _render(browser)
+        return await _render(browser)
 
     # Fallback: no shared browser was provided - launch + tear down our
     # own, same as before. Slower if called many times, but keeps this
     # function usable standalone (e.g. from a REPL or a test).
-    with sync_playwright() as p:
-        browser = p.chromium.launch(
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(
             headless=True,
             args=["--no-sandbox", "--disable-blink-features=AutomationControlled"],
         )
         try:
-            return _render(browser)
+            return await _render(browser)
         finally:
-            browser.close()
+            await browser.close()
 
 
 def _best_img_src(img_tag, base_url):
@@ -1004,7 +1016,15 @@ def parse_listing(html, max_items=MAX_ITEMS_PER_CATEGORY, base_url=""):
         name = lines[i]
 
         is_price_line = bool(PRICE_RE.search(name)) or bool(BARE_NUMBER_RE.match(name))
-        too_short_or_long = not (10 <= len(name) <= 150)
+        # Real product names on every retailer/category seen so far run
+        # well past 20 characters (full brand + model + specs). Short
+        # marketing badges near the top of a card - a CPU/GPU highlight
+        # like "Ryzen 7" or "i7-14650HX" - can otherwise get mistaken for
+        # the name when the real title sits further away; a length floor
+        # this high is a general defense against that whole class of
+        # badge, since enumerating every possible badge text isn't
+        # practical.
+        too_short_or_long = not (20 <= len(name) <= 150)
         is_junk = name.lower().startswith(JUNK_NAME_PREFIXES) or JUNK_NAME_RE.match(name) or JS_SYNTAX_RE.search(name)
 
         if is_price_line or too_short_or_long or is_junk or name in seen:
@@ -1110,8 +1130,14 @@ def diagnose_empty_render(html):
     )
 
 
-def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False, return_html=False, browser=None):
-    html = fetch_rendered_page(url, browser=browser) if needs_browser else fetch_page(url)
+async def fetch_category(key, url, max_items=MAX_ITEMS_PER_CATEGORY, needs_browser=False, return_html=False, browser=None):
+    if needs_browser:
+        html = await fetch_rendered_page(url, browser=browser)
+    else:
+        # requests is synchronous/blocking - run it in a worker thread so
+        # it doesn't stall the event loop (and so it can overlap with the
+        # concurrent browser-based fetches happening alongside it).
+        html = await asyncio.to_thread(fetch_page, url)
     extractor = SPEC_EXTRACTORS.get(key)
     # Collect a larger batch of raw candidates than we actually want to
     # show: if the page has a run of off-topic junk (a cross-department
@@ -1478,7 +1504,57 @@ def resolve_timestamp():
     return now, now.strftime("%H:%M %d/%m/%Y")
 
 
-def cmd_generate():
+async def _fetch_one_category(cat, browser, semaphore):
+    """Fetch + parse one category. Browser-rendered categories acquire
+    the shared semaphore first (bounding how many run concurrently);
+    plain-HTTP ones (just MemoryZone currently) skip it - cheap enough
+    not to need limiting, and running in a worker thread via
+    asyncio.to_thread inside fetch_category anyway."""
+    via = " (via headless browser)" if cat.get("needs_browser") else ""
+    print(f"Fetching {cat['site_label']} - {cat['label']} ({cat['url']}){via} ...")
+    rendered_html = None
+    had_error = False
+    try:
+        if cat.get("needs_browser"):
+            async with semaphore:
+                items, rendered_html = await fetch_category(
+                    cat["key"], cat["url"], needs_browser=True, return_html=True, browser=browser
+                )
+        else:
+            items, rendered_html = await fetch_category(
+                cat["key"], cat["url"], needs_browser=False, return_html=True, browser=browser
+            )
+    except requests.RequestException as e:
+        print(f"  Failed to fetch {cat['url']}: {e}", file=sys.stderr)
+        had_error = True
+        items = []
+    except RuntimeError as e:
+        # Playwright not installed, or similar setup problem.
+        print(f"  {e}", file=sys.stderr)
+        had_error = True
+        items = []
+    except Exception as e:  # noqa: BLE001 - Playwright raises its own error types
+        print(
+            f"  Failed to render {cat['url']} with headless browser: {e}\n"
+            f"  (If this is {cat['site_label']}, the site may be blocking automated "
+            f"browsers - see README.)",
+            file=sys.stderr,
+        )
+        had_error = True
+        items = []
+    print(f"  Parsed {len(items)} item(s).")
+    if not items:
+        print(
+            f"  0 items parsed for {cat['site_label']} - {cat['label']} - the page markup may "
+            f"have changed. Open {cat['url']} and check parse_listing().",
+            file=sys.stderr,
+        )
+        if cat.get("needs_browser") and rendered_html:
+            print(diagnose_empty_render(rendered_html), file=sys.stderr)
+    return cat, items, had_error
+
+
+async def _cmd_generate_async():
     if os.path.exists(EMAIL_DIR):
         for f in os.listdir(EMAIL_DIR):
             os.remove(os.path.join(EMAIL_DIR, f))
@@ -1488,76 +1564,47 @@ def cmd_generate():
         print("No retailers/categories enabled (check ENABLED_RETAILERS). Aborting.", file=sys.stderr)
         sys.exit(1)
 
-    categories_data = []
-    total_items = 0
-    had_fetch_error = False
-
-    # One browser for the whole run, reused across every category that
-    # needs one, rather than launching a fresh Chromium process ~30+
-    # times (once per browser-rendered category) - that relaunch
-    # overhead was adding real time on top of the network waits below.
+    # One browser for the whole run, reused (via concurrent pages/tabs)
+    # across every category that needs one, rather than launching a
+    # fresh Chromium process ~30+ times (once per browser-rendered
+    # category) - that relaunch overhead was adding real time on top of
+    # the network waits. Fetches now also run concurrently (bounded by
+    # BROWSER_CONCURRENCY) instead of one at a time - with ~36
+    # browser-rendered categories in a full run, doing them strictly
+    # sequentially was the single biggest cost in total run time.
     needs_any_browser = any(cat.get("needs_browser") for cat in CATEGORIES)
     playwright_ctx = None
     shared_browser = None
     if needs_any_browser:
         try:
-            from playwright.sync_api import sync_playwright
+            from playwright.async_api import async_playwright
 
-            playwright_ctx = sync_playwright().start()
-            shared_browser = playwright_ctx.chromium.launch(
+            playwright_ctx = await async_playwright().start()
+            shared_browser = await playwright_ctx.chromium.launch(
                 headless=True,
                 args=["--no-sandbox", "--disable-blink-features=AutomationControlled"],
             )
         except ImportError:
             pass  # surfaces as a clear RuntimeError per-category from fetch_rendered_page instead
 
+    semaphore = asyncio.Semaphore(BROWSER_CONCURRENCY)
     try:
-        for cat in CATEGORIES:
-            via = " (via headless browser)" if cat.get("needs_browser") else ""
-            print(f"Fetching {cat['site_label']} - {cat['label']} ({cat['url']}){via} ...")
-            rendered_html = None
-            try:
-                items, rendered_html = fetch_category(
-                    cat["key"],
-                    cat["url"],
-                    needs_browser=cat.get("needs_browser", False),
-                    return_html=True,
-                    browser=shared_browser,
-                )
-            except requests.RequestException as e:
-                print(f"  Failed to fetch {cat['url']}: {e}", file=sys.stderr)
-                had_fetch_error = True
-                items = []
-            except RuntimeError as e:
-                # Playwright not installed, or similar setup problem.
-                print(f"  {e}", file=sys.stderr)
-                had_fetch_error = True
-                items = []
-            except Exception as e:  # noqa: BLE001 - Playwright raises its own error types
-                print(
-                    f"  Failed to render {cat['url']} with headless browser: {e}\n"
-                    f"  (If this is {cat['site_label']}, the site may be blocking automated "
-                    f"browsers - see README.)",
-                    file=sys.stderr,
-                )
-                had_fetch_error = True
-                items = []
-            print(f"  Parsed {len(items)} item(s).")
-            if not items:
-                print(
-                    f"  0 items parsed for {cat['site_label']} - {cat['label']} - the page markup may "
-                    f"have changed. Open {cat['url']} and check parse_listing().",
-                    file=sys.stderr,
-                )
-                if cat.get("needs_browser") and rendered_html:
-                    print(diagnose_empty_render(rendered_html), file=sys.stderr)
-            categories_data.append({**cat, "items": items})
-            total_items += len(items)
+        results = await asyncio.gather(
+            *[_fetch_one_category(cat, shared_browser, semaphore) for cat in CATEGORIES]
+        )
     finally:
         if shared_browser is not None:
-            shared_browser.close()
+            await shared_browser.close()
         if playwright_ctx is not None:
-            playwright_ctx.stop()
+            await playwright_ctx.stop()
+
+    categories_data = []
+    total_items = 0
+    had_fetch_error = False
+    for cat, items, had_error in results:
+        categories_data.append({**cat, "items": items})
+        total_items += len(items)
+        had_fetch_error = had_fetch_error or had_error
 
     if total_items == 0 and had_fetch_error:
         print("All categories failed to fetch. Aborting without sending.", file=sys.stderr)
@@ -1607,6 +1654,10 @@ def cmd_generate():
 
     save_last_hash(price_hash)
     print(f"Generated email ({total_items} item(s) total across {len(set(c['site'] for c in categories_data))} retailer(s)). Saved to ./{EMAIL_DIR}/")
+
+
+def cmd_generate():
+    asyncio.run(_cmd_generate_async())
 
 
 def cmd_send():
