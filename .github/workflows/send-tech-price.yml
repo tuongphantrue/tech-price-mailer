@@ -55,6 +55,16 @@ jobs:
           TECH_RECIPIENT: ${{ secrets.TECH_RECIPIENT }}
         run: python ram_ssd_laptop_price_emailer.py send
 
+      - name: Commit price snapshot to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f docs/price_history_latest.csv ]; then
+            git add docs/price_history_latest.csv
+            git diff --cached --quiet || git commit -m "Update price snapshot [skip ci]"
+            git push origin HEAD:main
+          fi
+
       - name: Persist dedup state to state branch
         run: |
           git config user.name "github-actions[bot]"
