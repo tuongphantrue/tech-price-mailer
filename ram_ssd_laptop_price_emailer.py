@@ -140,7 +140,9 @@ always confirm the actual price on the retailer's site before buying.
 """
 
 import asyncio
+import csv
 import hashlib
+import io
 import json
 import os
 import re
@@ -1531,6 +1533,35 @@ def build_plain_text(categories_data, timestamp):
     return "\n".join(lines)
 
 
+def build_history_csv(categories_data):
+    """
+    Flat, one-row-per-item snapshot: current price + every TREND_WINDOWS
+    percentage, written as CSV so it renders as a sortable/filterable
+    table directly in the GitHub web UI (no clone needed) - unlike
+    state/price_history.json (raw per-day history, lives on the
+    tech-price-state branch), this is a *current-moment* snapshot meant
+    to be committed straight onto main and simply overwritten each run.
+    """
+    output = io.StringIO()
+    writer = csv.writer(output)
+    header = ["Retailer", "Category", "Item", "Price (VND)"]
+    header += [f"{label} change" for label, _days in TREND_WINDOWS]
+    header += ["Product URL"]
+    writer.writerow(header)
+
+    for cat in categories_data:
+        for item in cat["items"]:
+            trend = item.get("trend") or {}
+            row = [cat.get("site_label", cat.get("site", "")), cat["label"], item["name"], item["price"]]
+            for label, _days in TREND_WINDOWS:
+                pct = trend.get(label)
+                row.append(f"{pct:+g}%" if pct is not None else "")
+            row.append(item.get("product_url", ""))
+            writer.writerow(row)
+
+    return output.getvalue()
+
+
 def resolve_timestamp():
     timezone_name = os.environ.get("TIMEZONE", "Asia/Ho_Chi_Minh")
     try:
@@ -1653,6 +1684,13 @@ async def _cmd_generate_async():
         for cat in categories_data:
             update_history_and_get_trends(price_history, cat["site"], cat["key"], cat["items"], today)
         save_price_history(price_history)
+
+        # Human-readable snapshot committed straight to main by the
+        # workflow (see the "Commit price snapshot to main" step) so it's
+        # browsable in the GitHub web UI without switching branches.
+        os.makedirs("docs", exist_ok=True)
+        with open("docs/price_history_latest.csv", "w", newline="", encoding="utf-8") as f:
+            f.write(build_history_csv(categories_data))
 
     price_hash = hash_data(
         [
