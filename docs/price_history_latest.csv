@@ -361,47 +361,51 @@ GEARVN,Laptop,"Laptop Dell Vostro 3530 2H1TPI7 (I7-1355U/ 8GB/ 512GB/ 15.6"" FHD
 GEARVN,HDD,Ổ Cứng HDD Seagate Barracuda 1TB,3.290.000,+0%,,,,https://gearvn.com/products/hdd-seagate-barracuda-1tb-7200rpm
 GEARVN,HDD,"Ổ Cứng HDD WD 1TB Blue 2.5"" for Laptop",1.690.000,+0%,,,,https://gearvn.com/products/hdd-western-digital-blue-1tb-2-5-sata-3
 GEARVN,HDD,"Ổ Cứng HDD Seagate 1TB 2.5"" for Laptop - ST1000LM048",1.390.000,-12.6%,,,,https://gearvn.com/products/o-cung-hdd-seagate-1tb-2-5inch-sata-3-st1000lm048
-GEARVN,VGA - Card màn hình,Card màn hình MSI GeForce RTX 5060 Ventus 2X OC V1 8GB,13.690.000,+0%,,,,https://gearvn.com/products/card-man-hinh-msi-geforce-rtx-5060-ventus-2x-oc-v1-8gb
-GEARVN,VGA - Card màn hình,Card màn hình ASUS ROG Astral EDITION 20 GeForce RTX 5090 32GB GDDR7,200.000.000,,,,,https://gearvn.com/products/card-man-hinh-asus-rog-astral-edition-20-geforce-rtx-5090-32gb-gddr7
-GEARVN,VGA - Card màn hình,Card màn hình Zotac GeForce RTX 5080 Solid Core OC 16GB,39.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5080-solid-core-oc-16gb
-GEARVN,VGA - Card màn hình,Card màn hình Zotac GeForce RTX 5070Ti Solid Core OC 16GB,33.590.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5070ti-solid-core-oc-16gb
-GEARVN,VGA - Card màn hình,Card màn hình Zotac GeForce RTX 5060 Ti 16GB Twin Edge OC,21.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5060-ti-16gb-twin-edge-oc-1
-GEARVN,VGA - Card màn hình,Card màn hình SPARKLE Intel Arc B580 TWINSTAR OC 12GB GDDR6,9.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-sparkle-intel-arc-b580-twinstar-oc-12gb-gddr6
-GEARVN,VGA - Card màn hình,Card màn hình Leadtek NVIDIA RTX PRO 5000 Blackwell 48GB GDDR7,218.990.000,,,,,https://gearvn.com/products/card-man-hinh-leadtek-nvidia-rtx-pro-5000-blackwell-48gb-gddr7
+GEARVN,VGA - Card màn hình,Card màn hình Leadtek NVIDIA RTX PRO 4000 Blackwell 24GB GDDR7,60.990.000,,,,,https://gearvn.com/products/card-man-hinh-leadtek-nvidia-rtx-pro-4000-blackwell-24gb-gddr7
+GEARVN,VGA - Card màn hình,Card màn hình MSI GeForce RTX 5090 LIGHTNING Z 32GB,209.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-msi-geforce-rtx-5090-lightning-z-32gb
 GEARVN,VGA - Card màn hình,Card màn hình Zotac GeForce RTX 5060 Ti 8GB Moon White OC,14.490.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5060-ti-8gb-moon-white-oc
 GEARVN,VGA - Card màn hình,Card màn hình MSI GeForce RTX 5060 Ti Shadow 2X OC Plus 8GB,15.490.000,,,,,https://gearvn.com/products/card-man-hinh-msi-geforce-rtx-5060-ti-shadow-2x-oc-plus-8gb
-GEARVN,VGA - Card màn hình,Card màn hình MSI GeForce RTX 5090 LIGHTNING Z 32GB,209.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-msi-geforce-rtx-5090-lightning-z-32gb
-GEARVN,VGA - Card màn hình,Card màn hình Leadtek NVIDIA RTX PRO 4000 Blackwell 24GB GDDR7,60.990.000,,,,,https://gearvn.com/products/card-man-hinh-leadtek-nvidia-rtx-pro-4000-blackwell-24gb-gddr7
-GEARVN,VGA - Card màn hình,Card màn hình SPARKLE Intel Arc B580 TITAN OC 12GB GDDR6,10.990.000,,,,,https://gearvn.com/products/card-man-hinh-sparkle-intel-arc-b580-titan-oc-12gb-gddr6
+GEARVN,VGA - Card màn hình,Card màn hình SPARKLE Intel Arc B580 TWINSTAR OC 12GB GDDR6,9.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-sparkle-intel-arc-b580-twinstar-oc-12gb-gddr6
+GEARVN,VGA - Card màn hình,Card màn hình Leadtek NVIDIA RTX PRO 5000 Blackwell 48GB GDDR7,218.990.000,,,,,https://gearvn.com/products/card-man-hinh-leadtek-nvidia-rtx-pro-5000-blackwell-48gb-gddr7
+GEARVN,VGA - Card màn hình,Card màn hình Zotac GeForce RTX 5060 Ti 16GB Twin Edge OC,21.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5060-ti-16gb-twin-edge-oc-1
+GEARVN,VGA - Card màn hình,Card màn hình MSI GeForce RTX 5060 Ventus 2X OC V1 8GB,13.690.000,+0%,,,,https://gearvn.com/products/card-man-hinh-msi-geforce-rtx-5060-ventus-2x-oc-v1-8gb
+GEARVN,VGA - Card màn hình,Card màn hình Zotac GeForce RTX 5070Ti Solid Core OC 16GB,33.590.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5070ti-solid-core-oc-16gb
+GEARVN,VGA - Card màn hình,Card màn hình Zotac GeForce RTX 5080 Solid Core OC 16GB,39.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5080-solid-core-oc-16gb
+GEARVN,VGA - Card màn hình,Card màn hình ASUS ROG Astral EDITION 20 GeForce RTX 5090 32GB GDDR7,200.000.000,,,,,https://gearvn.com/products/card-man-hinh-asus-rog-astral-edition-20-geforce-rtx-5090-32gb-gddr7
 GEARVN,VGA - Card màn hình,Card màn hình SPARKLE Intel Arc B580 TITAN Nox OC 12GB GDDR6,10.990.000,,,,,https://gearvn.com/products/card-man-hinh-sparkle-intel-arc-b580-titan-nox-oc-12gb-gddr6
+GEARVN,VGA - Card màn hình,Card màn hình SPARKLE Intel Arc B580 TITAN OC 12GB GDDR6,10.990.000,,,,,https://gearvn.com/products/card-man-hinh-sparkle-intel-arc-b580-titan-oc-12gb-gddr6
 GEARVN,VGA - Card màn hình,Card màn hình Gigabyte GeForce RTX 5060 Windforce Max OC 8GB,11.990.000,+0%,,,,https://gearvn.com/products/card-man-hinh-gigabyte-geforce-rtx-5060-windforce-max-oc-8gb
-GEARVN,VGA - Card màn hình,Card màn hình Zotac GEFORCE RTX 5060 Ti 8GB TWIN EDGE GDDR7,13.490.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5060-ti-8gb-twin-edge-gddr7
-GEARVN,VGA - Card màn hình,Card màn hình Zotac GEFORCE RTX 3050 TWIN EDGE OC 6GB GDDR6,6.890.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-3050-twin-edge-oc-6gb-gddr6
-GEARVN,VGA - Card màn hình,Card màn hình Zotac GEFORCE RTX 5050 TWIN EDGE OC 8GB GDDR6,9.490.000,,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5050-twin-edge-oc-8gb-gddr6
 GEARVN,VGA - Card màn hình,Card màn hình Zotac GeForce RTX 5060 Ti 16GB Twin Edge,15.990.000,,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5060-ti-16gb-twin-edge
+GEARVN,VGA - Card màn hình,Card màn hình Zotac GEFORCE RTX 5050 TWIN EDGE OC 8GB GDDR6,9.490.000,,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5050-twin-edge-oc-8gb-gddr6
+GEARVN,VGA - Card màn hình,Card màn hình Zotac GEFORCE RTX 3050 TWIN EDGE OC 6GB GDDR6,6.890.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-3050-twin-edge-oc-6gb-gddr6
+GEARVN,VGA - Card màn hình,Card màn hình Zotac GEFORCE RTX 5060 Ti 8GB TWIN EDGE GDDR7,13.490.000,+0%,,,,https://gearvn.com/products/card-man-hinh-zotac-geforce-rtx-5060-ti-8gb-twin-edge-gddr7
 GEARVN,VGA - Card màn hình,Card màn hình ZOTAC GAMING GeForce RTX 5070 AMP White Edition (ZT-B50700FQ-10P),19.990.000,,,,,https://gearvn.com/products/card-man-hinh-zotac-gaming-geforce-rtx-5070-amp-white-edition
 GEARVN,Mainboard,Bo mạch chủ ASUS PRIME B760M-K (DDR5),2.690.000,+0%,,,,https://gearvn.com/products/bo-mach-chu-asus-prime-b760m-k-ddr5
 GEARVN,Mainboard,Bo mạch chủ ASUS ROG CROSSHAIR X870E EXTREME (DDR5),32.990.000,,,,,https://gearvn.com/products/bo-mach-chu-asus-rog-crosshair-x870e-extreme-ddr5
+GEARVN,Mainboard,Bo mạch chủ ASUS TUF Gaming Z890-PLUS WIFI (DDR5),12.490.000,+0%,,,,https://gearvn.com/products/bo-mach-chu-asus-tuf-gaming-z890-plus-wifi-ddr5
 GEARVN,Mainboard,Bo mạch chủ MSI B450M-A PRO MAX II,1.990.000,+0%,,,,https://gearvn.com/products/bo-mach-chu-msi-b450m-a-pro-max-ii
-GEARVN,PSU - Nguồn máy tính,Nguồn máy tính FSP VIC BD 750W - 80 Plus Bronze (750W),1.690.000,+0%,,,,https://gearvn.com/products/nguon-may-tinh-fsp-vic-bd-750w-80-plus-bronze-750w
 GEARVN,PSU - Nguồn máy tính,Nguồn máy tính FSP VIC WD 650W - 80 Plus White (650W),1.090.000,+0%,,,,https://gearvn.com/products/nguon-may-tinh-fsp-vic-wd-650w-80-plus-white-650w
+GEARVN,PSU - Nguồn máy tính,Nguồn máy tính FSP VIC BD 750W - 80 Plus Bronze (750W),1.690.000,+0%,,,,https://gearvn.com/products/nguon-may-tinh-fsp-vic-bd-750w-80-plus-bronze-750w
 GEARVN,PSU - Nguồn máy tính,Nguồn máy tính Cooler Master V Platinum 1300 V2 - 1600W - 80 Plus Platinum - Full Modular,6.990.000,+0%,,,,https://gearvn.com/products/nguon-may-tinh-cooler-master-v-platinum-1300-v2-1600w-80-plus-platinum-full-modular
+GEARVN,PSU - Nguồn máy tính,Nguồn máy tính Corsair RM1000e ATX 3.0 - 80 Plus Gold - Full Modular (1000W) (CP-9020264-NA),5.990.000,,,,,https://gearvn.com/products/1000w-nguon-corsair-rm1000e-atx-3-0-80-plus-gold-full-modular
 GEARVN,Màn hình,"Màn hình ViewSonic VA24G1-H 24"" IPS 144Hz",2.590.000,+0%,,,,https://gearvn.com/products/man-hinh-viewsonic-va24g1-h-24-ips-144hz
-GEARVN,Màn hình,2K/QHD (2560 x 1440),7.990.000,+0%,,,,https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg27aqm5f-27-fast-ips-2k-320hz-chuyen-game
+GEARVN,Màn hình,"Màn hình BenQ Zowie XL2586X+ 25"" 600Hz DyAc 2 chuyên game",29.990.000,+0%,,,,https://gearvn.com/products/man-hinh-benq-zowie-xl2586x-25-600hz-dyac-2-chuyen-game
 GEARVN,Màn hình,"Màn hình ASUS TUF GAMING VG27AQME5F 27"" Fast IPS 2K 255Hz chuyên game",6.990.000,,,,,https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg27aqme5f-27-fast-ips-2k-255hz-chuyen-game
-GEARVN,Màn hình,"Màn hình Samsung Odyssey G8 LS27HG802SEXXV 27"" QD-OLED 4K 240Hz chuyên game",27.990.000,+0%,,,,https://gearvn.com/products/man-hinh-samsung-odyssey-g8-ls27hg802sexxv-27-qd-oled-4k-240hz-chuyen-game
-GEARVN,Màn hình,"Màn hình Samsung Odyssey G7 LS32HG732SEXXV 32"" OLED 4K 165Hz-FHD 330Hz chuyên game",28.990.000,+0%,,,,https://gearvn.com/products/man-hinh-samsung-odyssey-g7-ls32hg732sexxv-32-oled-4k-165hz-fhd-330hz-chuyen-game
-GEARVN,Màn hình,"Màn hình LG 27GX790B-B UltraGear 27"" OLED 2K 540Hz-HD 720Hz chuyên game",28.900.000,+0%,,,,https://gearvn.com/products/man-hinh-lg-27gx790b-b-ultragear-27-oled-2k-540hz-hd-720hz-chuyen-game
-GEARVN,Màn hình,"Màn hình AOC 27B3CA3 27"" IPS 120Hz USBC",3.990.000,+0%,,,,https://gearvn.com/products/man-hinh-aoc-27b3ca3-27-ips-120hz-usbc
-GEARVN,Màn hình,"Màn hình cong MSI MAG 341CQP QD-OLED X28 34"" QD-OLED 2K 280Hz chuyên game",24.990.000,+0%,,,,https://gearvn.com/products/man-hinh-cong-msi-mag-341cqp-qd-oled-x28-34-qd-oled-280hz-chuyen-game
-GEARVN,Màn hình,"Màn hình MSI MAG 275QF E21 27"" Rapid IPS 2K 210Hz chuyên game",4.990.000,+0%,,,,https://gearvn.com/products/man-hinh-msi-mag-275qf-e21-27-rapid-ips-2k-210hz-chuyen-game
-GEARVN,Màn hình,"Màn hình MSI MAG 274QPF X32 27"" Rapid IPS 2K 320Hz chuyên game",6.990.000,+0%,,,,https://gearvn.com/products/man-hinh-msi-mag-274qpf-x32-27-rapid-ips-2k-320hz-chuyen-game
-GEARVN,Màn hình,"Màn hình ASUS TUF GAMING VG279QM5F 27"" Fast IPS 260Hz chuyên game",4.990.000,+0%,,,,https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg279qm5f-27-fast-ips-260hz-chuyen-game
-GEARVN,Màn hình,"Màn hình ASUS TUF GAMING VG27AQ5F 27"" Fast IPS 2K 220Hz chuyên game",6.490.000,+0%,,,,https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg27aq5f-27-fast-ips-2k-220hz-chuyen-game
-GEARVN,Màn hình,"Màn hình cong ASUS TUF GAMING VG34WQ5A 34"" 2K 200Hz-HD 400Hz chuyên game",8.590.000,+0%,,,,https://gearvn.com/products/man-hinh-cong-asus-tuf-gaming-vg34wq5a-34-2k-200hz-hd-400hz-chuyen-game
+GEARVN,Màn hình,2K/QHD (2560 x 1440),7.990.000,+0%,,,,https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg27aqm5f-27-fast-ips-2k-320hz-chuyen-game
+GEARVN,Màn hình,"Màn hình KOORUI E2212F 22"" 100Hz",1.690.000,,,,,https://gearvn.com/products/man-hinh-koorui-e2212f-22-100hz
+GEARVN,Màn hình,"Màn hình KOORUI E2411F 24"" IPS 100Hz",1.990.000,,,,,https://gearvn.com/products/man-hinh-koorui-e2411f-24-ips-100hz
+GEARVN,Màn hình,"Màn hình KOORUI E2711F 27"" IPS 100Hz",2.490.000,,,,,https://gearvn.com/products/man-hinh-koorui-e2711f-27-ips-100hz
+GEARVN,Màn hình,"Màn hình KOORUI G2411P 24"" IPS 200Hz chuyên game",2.990.000,,,,,https://gearvn.com/products/man-hinh-koorui-g2411p-24-ips-200hz-chuyen-game
+GEARVN,Màn hình,"Màn hình KOORUI G2711P 24"" IPS 200Hz chuyên game",3.190.000,,,,,https://gearvn.com/products/man-hinh-koorui-g2711p-24-ips-200hz-chuyen-game
 GEARVN,Màn hình,"Màn hình ASUS TUF GAMING VG27UQEL5A 27"" Fast IPS 4K 80Hz-FHD 310Hz chuyên game",7.590.000,+0%,,,,https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg27uqel5a-27-fast-ips-4k-80hz-fhd-310hz-chuyen-game
-GEARVN,Màn hình,4K/UHD (3840 x 2160),14.990.000,+0%,,,,https://gearvn.com/products/man-hinh-benq-ma270u-27-ips-4k
-GEARVN,Màn hình,"Màn hình BenQ Zowie XL2540X+ 24"" 280Hz chuyên game",11.990.000,+0%,,,,https://gearvn.com/products/man-hinh-benq-zowie-xl2540x-24-280hz-chuyen-game
+GEARVN,Màn hình,"Màn hình cong ASUS TUF GAMING VG34WQ5A 34"" 2K 200Hz-HD 400Hz chuyên game",8.590.000,+0%,,,,https://gearvn.com/products/man-hinh-cong-asus-tuf-gaming-vg34wq5a-34-2k-200hz-hd-400hz-chuyen-game
+GEARVN,Màn hình,"Màn hình ASUS TUF GAMING VG27AQ5F 27"" Fast IPS 2K 220Hz chuyên game",6.490.000,+0%,,,,https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg27aq5f-27-fast-ips-2k-220hz-chuyen-game
+GEARVN,Màn hình,"Màn hình ASUS TUF GAMING VG279QM5F 27"" Fast IPS 260Hz chuyên game",4.990.000,+0%,,,,https://gearvn.com/products/man-hinh-asus-tuf-gaming-vg279qm5f-27-fast-ips-260hz-chuyen-game
+GEARVN,Màn hình,"Màn hình MSI MAG 274QPF X32 27"" Rapid IPS 2K 320Hz chuyên game",6.990.000,+0%,,,,https://gearvn.com/products/man-hinh-msi-mag-274qpf-x32-27-rapid-ips-2k-320hz-chuyen-game
+GEARVN,Màn hình,"Màn hình MSI MAG 275QF E21 27"" Rapid IPS 2K 210Hz chuyên game",4.990.000,+0%,,,,https://gearvn.com/products/man-hinh-msi-mag-275qf-e21-27-rapid-ips-2k-210hz-chuyen-game
+GEARVN,Màn hình,"Màn hình cong MSI MAG 341CQP QD-OLED X28 34"" QD-OLED 2K 280Hz chuyên game",24.990.000,+0%,,,,https://gearvn.com/products/man-hinh-cong-msi-mag-341cqp-qd-oled-x28-34-qd-oled-280hz-chuyen-game
+GEARVN,Màn hình,"Màn hình AOC 27B3CA3 27"" IPS 120Hz USBC",3.990.000,+0%,,,,https://gearvn.com/products/man-hinh-aoc-27b3ca3-27-ips-120hz-usbc
+GEARVN,Màn hình,"Màn hình LG 27GX790B-B UltraGear 27"" OLED 2K 540Hz-HD 720Hz chuyên game",28.900.000,+0%,,,,https://gearvn.com/products/man-hinh-lg-27gx790b-b-ultragear-27-oled-2k-540hz-hd-720hz-chuyen-game
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Adata 8GB DDR5 bus 5600,4.090.000,,,,,https://www.anphatpc.com.vn/ram-laptop-adata-8gb-ddr5-bus-5600.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 32GB (1x32GB) DDR4 bus 3200 (KVR32S22D8/32),28.999.000,+0%,,,,https://www.anphatpc.com.vn/ram-laptop-kingston-32gb-1x32gb-ddr4-bus-3200-kvr32s22d8/32.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 16GB DDR5 bus 6400 (CT16G64C52CS5),7.999.000,+0%,,,,https://www.anphatpc.com.vn/ram-laptop-crucial-16gb-ddr5-bus-6400-ct16g64c52cs5.html
@@ -425,7 +429,7 @@ An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Adata 8GB DDR4 bus 3200,999.
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Gskill 32GB DDR4 bus 3200,3.399.000,+0%,,,,https://www.anphatpc.com.vn/ram-laptop-gskill-32gb-ddr4-bus-3200.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 32GB DDR5 bus 5200 (CT32G52C42S5),3.999.000,+0%,,,,https://www.anphatpc.com.vn/ram-laptop-crucial-32gb-ddr5-bus-5200-ct32g52c42s5.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop PNY XLR8 8GB DDR4 3200 (MN8GSD43200XR-RB),2.499.000,+0%,,,,https://www.anphatpc.com.vn/ram-laptop-pny-xlr8-8gb-ddr4-3200-mn8gsd43200xr-rb.html
-An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 32GB DDR5 bus 5600 (CT32G56C46S5),28.999.000,+0%,,,,https://www.anphatpc.com.vn/ram-laptop-crucial-32gb-ddr5-bus-5600-ct32g56c46s5.html
+An Phát Computer (Hà Nội),RAM Laptop,Ram laptop TeamGroup Elite 8GB DDR5-4800,1.299.000,+0%,,,,https://www.anphatpc.com.vn/ram-laptop-teamgroup-elite-8gb-ddr5-4800.html
 An Phát Computer (Hà Nội),SSD,Ổ cứng Seagate Skyhawk AI 8TB 3.5'' ST8000VE001 (Chuyên dụng cho Camera),15.999.000,+0%,,,,https://www.anphatpc.com.vn/o-cung-seagate-skyhawk-ai-8-tb-3.5-st8000ve001-chuyen-dung-cho-camera_id39884.html
 An Phát Computer (Hà Nội),SSD,Ổ cứng Western Digital Enterprise Ultrastar HA340 8TB 7200RPM 256MB- WUS721208BLE6L4,13.999.000,+0%,,,,https://www.anphatpc.com.vn/o-cung-western-digital-enterprise-ultrastar-ha340-8tb-7200rpm-256mb-wus721208ble6l4.html
 An Phát Computer (Hà Nội),SSD,Ổ Cứng Western Digital Purple 8TB 256MB Cache WD85PURZ,12.999.000,+0%,,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-8tb-256mb-cache-wd85purz.html
