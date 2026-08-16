@@ -83,7 +83,6 @@ MemoryZone,Mainboard,Mainboard ASUS PRIME H810M-K DDR5,2.450.000,+0%,,,,https://
 MemoryZone,Mainboard,Mainboard ASRock H810M-H DDR5,2.450.000,+0%,,,,https://memoryzone.com.vn/mainboard-asrock-h810m-h-ddr5
 MemoryZone,Mainboard,Mainboard ASUS B760M-AYW WIFI DDR4,2.600.000,+0%,,,,https://memoryzone.com.vn/mainboard-pc-asus-b760m-ayw-wifi-d4
 MemoryZone,Mainboard,Mainboard ASUS TUF GAMING B550M-PLUS WIFI II DDR4,2.950.000,+0%,,,,https://memoryzone.com.vn/mainboard-asus-tuf-gaming-b550m-plus-wifi-ii-ddr4
-MemoryZone,Mainboard,Mainboard ASRock B760M Pro RS/D4 WIFI,2.990.000,,,,,https://memoryzone.com.vn/mainboard-pc-asrock-b760m-pro-rs-d4-wifi
 MemoryZone,Mainboard,Mainboard MSI B760M GAMING PLUS WIFI DDR4,3.100.000,+0%,,,,https://memoryzone.com.vn/mainboard-pc-msi-b760m-gaming-plus-wifi-ddr4
 MemoryZone,Mainboard,Mainboard ASRock B760M Pro RS WIFI DDR5,3.150.000,,,,,https://memoryzone.com.vn/mainboard-pc-asrock-b760m-pro-rs-wifi
 MemoryZone,Mainboard,Mainboard MSI PRO B840M-P WIFI6E DDR5,3.200.000,+0%,,,,https://memoryzone.com.vn/mainboard-msi-pro-b840m-p-wifi6e-ddr5
@@ -94,6 +93,7 @@ MemoryZone,Mainboard,Mainboard ASUS TUF GAMING B760M-PLUS WIFI II DDR5,3.890.000
 MemoryZone,Mainboard,Mainboard MSI B860M GAMING WIFI DDR5,3.950.000,+0%,,,,https://memoryzone.com.vn/mainboard-msi-b860m-gaming-wifi-ddr5
 MemoryZone,Mainboard,Mainboard MSI MPG B760I EDGE WIFI DDR5,4.750.000,+0%,,,,https://memoryzone.com.vn/mainboard-msi-mpg-b760i-edge-wifi-ddr5
 MemoryZone,Mainboard,Mainboard MSI MAG B760M MORTAR WIFI II DDR5,4.800.000,+0%,,,,https://memoryzone.com.vn/mainboard-pc-msi-mag-b760m-mortar-wifi-ii
+MemoryZone,Mainboard,Mainboard MSI PRO Z790-P WIFI DDR5,4.850.000,+0%,,,,https://memoryzone.com.vn/mainboard-msi-pro-z790-p-wifi-ddr5
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính Gamdias AURA GP550 550W PSAURAGP550GA,590.000,+0%,,,,https://memoryzone.com.vn/nguon-may-tinh-gamdias-aura-gp550-550w-psauragp550ga
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính MSI MAG A650BNL 650W 80 Plus Bronze MAG-A650BNL,1.150.000,+0%,,,,https://memoryzone.com.vn/nguon-may-tinh-msi-mag-a650bnl-650w-80-plus-bronze-mag-a650bnl
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính MSI MAG A750BN PCIE5 III 750W 80 Plus Bronze MAG-A750BN-PCIE5-III,1.390.000,+0%,,,,https://memoryzone.com.vn/nguon-may-tinh-msi-mag-a750bn-pcie5-iii-750w-80-plus-bronze-mag-a750bn-pcie5-iii
@@ -643,8 +643,8 @@ ThinkPro,SSD / Ổ cứng,SSD Skhynix 512GB NVME M2 2280,1.490.000,+0%,,,,https:
 ThinkPro,SSD / Ổ cứng,SSD WD 256GB NVME M2 2280,499.000,+0%,,,,https://thinkpro.vn/o-cung/o-cung-ssd-wd-black-256gb-m2-nvme-2280
 ThinkPro,SSD / Ổ cứng,SSD Kioxia 512GB NVME M2 2280,1.290.000,+0%,,,,https://thinkpro.vn/o-cung/o-cung-ssd-kioxia-512gb-m2-nvme-2280
 ThinkPro,SSD / Ổ cứng,SSD Kioxia 512GB NVME M2 2230,1.490.000,+0%,,,,https://thinkpro.vn/o-cung/o-cung-ssd-kioxia-512gb-nvme-2230
-ThinkPro,SSD / Ổ cứng,SSD WD 512GB NVME M2 2280,1.290.000,+0%,,,,https://thinkpro.vn/o-cung/o-cung-ssd-wd-512gb-m2-nvme-2280
 ThinkPro,SSD / Ổ cứng,SSD Samsung 512GB NVME M2 2280,1.490.000,+0%,,,,https://thinkpro.vn/o-cung/o-cung-ssd-samsung-512gb-m2-nvme-2280
+ThinkPro,SSD / Ổ cứng,SSD WD 512GB NVME M2 2280,1.290.000,+0%,,,,https://thinkpro.vn/o-cung/o-cung-ssd-wd-512gb-m2-nvme-2280
 ThinkPro,SSD / Ổ cứng,SSD Skhynix 512GB PCIe Gen 3 x4 NVME M2 2230,1.490.000,+0%,,,,https://thinkpro.vn/o-cung/ssd-skhynix-512gb-2230-gen-3-x-4
 ThinkPro,SSD / Ổ cứng,SSD Samsung PM991A 512GB PCIe Gen 3 x4 NVME M2 2230,1.690.000,+0%,,,,https://thinkpro.vn/o-cung/ssd-samsung-m2-nvme-pm991
 ThinkPro,SSD / Ổ cứng,SSD Kioxia 256GB NVME M2 2230,399.000,+0%,,,,https://thinkpro.vn/o-cung/o-cung-ssd-kioxia-256gb-nvme-2230
@@ -662,16 +662,18 @@ ThinkPro,Laptop,"Lenovo ThinkPad X1 Carbon Gen 11 i7 1365U, 32GB, 512GB, FHD+",2
 ThinkPro,Laptop,Apple Macbook Pro 16 (Apple M1),26.990.000,-61.4%,,,,https://thinkpro.vn/laptop/apple-macbook-pro-16-apple-m1
 ThinkPro,Màn hình,"Lenovo ThinkPad X1 Carbon Gen 11 i7 1365U, 32GB, 512GB, FHD+",28.490.000,+9.6%,,,,https://thinkpro.vn/laptop/lenovo-thinkpad-x1-carbon-gen-11?skuId=11446
 ThinkPro,Màn hình,"Màn hình LG 27US500-W 27""",5.079.000,+0%,,,,https://thinkpro.vn/man-hinh/man-hinh-lg-27qn600-b
-ThinkPro,Màn hình,Màn hình gaming ARZOPA M1RC 27'' 180Hz 2K QHD,3.990.000,+0%,,,,https://thinkpro.vn/man-hinh/man-hinh-gaming-arzopa-m1rc-27-180hz-2k-qhd
 ThinkPro,Màn hình,Màn hình di động ARZOPA A1 15.6 inch,1.999.000,+5.3%,,,,https://thinkpro.vn/man-hinh/man-hinh-di-dong-arzopa-a1-156-inch
 ThinkPro,Màn hình,Màn hình di động ARZOPA A1M 17.3 inch,3.199.000,+0%,,,,https://thinkpro.vn/man-hinh/man-hinh-di-dong-arzopa-a1m-173-inch
 ThinkPro,Màn hình,Màn hình di động ARZOPA Z1FC 16.1 inch 144Hz,2.939.000,+0%,,,,https://thinkpro.vn/man-hinh/man-hinh-di-dong-arzopa-z1fc-161-inch-144hz
 ThinkPro,Màn hình,"Màn hình di động ARZOPA Z3FC 16.1"" IPS 180Hz 2.5K",3.999.000,+0%,,,,https://thinkpro.vn/man-hinh/man-hinh-di-dong-arzopa-z3fc-161-ips-180hz-25k
 ThinkPro,Màn hình,"Khung ảnh kỹ thuật số ARZOPA D10 WiFi 10.1""",2.199.000,+0%,,,,https://thinkpro.vn/man-hinh-di-dong/khung-anh-ky-thuat-so-arzopa-d10-wifi-101
 ThinkPro,Màn hình,"Khung ảnh kỹ thuật số ARZOPA D15 WiFi 15.6""",3.799.000,+0%,,,,https://thinkpro.vn/man-hinh-di-dong/khung-anh-ky-thuat-so-arzopa-d15-wifi-156
+ThinkPro,Màn hình,Màn hình gaming ARZOPA M1RC 27'' 180Hz 2K QHD,3.990.000,+0%,,,,https://thinkpro.vn/man-hinh/man-hinh-gaming-arzopa-m1rc-27-180hz-2k-qhd
 ThinkPro,Màn hình,Màn hình di động ARZOPA Z1RC 16 inch 60Hz 2.5K 100%sRGB,3.399.000,+0%,,,,https://thinkpro.vn/man-hinh/man-hinh-di-dong-arzopa-z1rc-16-inch-60hz-25k
+ThinkPro,Màn hình,Lenovo ThinkVision S24i-30 63DEKAR3WW (23.8 inch - FHD - IPS - 4ms - 100Hz),2.469.000,+0%,,,,https://thinkpro.vn/man-hinh/lenovo-thinkvision-s24i-30-63dekar3ww-238-inch-fhd-ips-4ms-100hz
+ThinkPro,Màn hình,Lenovo Think Vision S27i-30 63DFKAR4WW (27Inch/ Full HD/ 4ms/ 100HZ/ 300 cd/m2/ IPS),2.799.000,+0%,,,,https://thinkpro.vn/man-hinh/lenovo-think-vision-s27i-30-63dfkar4ww-27inch-full-hd-4ms-100hz-300-cdm2-ips
+ThinkPro,Màn hình,Lenovo L27q-4A 67BFGAC6VN (27Inch/ QHD (2560x1440)/ 4ms/ 100HZ/ 350cd/m2/ IPS/ Loa),4.569.000,+0%,,,,https://thinkpro.vn/man-hinh/lenovo-l27q-4a-67bfgac6vn-27inch-qhd-2560x1440-4ms-100hz-350cdm2-ips-loa
 ThinkPro,Màn hình,Màn hình đồ họa Dell Pro 32 Plus 4K P3225QE (31.5Inch/ 4K/ 5ms/ 100HZ/ 350cd/m2/ IPS),14.879.000,+0%,,,,https://thinkpro.vn/man-hinh/dell-pro-32-plus-4k-p3225qe-315inch-4k-5ms-100hz-350cdm2-ips
-ThinkPro,Màn hình,Màn hình cong Dell Ultrasharp U4025QW (40Inch/ WUHD/ 5ms/ 120HZ/ 450cd/m2/ IPS),44.990.000,+0%,,,,https://thinkpro.vn/man-hinh/dell-ultrasharp-u4025qw
 Hoàng Hà PC (Hà Nội),RAM,RAM DDR5 CORSAIR VENGEANCE 16GB 5600MHz (1x16G) CL40,7.000.000,,,,,https://hoanghapc.vn/ram-ddr5-corsair-vengeance-16gb-5600mhz
 Hoàng Hà PC (Hà Nội),RAM,RAM DDR4 CORSAIR VENGEANCE LPX 16GB 3200MHz (1x16GB),3.250.000,+0%,,,,https://hoanghapc.vn/ram-corsair-vengeance-lpx-16gb-ddr4-3200mhz
 Hoàng Hà PC (Hà Nội),RAM,RAM DDR5 CORSAIR VENGEANCE RGB 64GB 5600MHz (2x32G) CL40,19.900.000,+0%,,,,https://hoanghapc.vn/ram-ddr5-corsair-vengeance-rgb-64g-5600mhz
