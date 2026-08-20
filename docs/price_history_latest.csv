@@ -8,7 +8,7 @@ MemoryZone,SSD,SSD Transcend 115S 250GB PCIe Gen3 x4 NVMe M.2 TS250GMTE115S,1.25
 MemoryZone,SSD,SSD PNY CS1031 M.2 PCIe Gen3 x4 NVMe 256GB M280CS1031-256-CL,1.250.000,+0%,+0%,,,https://memoryzone.com.vn/ssd-pny-cs1031-m-2-pcie-gen3-x4-nvme-256gb-m280cs1031-256-cl
 MemoryZone,SSD,SSD Patriot P400 Lite 500GB M.2 PCIe Gen4 x4 NVMe P400LP500GM28H,1.990.000,+0%,+0%,,,https://memoryzone.com.vn/ssd-patriot-p400-lite-500gb-m-2-pcie-gen4-x4-nvme-p400lp500gm28h
 MemoryZone,SSD,SSD Patriot P400 Lite 1TB M.2 PCIe Gen4 x4 NVMe P400LP1KGM28H,2.750.000,+0%,+0%,,,https://memoryzone.com.vn/ssd-patriot-p400-lite-1tb-m-2-pcie-gen4-x4-nvme-p400lp1kgm28h
-MemoryZone,SSD,SSD Western Digital Blue SN5100 500GB PCIe Gen4 x4 NVMe M.2 WDS500G5B0E,2.790.000,,,,,https://memoryzone.com.vn/ssd-western-digital-blue-sn5100-500gb-pcie-gen4-x4-nvme-m-2-wds500g5b0e
+MemoryZone,SSD,SSD Western Digital Blue SN5100 500GB PCIe Gen4 x4 NVMe M.2 WDS500G5B0E,2.790.000,+0%,,,,https://memoryzone.com.vn/ssd-western-digital-blue-sn5100-500gb-pcie-gen4-x4-nvme-m-2-wds500g5b0e
 MemoryZone,SSD,SSD Biwin NV7200 1TB M.2 PCIe Gen4 x4 NVMe BNV720001TB-RGX,2.990.000,+0%,+0%,,,https://memoryzone.com.vn/ssd-biwin-nv7200-1tb-m-2-pcie-gen4-x4-nvme-bnv720001tb-rgx
 MemoryZone,SSD,SSD Biwin Black Opal NV7400 1TB M.2 PCIe Gen4 x4 NVMe BNV740001TB-RGX,3.650.000,+0%,,,,https://memoryzone.com.vn/ssd-biwin-black-opal-nv7400-1tb-m-2-pcie-gen4-x4-nvme-bnv740001tb-rgx
 MemoryZone,SSD,SSD Kioxia Exceria Plus G3 1TB M.2 PCIe Gen4 x4 BiCS FLASH LSD10Z001TG8,3.750.000,+2.7%,+4.5%,,,https://memoryzone.com.vn/ssd-kioxia-toshiba-exceria-plus-g3-1tb-m-2-pcie-gen4-x4-bics-flash-lsd10z001tg8
@@ -39,7 +39,7 @@ MemoryZone,Laptop,"Laptop Lenovo ThinkPad E14 Gen 7 21U2006FVA (Ultra 7 258V, In
 MemoryZone,Laptop,"Laptop Lenovo ThinkPad E16 Gen 3 21SR002LVA (Ultra 7 255H, Intel Arc Graphics, RAM 16GB DDR5, SSD 512GB, 16 Inch IPS FHD+ 60Hz, NoOS)",36.900.000,+0%,+0%,,,https://memoryzone.com.vn/laptop-lenovo-thinkpad-e16-gen-3-21sr002lva
 MemoryZone,Laptop,"Laptop Lenovo LOQ 15IRX10 83JE01AGVN (i7-13645HX, RTX 5050 8GB, RAM 16GB DDR5, SSD 512GB, 15.6 Inch IPS FHD 144Hz 100% sRGB, Win 11 Home)",37.500.000,+0%,,,,https://memoryzone.com.vn/laptop-lenovo-loq-15irx10-83je01agvn
 MemoryZone,Laptop,"Laptop MSI Cyborg 15 B2RWFKG-048VN (Core 7 240H, RTX 5060 8GB, RAM 16GB D5, SSD 512GB, 15.6 Inch FHD IPS 144Hz)",37.900.000,+0%,,,,https://memoryzone.com.vn/laptop-msi-cyborg-15-b2rwfkg-048vn
-MemoryZone,Laptop,"Laptop Lenovo ThinkPad E14 Gen 7 21U2006GVA (Ultra 7 258V, Intel Arc Graphics, RAM 32GB, SSD 1TB, 14 inch IPS WUXGA 60Hz, NoOS)",41.900.000,,,,,https://memoryzone.com.vn/laptop-lenovo-thinkpad-e14-gen-7-21u2006gva
+MemoryZone,Laptop,"Laptop Lenovo ThinkPad E14 Gen 7 21U2006GVA (Ultra 7 258V, Intel Arc Graphics, RAM 32GB, SSD 1TB, 14 inch IPS WUXGA 60Hz, NoOS)",41.900.000,+0%,,,,https://memoryzone.com.vn/laptop-lenovo-thinkpad-e14-gen-7-21u2006gva
 MemoryZone,Laptop,"Laptop MSI Katana 15 HX B14WEK-027VN (i7-14650HX, RTX 5050 8GB, RAM 32GB DDR5, SSD 512GB, 15.6 Inch QHD IPS 165Hz 100% DCI-P3, Win 11)",45.900.000,,,,,https://memoryzone.com.vn/laptop-msi-katana-15-hx-b14wek-027vn
 MemoryZone,HDD,HDD Toshiba S300 Surveillance 2TB 3.5 inch SATA III 128MB Cache 5400RPM HDWT720UZSVA,2.990.000,+0%,+4.9%,,,https://memoryzone.com.vn/hdd-toshiba-s300-surveillance-2tb-3-5-inch-sata-iii-128mb-cache-5400rpm-hdwt720uzsva
 MemoryZone,HDD,HDD Toshiba S300 Surveillance 4TB 3.5 inch SATA III 256MB Cache 5400RPM HDWT840UZSVA,4.790.000,+0%,,,,https://memoryzone.com.vn/hdd-toshiba-s300-surveillance-4tb-3-5-inch-sata-iii-256mb-cache-5400rpm-hdwt840uzsva
@@ -53,7 +53,7 @@ MemoryZone,HDD,HDD Synology HAT3300 Plus 6TB 3.5 inch SATA 256MB Cache 5400RPM H
 MemoryZone,HDD,HDD WD Ultrastar DC HA340 6TB 3.5 inch SATA III 256MB Cache 7200RPM WUS721206BLE6L4,8.990.000,+0%,-5.9%,,,https://memoryzone.com.vn/hdd-wd-ultrastar-dc-ha340-6tb-3-5-inch-sata-iii-256mb-cache-7200rpm-wus721206ble6l4
 MemoryZone,HDD,HDD Toshiba S300 Pro Surveillance 8TB 3.5 inch SATA III 512MB Cache 7200RPM MD10ADA800V,10.900.000,+0%,,,,https://memoryzone.com.vn/hdd-toshiba-s300-pro-surveillance-8tb-3-5-inch-sata-iii-512mb-cache-7200rpm-md10ada800v
 MemoryZone,HDD,HDD Synology HAT3320 Plus 8TB 3.5 inch SATA 512MB Cache 7200 RPM HAT3320-8T,12.450.000,+0%,+0%,,,https://memoryzone.com.vn/hdd-synology-hat3320-8tb-3-5-inch-sata-512mb-cache-7200-rpm-hat3320-8t
-MemoryZone,HDD,HDD WD Ultrastar DC HA340 10TB 3.5 inch SATA III 512MB Cache 7200RPM WUS721210BLE6L4,13.900.000,+0%,-2.8%,,,https://memoryzone.com.vn/hdd-wd-ultrastar-dc-ha340-10tb-3-5-inch-sata-iii-512mb-cache-7200rpm-wus721210ble6l4
+MemoryZone,HDD,HDD WD Ultrastar DC HA340 10TB 3.5 inch SATA III 512MB Cache 7200RPM WUS721210BLE6L4,13.900.000,+0%,+0%,,,https://memoryzone.com.vn/hdd-wd-ultrastar-dc-ha340-10tb-3-5-inch-sata-iii-512mb-cache-7200rpm-wus721210ble6l4
 MemoryZone,HDD,HDD Synology HAT3310 Plus 12TB 3.5 inch SATA 512MB Cache 7200 RPM HAT3310-12T,15.300.000,+0%,+2.1%,,,https://memoryzone.com.vn/hdd-synology-hat3310-12tb-3-5-inch-sata-256mb-cache-7200-rpm-hat3310-12t
 MemoryZone,HDD,HDD WD Ultrastar DC HA340 12TB 3.5 inch SATA III 512MB Cache 7200RPM WUS721212BLE6L4,16.390.000,+0%,+0%,,,https://memoryzone.com.vn/hdd-wd-ultrastar-dc-ha340-12tb-3-5-inch-sata-iii-512mb-cache-7200rpm-wus721212ble6l4
 MemoryZone,HDD,HDD Synology HAT5320 8TB 3.5 inch SATA 512MB Cache 7200RPM HAT5320-8T,16.900.000,+0%,+0%,,,https://memoryzone.com.vn/hdd-synology-hat5320-8tb-3-5-inch-sata-512mb-cache-7200rpm-hat5320-8t
@@ -107,14 +107,14 @@ MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính Corsair RM850e ATX 3.1 85
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính Corsair RM850e White ATX 3.1 850W Cybenetics Gold CP-9020293-NA,2.850.000,+0%,+0%,,,https://memoryzone.com.vn/nguon-may-tinh-corsair-rm850e-white-atx-3-1-850w-cybenetics-gold-cp-9020293-na
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower ZILLION SFX 750W ATX 3.1 80 Plus Gold SF-750Z92SFG,3.300.000,+0%,+0%,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-zillion-sfx-750w-atx-3-1-80-plus-gold-sf-750z92sfg
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính MSI MAG A1000GL PCIE5 1000W 80 Plus Gold MAG-A1000GL-PCIE5,3.350.000,+0%,+0%,,,https://memoryzone.com.vn/nguon-may-tinh-msi-mag-a1000gl-pcie5-1000w-80-plus-gold-mag-a1000gl-pcie5
-MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính Corsair RM1000e 1000W ATX 3.1 Cybenetics Gold CP-9020297-NA,3.650.000,+0%,,,,https://memoryzone.com.vn/nguon-may-tinh-corsair-rm1000e-atx-3-1-cybenetics-gold-cp-9020297-na
-MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower ZILLION SFX 850W ATX 3.1 80 Plus Gold SF-850Z92SFG,3.690.000,+2.8%,+2.8%,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-zillion-sfx-850w-atx-3-1-80-plus-gold-sf-850z92sfg
+MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính Corsair RM1000e 1000W ATX 3.1 Cybenetics Gold CP-9020297-NA,3.650.000,+0%,-2.7%,,,https://memoryzone.com.vn/nguon-may-tinh-corsair-rm1000e-atx-3-1-cybenetics-gold-cp-9020297-na
+MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower ZILLION SFX 850W ATX 3.1 80 Plus Gold SF-850Z92SFG,3.690.000,+0%,+2.8%,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-zillion-sfx-850w-atx-3-1-80-plus-gold-sf-850z92sfg
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính Corsair RM1200e 1200W ATX 3.1 80 Plus Gold CP-9020258-NA,4.350.000,+0%,-5.2%,,,https://memoryzone.com.vn/nguon-may-tinh-corsair-rm1200e-1200w-atx-3-1-80-plus-gold-cp-9020258-na
-MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower Leadex VII XG 1000W ATX 3.1 White 80 Plus Gold SF-1000F14XG-WH,4.490.000,+0.9%,+2.3%,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-leadex-vii-xg-1000w-atx3-1-white-80-plus-gold-sf-1000f14xg
-MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower Leadex VII XG 1000W ATX3.1 80 Plus Gold SF-1000F14XG,4.590.000,+13.3%,+13.3%,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-leadex-vii-xg-1000w-atx3-1-80-plus-gold-sf-1000f14xg
+MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower Leadex VII XG 1000W ATX 3.1 White 80 Plus Gold SF-1000F14XG-WH,4.490.000,+0%,+2.3%,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-leadex-vii-xg-1000w-atx3-1-white-80-plus-gold-sf-1000f14xg
+MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower Leadex VII XG 1000W ATX3.1 80 Plus Gold SF-1000F14XG,4.590.000,+0%,+13.3%,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-leadex-vii-xg-1000w-atx3-1-80-plus-gold-sf-1000f14xg
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính MSI MAG A1200PLS PCIE5 1200W 80 Plus Titanium MAG-A1200PLS-PCIE5,4.900.000,+0%,+0%,,,https://memoryzone.com.vn/nguon-may-tinh-msi-mag-a1200pls-pcie5-1200w-80-plus-titanium-mag-a1200pls-pcie5
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính Corsair RM1000x Shift White 1000W 80 Plus Gold CP-9020275-NA,4.900.000,+0%,,,,https://memoryzone.com.vn/nguon-may-tinh-corsair-rm1000x-shift-white-1000w-80-plus-gold-cp-9020275-na
-MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower Leadex VIII Platinum Pro 1000W ATX 3.1 Cybenetics Titanium SF-1000F14SP(T),5.100.000,+0%,,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-leadex-viii-platinum-pro-1000w-atx-3-1-cybenetics-titanium-sf-1000f14sp-t
+MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower Leadex VIII Platinum Pro 1000W ATX 3.1 Cybenetics Titanium SF-1000F14SP(T),5.100.000,+0%,+0%,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-leadex-viii-platinum-pro-1000w-atx-3-1-cybenetics-titanium-sf-1000f14sp-t
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower Leadex VII XG 1300W ATX3.1 80 Plus Gold SF-1300F14XG,5.390.000,+0%,,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-leadex-vii-xg-1300w-atx3-1-80-plus-gold-sf-1300f14xg
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính SuperFlower Leadex VII PRO 1200W ATX3.1 WHITE 80 Plus Platinum SF-1200F14XP-WH,5.650.000,+0%,,,,https://memoryzone.com.vn/nguon-may-tinh-superflower-leadex-vii-pro-1200w-atx3-1-white-80-plus-platinum-sf-1200f14xp-wh
 MemoryZone,Màn hình,Màn hình MSI PRO MP225 E12VL VA 21.45 inch FHD 120Hz,1.530.000,+0%,-1.3%,,,https://memoryzone.com.vn/man-hinh-msi-pro-mp225-e12vl-va-21-45-inch-fhd-120hz
@@ -142,7 +142,7 @@ HACOM (Hà Nội),RAM Laptop,Ram Laptop Kingston (KVR32S22S8/16 / KVR32S22D8/16 
 HACOM (Hà Nội),RAM Laptop,RAM Laptop KINGSTON (KVR56S46BS6-8) 8GB (1x8GB) DDR5 5600MHz,4.990.000,+0%,+13.7%,,,https://hacom.vn/ram-kingston-8gb-ddr5-5600mhz-kvr56s46bs6-8
 HACOM (Hà Nội),RAM Laptop,RAM Laptop Gskill (F4-3200C22S-8GRS) 8GB (1x8GB) DDR4 3200MHz,2.990.000,+0%,+0%,,,https://hacom.vn/ram-gskill-8gb-ddr4-3200mhz-f4-3200c22s-8grs
 HACOM (Hà Nội),RAM Laptop,RAM Laptop Gskill (F4-3200C22S-16GRS) 16GB (1x16GB) DDR4 3200MHz,4.990.000,+0%,+0%,,,https://hacom.vn/ram-gskill-16gb-ddr4-3200mhz-f4-3200c22s-16grs
-HACOM (Hà Nội),RAM Laptop,Ram Laptop Gskill Ripjaws (F5-5600S4040A16GX1-RS) 16G (1x16GB) DDR5 5600MHz,7.990.000,+14.3%,+14.3%,,,https://hacom.vn/ram-laptop-gskill-ripjaws-rags0574
+HACOM (Hà Nội),RAM Laptop,Ram Laptop Gskill Ripjaws (F5-5600S4040A16GX1-RS) 16G (1x16GB) DDR5 5600MHz,7.990.000,+0%,+14.3%,,,https://hacom.vn/ram-laptop-gskill-ripjaws-rags0574
 HACOM (Hà Nội),RAM Laptop,Ram Laptop Gskill Ripjaws (F5-5600S4040A32GX1-RS) 32GB (1x32GB) DDR5 5600MHz,14.990.000,,,,,https://hacom.vn/ram-laptop-gskill-ripjaws-rags0580
 HACOM (Hà Nội),RAM Laptop,RAM Laptop LEXAR (LD4AS008G-R3200GSST) 8GB (1x8GB) DDR4 3200MHz,2.990.000,+0%,+0%,,,https://hacom.vn/ram-lexar-8gb-ddr4-3200mhz-ld4as008g-r3200gsst
 HACOM (Hà Nội),RAM Laptop,RAM Laptop Kingston (KVR56S46BS8-16/KVR56S46BS8-16WP) 16GB (1x16GB) DDR5 5600MHz,7.990.000,+0%,+0%,,,https://hacom.vn/ram-kingston-16gb-ddr5-5600mhz-kvr56s46bs8-16
@@ -227,7 +227,7 @@ HACOM (Hà Nội),HDD,"Ổ Cứng HDD SEAGATE Skyhawk 6TB 3.5 inch, 5400RPM, SAT
 HACOM (Hà Nội),HDD,"Ổ Cứng HDD WD Purple 8TB 3.5 inch, 5640RPM, SATA III, 256MB Cache (WD85PURZ)",11.990.000,+0%,+0%,,,https://hacom.vn/o-cung-hdd-wd-purple-8tb-3.5-inch-5640rpm-sata-iii-256mb-cache
 HACOM (Hà Nội),HDD,"Ổ Cứng HDD WD Purple Pro 10TB 3.5 inch, 7200RPM, SATA III, 512MB Cache (WD102PURP)",15.990.000,+0%,+0%,,,https://hacom.vn/o-cung-hdd-wd-purple-pro-10tb-3.5-inch-7200rpm-sata-iii-512mb-cache
 HACOM (Hà Nội),HDD,"Ổ Cứng HDD Hikvision AI 16TB 3.5 inch, 7200RPM, SATA III, 512MB Cache - chuyên dụng Camera (DS160HKAI-VX1)",24.990.000,+0%,+0%,,,https://hacom.vn/o-cung-hdd-hikvision-ai-16tb-3.5-inch-7200rpm-sata-iii-512mb-cache-chuyen-dung-camera-ds160hkai-vx1
-HACOM (Hà Nội),HDD,"Ổ Cứng HDD Hikvision AI 12TB 3.5 inch, 7200RPM, SATA III, 512MB Cache - chuyên dụng Camera (DS120HKAI-VX1)",14.990.000,,,,,https://hacom.vn/o-cung-hdd-hikvision-ai-12tb-3.5-inch-7200rpm-sata-iii-512mb-cache-chuyen-dung-camera-ds120hkai-vx1
+HACOM (Hà Nội),HDD,"Ổ Cứng HDD Hikvision AI 12TB 3.5 inch, 7200RPM, SATA III, 512MB Cache - chuyên dụng Camera (DS120HKAI-VX1)",14.990.000,+0%,,,,https://hacom.vn/o-cung-hdd-hikvision-ai-12tb-3.5-inch-7200rpm-sata-iii-512mb-cache-chuyen-dung-camera-ds120hkai-vx1
 HACOM (Hà Nội),HDD,"Ổ Cứng HDD WD 1TB Blue 3.5 inch, 5400RPM, SATA III, 64MB Cache (WD10EARZ)",4.590.000,+15%,+15%,,,https://hacom.vn/o-cung-hdd-wd-1tb-blue-35-inch-5400rpm-sata-iii-64mb-cache-hdwd0570
 HACOM (Hà Nội),HDD,"Ổ Cứng HDD WD 4TB Blue 3.5 inch, 5400RPM, SATA III, 128MB Cache (WD40EZZX)",5.990.000,+0%,+20%,,,https://hacom.vn/o-cung-hdd-wd-4tb-blue-35-inch-5400rpm-sata-iii-128mb-cache-hdwd0579
 HACOM (Hà Nội),HDD,"Ổ Cứng HDD WD 4TB Purple 3.5 inch, 5400RPM, SATA III, 128MB Cache (WD44PURZ)",5.390.000,+0%,+8%,,,https://hacom.vn/o-cung-hdd-wd-4tb-purple-35-inch-5400rpm-sata-iii-128mb-cache-hdwd0580
@@ -257,11 +257,11 @@ HACOM (Hà Nội),VGA - Card màn hình,Card màn hình Gigabyte RX 6500 XT EAGL
 HACOM (Hà Nội),VGA - Card màn hình,Card màn hình Gigabyte RTX 3060 WINDFORCE OC 12G,11.999.000,+9.1%,+20%,,,https://hacom.vn/card-man-hinh-gigabyte-rtx-3060-windforce-oc-12g
 HACOM (Hà Nội),VGA - Card màn hình,Card màn hình Asus DUAL-RX 6500 XT-O4G-V2,4.999.000,+0%,+0%,,,https://hacom.vn/card-man-hinh-asus-dual-rx-6500-xt-o4g-v2
 HACOM (Hà Nội),VGA - Card màn hình,Card màn hình MSI RTX 3050 VENTUS 2X 6G OC,5.999.000,+0%,+22.5%,,,https://hacom.vn/card-man-hinh-msi-rtx-3050-ventus-2x-6g-oc
-HACOM (Hà Nội),Mainboard,Mainboard ASUS TUF GAMING Z890-PLUS WIFI DDR5,8.999.000,+0.3%,+12.5%,,,https://hacom.vn/mainboard-asus-tuf-gaming-z890-plus-wifi-ddr5
-HACOM (Hà Nội),Mainboard,Mainboard ASUS PRIME Z890-P WIFI-CSM,6.999.000,-9.2%,,,,https://hacom.vn/mainboard-asus-prime-z890-p-wifi-csm
+HACOM (Hà Nội),Mainboard,Mainboard ASUS TUF GAMING Z890-PLUS WIFI DDR5,8.999.000,+0%,+12.5%,,,https://hacom.vn/mainboard-asus-tuf-gaming-z890-plus-wifi-ddr5
+HACOM (Hà Nội),Mainboard,Mainboard ASUS PRIME Z890-P WIFI-CSM,6.999.000,+0%,,,,https://hacom.vn/mainboard-asus-prime-z890-p-wifi-csm
 HACOM (Hà Nội),Mainboard,Mainboard Gigabyte Z890 EAGLE,7.999.000,,,,,https://hacom.vn/mainboard-gigabyte-z890-eagle
 HACOM (Hà Nội),Mainboard,Mainboard Gigabyte B860M GAMING X WIFI 6E,5.899.000,,,,,https://hacom.vn/mainboard-gigabyte-b860m-gaming-x-wifi-6e
-HACOM (Hà Nội),Mainboard,Mainboard ASUS PRIME Z890-P-CSM DDR5,6.599.000,-10.3%,-10.8%,,,https://hacom.vn/mainboard-asus-prime-z890-p-csm-mbas0873
+HACOM (Hà Nội),Mainboard,Mainboard ASUS PRIME Z890-P-CSM DDR5,6.599.000,+0%,-10.8%,,,https://hacom.vn/mainboard-asus-prime-z890-p-csm-mbas0873
 HACOM (Hà Nội),Mainboard,Mainboard Gigabyte Z890 AORUS ELITE WIFI7 PLUS,8.999.000,,,,,https://hacom.vn/mainboard-gigabyte-z890-aorus-elite-wifi7-plus-mbgi0813
 HACOM (Hà Nội),Mainboard,Mainboard ASUS TUF GAMING B760M-PLUS WIFI D4,3.599.000,-25%,+0%,,,https://hacom.vn/mainboard-asus-tuf-gaming-b760m-plus-wifi-d4
 HACOM (Hà Nội),Mainboard,Mainboard ASUS TUF GAMING Z790 PLUS WIFI DDR5,7.999.000,+0%,+0%,,,https://hacom.vn/mainboard-asus-tuf-gaming-z790-plus-wifi-ddr5
@@ -273,7 +273,7 @@ HACOM (Hà Nội),Mainboard,Mainboard ASUS TUF GAMING B550M-PLUS WIFI II,3.999.0
 HACOM (Hà Nội),Mainboard,Mainboard ASUS TUF GAMING X870-PLUS WIFI,10.699.000,+0%,+0%,,,https://hacom.vn/mainboard-asus-tuf-gaming-x870-plus-wifi
 HACOM (Hà Nội),Mainboard,Mainboard ASUS CROSSHAIR X870E HERO,20.599.000,+0%,,,,https://hacom.vn/mainboard-asus-crosshair-x870e-hero
 HACOM (Hà Nội),Mainboard,Mainboard ASUS ROG STRIX X870-F GAMING WIFI,13.999.000,+0%,,,,https://hacom.vn/mainboard-asus-rog-strix-x870-f-gaming-wifi
-HACOM (Hà Nội),Mainboard,Mainboard ASUS ROG STRIX Z890-F GAMING WIFI DDR5,14.999.000,-9.4%,,,,https://hacom.vn/mainboard-asus-rog-strix-z890-f-gaming-wifi-ddr5
+HACOM (Hà Nội),Mainboard,Mainboard ASUS ROG STRIX Z890-F GAMING WIFI DDR5,14.999.000,+0%,,,,https://hacom.vn/mainboard-asus-rog-strix-z890-f-gaming-wifi-ddr5
 HACOM (Hà Nội),Mainboard,Mainboard COLORFUL CVN B860M Gaming FROZEN,4.999.000,+0%,+0%,,,https://hacom.vn/mainboard-colorful-cvn-b860m-gaming-frozen-mbcl0005
 HACOM (Hà Nội),Mainboard,Mainboard Asus PRIME H610M-K D4,1.599.000,-33.3%,+3.2%,,,https://hacom.vn/mainboard-asus-prime-h610m-k-d4
 HACOM (Hà Nội),Mainboard,Mainboard ASUS PRIME H610M-F WIFI D4,2.699.000,+0%,+0%,,,https://hacom.vn/mainboard-asus-prime-h610m-f-wifi-d4-mbas0864
@@ -320,13 +320,13 @@ HACOM (Hà Nội),Màn hình,Màn hình Gigabyte GS24F14 (23.8 inch/FHD/IPS/144h
 HACOM (Hà Nội),Màn hình,Màn hình ASUS VA249HG (23.8 inch/FHD/IPS/120Hz/1ms),3.299.000,+0%,+0%,,,https://hacom.vn/man-hinh-asus-va249hg
 HACOM (Hà Nội),Màn hình,Màn hình Asus TUF VG259Q5A (24.5 inch/FHD/IPS/200Hz/1ms/Loa),3.999.000,+0%,,,,https://hacom.vn/man-hinh-asus-tuf-vg259q5a
 HACOM (Hà Nội),Màn hình,Màn hình LG UltraGear 27G850A-B (27 inch/Nano IPS/UHD-240Hz/FHD-480Hz/1ms),18.990.000,+0%,+0%,,,https://hacom.vn/man-hinh-lg-ultragear-27g850a-b
-HACOM (Hà Nội),Màn hình,Màn hình Samsung Odyssey G5 G55C LS32CG552EEXXV (32 inch/QHD/VA/165Hz/1ms/cong),7.999.000,+0%,,,,https://hacom.vn/man-hinh-samsung-odyssey-g5-g55c-ls32cg552eexxv
+HACOM (Hà Nội),Màn hình,Màn hình Samsung Odyssey G5 G55C LS32CG552EEXXV (32 inch/QHD/VA/165Hz/1ms/cong),7.999.000,+0%,+0%,,,https://hacom.vn/man-hinh-samsung-odyssey-g5-g55c-ls32cg552eexxv
 HACOM (Hà Nội),Màn hình,Màn hình Samsung LS34C500GAEXXV (34 inch/WQHD/VA/100Hz/5ms),7.399.000,+0%,+0%,,,https://hacom.vn/man-hinh-samsung-ls34c500gaexxv
 HACOM (Hà Nội),Màn hình,Màn hình Samsung LC34G55TWWEXXV (34 inch/WQHD/VA/165Hz/1ms),8.499.000,+0%,+0%,,,https://hacom.vn/man-hinh-samsung-lc34g55twwexxv-mosa0233
 HACOM (Hà Nội),Màn hình,Màn hình LG UltraGear 34GX90SA-W (34 inch/WQHD/OLED/240Hz/0.03ms/webOS/cong),33.990.000,+0%,+0%,,,https://hacom.vn/man-hinh-ultragear-34gx90sa-w
 HACOM (Hà Nội),Màn hình,Màn hình Samsung Odyssey G8 LS34DG850SEXXV (34 inch/WQHD/OLED/175Hz/0.03ms/Smart/cong),26.999.000,+0%,+0%,,,https://hacom.vn/man-hinh-samsung-odyssey-g8-ls34dg850sexxv
 HACOM (Hà Nội),Màn hình,Màn hình Dell Pro Plus P3425WE (34 inch/WQHD/IPS/100Hz/5ms/USB-C 90W),17.990.000,+0%,+0%,,,https://hacom.vn/man-hinh-dell-pro-plus-p3425we
-HACOM (Hà Nội),Màn hình,Màn hình Dell Ultrasharp U3425WE (34 inch/QHD/IPS/120Hz/5ms/USB-C),25.999.000,+0%,,,,https://hacom.vn/man-hinh-dell-ultrasharp-u3425we
+HACOM (Hà Nội),Màn hình,Màn hình Dell Ultrasharp U3425WE (34 inch/QHD/IPS/120Hz/5ms/USB-C),25.999.000,+0%,+0%,,,https://hacom.vn/man-hinh-dell-ultrasharp-u3425we
 HACOM (Hà Nội),Màn hình,Màn hình Asus TUF VG34WQML5A (34 inch/WQHD/VA/250Hz/1ms/loa),9.999.000,+0%,+0%,,,https://hacom.vn/man-hinh-asus-tuf-vg34wqml5a
 HACOM (Hà Nội),Màn hình,Màn hình Samsung Odyssey OLED G8 LS34BG850SEXXV (34 inch/WQHD/OLED/175Hz/0.1ms/cong),29.000.000,+0%,,,,https://hacom.vn/man-hinh-samsung-odyssey-oled-g8-ls34bg850sexxv
 GEARVN,RAM Laptop,Ram Laptop Kingston 32GB 2Rx8 4G x 64-Bit 5600 Mhz CL46 (KVR56S46BD8-32),12.990.000,+0%,+0%,,,https://gearvn.com/products/ram-laptop-kingston-32gb-2rx8-4g-x-64-bit-5600-mhz-cl46-kvr56s46bd8-32
@@ -394,8 +394,8 @@ An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 16GB DDR5 bus 6400 (
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR5 bus 5600 (KVR56S46BS6-8),5.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-8gb-ddr5-bus-5600-kvr56s46bs6-8.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingmax 16GB DDR4 bus 3200MHz,7.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingmax-gsoh22f-16gb-ddr4-3200mhz-ddr4-so-dimm-pc4-25600-16gb-1-2v.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 16GB DDR5 bus 5600 (KVR56S46BS8-16WP),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-16gb-ddr5-bus-5600-kvr56s46bs8-16wp.html
-An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 16GB DDR4 bus 3200 (KVR32S22D8/16WP),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-16gb-ddr4-bus-3200-kvr32s22d8/16wp.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR4 bus 3200 (KVR32S22S8/8WP),4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-8gb-ddr4-bus-3200-kvr32s22s8/8wp.html
+An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 16GB DDR4 bus 3200 (KVR32S22D8/16WP),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-16gb-ddr4-bus-3200-kvr32s22d8/16wp.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop 8GB DDR5 4800MHz OEM,2.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-8gb-ddr5-4800mhz-oem.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR4 bus 3200 MHz,4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-kingston-8gb-ddr4-3200-s22-1rx8-sodimm-kvr32s22s8-8_id33196.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 16GB DDR5 bus 4800Mhz CL40 (CT16G48C40S5),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-crucial-16gb-ddr5-bus-4800mhz-cl40-ct16g48c40s5.html
@@ -412,7 +412,7 @@ An Phát Computer (Hà Nội),SSD,Ổ cứng SSD TeamGroup MP44L 1TB M.2 2280 PC
 An Phát Computer (Hà Nội),SSD,Ổ cứng SSD TeamGroup G50 512GB M.2 PCIe Gen4x4,4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-ssd-teamgroup-g50-512gb-m.2-pcie-gen4x4.html
 An Phát Computer (Hà Nội),SSD,Ổ Cứng Western Digital Purple 8TB 256MB Cache WD85PURZ,12.999.000,+0%,+18.2%,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-8tb-256mb-cache-wd85purz.html
 An Phát Computer (Hà Nội),SSD,Ổ cứng SSD TeamGroup VULCAN Z QLC 1TB 2.5 inch SATA III,4.990.000,+0%,,,,https://www.anphatpc.com.vn/o-cung-ssd-teamgroup-vulcan-z-qlc-1tb-2.5-inch-sata-iii.html
-An Phát Computer (Hà Nội),SSD,Ổ Cứng Western Digital Purple Pro 10TB 3.5 inch SATA 3 512MB Cache 7200RPM WD102PURP,15.999.000,+0%,+14.3%,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-pro-10tb-3.5-inch-sata-3-512mb-cache-7200rpm-wd102purp.html
+An Phát Computer (Hà Nội),SSD,Ổ Cứng Western Digital Purple Pro 10TB 3.5 inch SATA 3 512MB Cache 7200RPM WD102PURP,15.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-pro-10tb-3.5-inch-sata-3-512mb-cache-7200rpm-wd102purp.html
 An Phát Computer (Hà Nội),SSD,Ổ Cứng Western Digital Purple 6TB 256MB Cache (WD64PURZ),8.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-6tb-256mb-cache-wd64purz.html
 An Phát Computer (Hà Nội),SSD,Ổ cứng SSD TeamGroup VULCAN Z 512GB 2.5 inch SATA III,2.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-ssd-teamgroup-vulcan-z-512gb-2.5-inch-sata-iii.html
 An Phát Computer (Hà Nội),SSD,"Ổ cứng SSD Samsung 870 EVO 500GB 2.5"" SATA 3 (MZ-77E500BW)",8.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-ssd-samsung-870-evo-500gb-2.5-quot-sata-3-mz-77e500bw_id36410.html
@@ -428,21 +428,21 @@ An Phát Computer (Hà Nội),SSD,Ổ cứng SSD Samsung 990 EVO Plus 1TB M.2 NV
 An Phát Computer (Hà Nội),SSD,Ổ cứng SSD Samsung 980 500GB M.2 NVMe PCIe Gen 3.0 x4 MZ-V8V500BW,7.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-ssd-samsung-980-500gb-m.2-nvme-pcie-gen-3.0-x4-mz-v8v500bw_id37441.html
 An Phát Computer (Hà Nội),SSD,Ổ cứng SSD Samsung 990 PRO 1TB M.2 NVMe M.2 2280 PCIe Gen4.0 x4 MZ-V9P1T0BW,9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-ssd-samsung-990-pro-1tb-m.2-nvme-m.2-2280-pcie-gen4.0-x4-mz-v9p1t0bw.html
 An Phát Computer (Hà Nội),SSD,"Ổ cứng SSD Samsung 870 EVO 1TB 2.5"" SATA 3 (MZ-77E1T0BW)",10.289.000,+28.6%,+28.6%,,,https://www.anphatpc.com.vn/o-cung-ssd-samsung-870-evo-1tb-2.5-quot-sata-3-mz-77e1t0bw_id36411.html
-An Phát Computer (Hà Nội),SSD,Ổ cứng SSD Kingston KC3000 1024GB NVMe PCIe Gen 4.0 ( SKC3000S/1024G ),9.499.000,+18.8%,,,,https://www.anphatpc.com.vn/o-cung-ssd-kingston-kc3000-1024gb-nvme-pcie-gen-4.0-kc3000s-1024g.html
+An Phát Computer (Hà Nội),SSD,Ổ cứng SSD Kingston KC3000 1024GB NVMe PCIe Gen 4.0 ( SKC3000S/1024G ),9.499.000,+18.8%,+18.8%,,,https://www.anphatpc.com.vn/o-cung-ssd-kingston-kc3000-1024gb-nvme-pcie-gen-4.0-kc3000s-1024g.html
 An Phát Computer (Hà Nội),Laptop,Laptop ASUS Vivobook Go 14 E1404FA-EB935W (AMD Mendocino R5 | AMD Radeon Graphics | 14.0-inch FHD | 16GB | 512GB | Windows 11 | Bạc),19.990.000,+0%,+0%,,,https://www.anphatpc.com.vn/laptop-asus-vivobook-go-14-e1404fa-eb935w.html
-An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB M.2 NVMe™ PCIe® 3.0 SSD,19.990.000,-13%,+0%,,,
+An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB M.2 NVMe™ PCIe® 3.0 SSD,19.990.000,+0%,+0%,,,
 An Phát Computer (Hà Nội),Laptop,Laptop ASUS TUF Gaming F16 FX608JHI-TU209W (Intel Core i7 Processor 14650HX | RTX 5050 | 16 inch FHD+ 144Hz | 16GB | 512GB | Win 11 | Xám),42.990.000,+13.2%,+0%,,,https://www.anphatpc.com.vn/laptop-asus-tuf-gaming-f16-fx608jhi-tu209w.html
-An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB PCIe® 4.0 NVMe™ M.2 SSD,42.990.000,-12.2%,+0%,,,
+An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB PCIe® 4.0 NVMe™ M.2 SSD,42.990.000,+0%,+0%,,,
 An Phát Computer (Hà Nội),Laptop,Laptop Gigabyte Gaming A16 CMHI2MY893SH (Intel Core i7-13620H | RTX 4050 6GB | 16GB | 512GB | 16 inch WUXGA 165Hz | Win 11),32.990.000,,,,,https://www.anphatpc.com.vn/laptop-gigabyte-gaming-a16-cmhi2my893sh.html
 An Phát Computer (Hà Nội),Laptop,Laptop ASUS Gaming V16 V3607VJ-TK189W (Intel Core 5 210H | RTX 3050 6GB | 16-inch WUXGA | 16GB | 512GB | Windows 11 | Đen),32.990.000,+27.9%,,,,https://www.anphatpc.com.vn/laptop-asus-gaming-v16-v3607vj-tk189w.html
 An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB M.2 NVMe™ PCIe® 4.0 SSD,32.990.000,+0%,,,,
 An Phát Computer (Hà Nội),Laptop,Laptop HP 250R G10 C3SH7AT (Intel Core 5 120U | 16GB | 512GB | Intel Graphics | 15.6 inch FHD IPS | Win 11 | Bạc),27.990.000,+0%,,,,https://www.anphatpc.com.vn/laptop-hp-250r-g10-c3sh7at.html
 An Phát Computer (Hà Nội),Laptop,Laptop Dell 15 DC15250-i5U165W11SLU-5 (Intel Core i5-1334U | 16GB | 512GB | Intel Graphics | 15.6 inch FHD | Win 11 | Office | Bạc),25.990.000,+4%,+8.3%,,,https://www.anphatpc.com.vn/laptop-dell-15-dc15250-i5u165w11slu-5.html
-An Phát Computer (Hà Nội),Laptop,Laptop Acer Aspire Go 14 AG14-72P-563L NX.JSBSV.002 (Intel Core 5 processor 120U | 16GB | 512GB | Intel UHD | 14 inch FHD+ | Win 11 | Bạc),23.990.000,,,,,https://www.anphatpc.com.vn/laptop-acer-aspire-go-14-ag14-72p-563l-nx.jsbsv.002.html
-An Phát Computer (Hà Nội),Laptop,Laptop Acer Aspire Go 14 AI AG14-I71M-50AL NX.W25SV.001 (Intel Core Ultra 5 processor 125H | Intel Arc | 14 inch FHD+ | 16GB | 512GB | Win 11 | Xám),24.490.000,,,,,https://www.anphatpc.com.vn/laptop-acer-aspire-go-14-ai-ag14-i71m-50al-nx.w25sv.001.html
-An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB PCIe NVMe SSD,24.490.000,-21%,-21%,,,
+An Phát Computer (Hà Nội),Laptop,Laptop Acer Aspire Go 14 AG14-72P-563L NX.JSBSV.002 (Intel Core 5 processor 120U | 16GB | 512GB | Intel UHD | 14 inch FHD+ | Win 11 | Bạc),23.990.000,+0%,,,,https://www.anphatpc.com.vn/laptop-acer-aspire-go-14-ag14-72p-563l-nx.jsbsv.002.html
+An Phát Computer (Hà Nội),Laptop,Laptop Acer Aspire Go 14 AI AG14-I71M-50AL NX.W25SV.001 (Intel Core Ultra 5 processor 125H | Intel Arc | 14 inch FHD+ | 16GB | 512GB | Win 11 | Xám),24.490.000,+0%,,,,https://www.anphatpc.com.vn/laptop-acer-aspire-go-14-ai-ag14-i71m-50al-nx.w25sv.001.html
+An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB PCIe NVMe SSD,24.490.000,+0%,-21%,,,
 An Phát Computer (Hà Nội),Laptop,Laptop Lenovo IdeaPad Slim 3 14IWC11 83RQ002PVN (Intel Core 5 320 | Intel Graphics | 14 inch WUXGA IPS | 8GB | 512GB | Win 11 | Xám),22.990.000,+0%,,,,https://www.anphatpc.com.vn/laptop-lenovo-ideapad-slim-3-14iwc11-83rq002pvn.html
-An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB SSD M.2 2242 PCIe® 4.0x4 NVMe,22.990.000,-37.8%,-37.8%,,,
+An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB SSD M.2 2242 PCIe® 4.0x4 NVMe,22.990.000,+0%,-37.8%,,,
 An Phát Computer (Hà Nội),Laptop,Laptop MSI Cyborg 15 B2RWEKG - 402VN (Intel Core 5 210H | RTX 5050 8GB | 15.6 inch FHD 144Hz | 16GB | 512GB | Win 11 | Đen),29.990.000,+0%,+0%,,,https://www.anphatpc.com.vn/laptop-msi-cyborg-15-b2rwekg-402vn.html
 An Phát Computer (Hà Nội),Laptop,Ổ cứng: 512GB NVMe PCIe SSD Gen4x4 w/o DRAM,29.990.000,+0%,+0%,,,
 An Phát Computer (Hà Nội),Laptop,Laptop ASUS ProArt P16 H7606WP-SR335W (AMD Ryzen 9 HX 370 | RTX 5070 | 16 inch OLED 3K 120Hz cảm ứng | 64GB | 2TB | Win 11 | Đen),124.990.000,,,,,https://www.anphatpc.com.vn/laptop-asus-proart-p16-h7606wp-sr335w.html
@@ -461,7 +461,7 @@ An Phát Computer (Hà Nội),HDD,Ổ cứng Western Digital Caviar Blue 4TB 256
 An Phát Computer (Hà Nội),HDD,Kết nối : SATA 3 6.0Gb/s,6.999.000,+0%,+0%,,,
 An Phát Computer (Hà Nội),HDD,Ổ cứng Seagate Skyhawk AI 8TB 3.5'' ST8000VE001 (Chuyên dụng cho Camera),15.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-seagate-skyhawk-ai-8-tb-3.5-st8000ve001-chuyen-dung-cho-camera_id39884.html
 An Phát Computer (Hà Nội),HDD,Ổ Cứng Western Digital Purple 8TB 256MB Cache WD85PURZ,12.999.000,+0%,+18.2%,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-8tb-256mb-cache-wd85purz.html
-An Phát Computer (Hà Nội),HDD,Ổ Cứng Western Digital Purple Pro 10TB 3.5 inch SATA 3 512MB Cache 7200RPM WD102PURP,15.999.000,+0%,+14.3%,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-pro-10tb-3.5-inch-sata-3-512mb-cache-7200rpm-wd102purp.html
+An Phát Computer (Hà Nội),HDD,Ổ Cứng Western Digital Purple Pro 10TB 3.5 inch SATA 3 512MB Cache 7200RPM WD102PURP,15.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-pro-10tb-3.5-inch-sata-3-512mb-cache-7200rpm-wd102purp.html
 An Phát Computer (Hà Nội),HDD,Ổ Cứng Western Digital Purple 6TB 256MB Cache (WD64PURZ),8.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-western-digital-purple-6tb-256mb-cache-wd64purz.html
 An Phát Computer (Hà Nội),HDD,Ổ cứng Western Digital Red Plus 4TB 3.5 inch 128MB Cache 5400RPM WD40EFZZ,7.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-western-digital-red-plus-4tb-3.5-inch-128mb-cache-5400rpm-wd40efzz.html
 An Phát Computer (Hà Nội),HDD,Ổ cứng Western Digital Red Plus 8TB 3.5 inch 256MB cache 5640RPM WD80EFPX,12.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-western-digital-red-plus-8tb-3.5-inch-256mb-cache-5640rpm-wd80efpx.html
@@ -483,7 +483,7 @@ An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus DUAL RTX 3050 6GB (
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus TUF GAMING RTX 5070 Ti 16G GDDR7 WHITE OC (TUF-RTX5070TI-WHITE-GAMING),39.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-tuf-gaming-rtx-5070-ti-16g-gddr7-white-oc.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus TUF GAMING RTX 5090 32GB GDDR7 OC (TUF-RTX5090-O32G-GAMING),199.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-tuf-rtx-5090-32gb-gddr7-oc.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5050 8GB GDDR6 OC Edition (DUAL-RTX5050-O8G),12.199.000,+22%,+22%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5050-8gb-gddr6-oc-edition-dual-rtx5050-o8g.html
-An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS PRIME RTX 5060 Ti 16GB GDDR7 (PRIME-RTX5060TI-16G),21.999.000,+0%,,,,https://www.anphatpc.com.vn/vga-asus-prime-rtx-5060-ti-16gb-gddr7-prime-rtx5060ti-16g.html
+An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS PRIME RTX 5060 Ti 16GB GDDR7 (PRIME-RTX5060TI-16G),21.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-prime-rtx-5060-ti-16gb-gddr7-prime-rtx5060ti-16g.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus ROG Astral RTX 5080 16GB GDDR7 OC (ROG-ASTRAL-RTX5080-O16G-GAMING),59.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-rog-astral-rtx-5080-16gb-gddr7-oc.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus ROG Astral RTX 5090 32GB GDDR7 OC (ROG-ASTRAL-RTX5090-O32G-GAMING),139.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-rog-astral-rtx-5090-32gb-gddr7-oc.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5060 8GB GDDR7 OC (DUAL-RTX5060-O8G),11.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5060-8gb-gddr7-oc-dual-rtx5060-o8g.html
@@ -522,7 +522,7 @@ An Phát Computer (Hà Nội),Mainboard,Mainboard Gigabyte B760M H V2 DDR5,4.999
 An Phát Computer (Hà Nội),Mainboard,Mainboard ASUS PRIME H510M-K R2.0 (box),2.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/mainboard-asus-prime-h510m-k_id39164.html
 An Phát Computer (Hà Nội),Mainboard,Mainboard DarkFlash H610M-VGD-V1,2.399.000,+0%,+0%,,,https://www.anphatpc.com.vn/mainboard-darkflash-h610m-vgd-v1.html
 An Phát Computer (Hà Nội),Mainboard,Mainboard ASUS B650M AYW WIFI CSM DDR5,3.999.000,+0%,,,,https://www.anphatpc.com.vn/mainboard-asus-b650m-ayw-wifi-csm-ddr5.html
-An Phát Computer (Hà Nội),Mainboard,Mainboard Asus Prime H610M-K D4,2.399.000,+0%,,,,https://www.anphatpc.com.vn/mainboard-asus-prime-h610m-k-d4_id40447.html
+An Phát Computer (Hà Nội),Mainboard,Mainboard Asus Prime H610M-K D4,2.399.000,+0%,+0%,,,https://www.anphatpc.com.vn/mainboard-asus-prime-h610m-k-d4_id40447.html
 An Phát Computer (Hà Nội),Mainboard,Mainboard Asus PRIME B760M-F DDR4,2.799.000,+0%,,,,https://www.anphatpc.com.vn/mainboard-asus-prime-b760m-f-ddr4.html
 An Phát Computer (Hà Nội),Mainboard,Mainboard Asus PRIME B760M-K DDR4,5.999.000,+0%,,,,https://www.anphatpc.com.vn/mainboard-asus-prime-b760m-k-ddr4.html
 An Phát Computer (Hà Nội),PSU - Nguồn máy tính,Laptop Lenovo IdeaPad Slim 3 14IPH11 83UQ000JVN (Intel Core Ultra 5 322 | Intel Graphics | 14 inch WUXGA IPS | 16GB | 512GB | Win 11 | Xám),22.890.000,,,,,https://www.anphatpc.com.vn/laptop-lenovo-ideapad-slim-3-14iph11-83uq000jvn.html
@@ -593,9 +593,9 @@ ThinkPro,Laptop,ASUS ExpertBook P3 PM3406CHA-LY0089W,25.690.000,+0%,,,,https://t
 ThinkPro,Laptop,ASUS ExpertBook B9 B9403CVAR-KM1305W,39.290.000,,,,,https://thinkpro.vn/laptop/asus-expertbook-b9-b9403cvar-km1305w
 ThinkPro,Màn hình,Màn hình gaming ARZOPA M1RC 27'' 180Hz 2K QHD,3.990.000,+0%,+0%,,,https://thinkpro.vn/man-hinh/man-hinh-gaming-arzopa-m1rc-27-180hz-2k-qhd
 ThinkPro,Màn hình,Màn hình cong Dell Ultrasharp U4025QW (40Inch/ WUHD/ 5ms/ 120HZ/ 450cd/m2/ IPS),44.990.000,+0%,,,,https://thinkpro.vn/man-hinh/dell-ultrasharp-u4025qw
-ThinkPro,Màn hình,Màn hình đồ họa Dell Pro 32 Plus 4K P3225QE (31.5Inch/ 4K/ 5ms/ 100HZ/ 350cd/m2/ IPS),14.879.000,+0%,,,,https://thinkpro.vn/man-hinh/dell-pro-32-plus-4k-p3225qe-315inch-4k-5ms-100hz-350cdm2-ips
-ThinkPro,Màn hình,Lenovo L27q-4A 67BFGAC6VN (27Inch/ QHD (2560x1440)/ 4ms/ 100HZ/ 350cd/m2/ IPS/ Loa),4.569.000,+0%,,,,https://thinkpro.vn/man-hinh/lenovo-l27q-4a-67bfgac6vn-27inch-qhd-2560x1440-4ms-100hz-350cdm2-ips-loa
-ThinkPro,Màn hình,Lenovo ThinkVision S24i-30 63DEKAR3WW (23.8 inch - FHD - IPS - 4ms - 100Hz),2.469.000,+0%,,,,https://thinkpro.vn/man-hinh/lenovo-thinkvision-s24i-30-63dekar3ww-238-inch-fhd-ips-4ms-100hz
+ThinkPro,Màn hình,Màn hình đồ họa Dell Pro 32 Plus 4K P3225QE (31.5Inch/ 4K/ 5ms/ 100HZ/ 350cd/m2/ IPS),14.879.000,+0%,+0%,,,https://thinkpro.vn/man-hinh/dell-pro-32-plus-4k-p3225qe-315inch-4k-5ms-100hz-350cdm2-ips
+ThinkPro,Màn hình,Lenovo L27q-4A 67BFGAC6VN (27Inch/ QHD (2560x1440)/ 4ms/ 100HZ/ 350cd/m2/ IPS/ Loa),4.569.000,+0%,-2.4%,,,https://thinkpro.vn/man-hinh/lenovo-l27q-4a-67bfgac6vn-27inch-qhd-2560x1440-4ms-100hz-350cdm2-ips-loa
+ThinkPro,Màn hình,Lenovo ThinkVision S24i-30 63DEKAR3WW (23.8 inch - FHD - IPS - 4ms - 100Hz),2.469.000,+0%,+10.3%,,,https://thinkpro.vn/man-hinh/lenovo-thinkvision-s24i-30-63dekar3ww-238-inch-fhd-ips-4ms-100hz
 ThinkPro,Màn hình,Dell Alienware AW2725DM (27Inch/ 2K/ 1ms/ 180Hz/ Fast IPS),6.579.000,,,,,https://thinkpro.vn/man-hinh/dell-alienware-aw2725dm-27inch-2k-1ms-180hz-fast-ips
 ThinkPro,Màn hình,Dell UltraSharp U3425WE (34Inch/ UWQHD (3440x1440)/ 5ms/ 120Hz/ 300cd/m2/ IPS/ Loa/RJ45 / Type-C),22.559.000,,,,,https://thinkpro.vn/man-hinh/dell-ultrasharp-u3425we-34inch-uwqhd-5ms-120hz-ips-loa-rj45-type-c
 ThinkPro,Màn hình,Dell SE2725HM (27Inch/ Full HD/ 5ms/ 100HZ/ 250cd/m2/ IPS/ Black/ 3Y),3.490.000,,,,,https://thinkpro.vn/man-hinh/dell-se2725hm-27inch-full-hd-5ms-100hz-ips
@@ -667,12 +667,12 @@ Hoàng Hà PC (Hà Nội),Laptop,Laptop Gaming MSI Katana 15 HX B14WGK 022VN (Co
 Hoàng Hà PC (Hà Nội),Laptop,Laptop MSI Vector 16 HX AI A2XWHG 010VN (Ultra 7 255HX | 16GB | 512GB | RTX 5070 Ti | 16 inch QHD + 240Hz | Win 11 | Xám),66.990.000,+0%,+0%,,,https://hoanghapc.vn/laptop-msi-vector-16-hx-ai-a2xwhg-010vn
 Hoàng Hà PC (Hà Nội),Laptop,Laptop Gaming Gigabyte A16 CMHH2VN893SH (Core i5 13420H | RAM 16G | SSD 512GB | RTX 4050 6G | 16 inch FHD+ 165Hz),27.990.000,+0%,+0%,,,https://hoanghapc.vn/laptop-gaming-gigabyte-a16-cmhh2vn893sh
 Hoàng Hà PC (Hà Nội),Laptop,Laptop Gaming Gigabyte Aorus Master 16 BYH-C5VNE64SH (Core Ultra 9 275HX | RAM 32G | SSD 1TB | RTX 5080 16G | 16 OLED 2.5K 240Hz),110.000.000,+0%,+0%,,,https://hoanghapc.vn/laptop-gaming-gigabyte-aorus-master-16-byh-c5vne64sh
-Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Ultrastar DC HA340 12TB (3.5 Inch/ SATA 3/ 7200RPM/ 512MB Cache),22.000.000,+0%,,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-dc-ha340-12tb
+Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Ultrastar DC HA340 12TB (3.5 Inch/ SATA 3/ 7200RPM/ 512MB Cache),22.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-dc-ha340-12tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ Cứng HDD Western Digital Ultrastar DC HA340 4TB (3.5 inch, SATA 6Gb/s, 256MB Cache,7200RPM)",8.500.000,+0%,-10.5%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-dc-ha340-4tb
-Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Ultrastar DC HC570 22TB (3.5 Inch/ SATA 3/ 7200RPM/ 512MB Cache),35.000.000,+0%,+40%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-hc570-22tb
+Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Ultrastar DC HC570 22TB (3.5 Inch/ SATA 3/ 7200RPM/ 512MB Cache),35.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-hc570-22tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD Seagate IronWolf Pro 24TB (3.5 inch, SATA3, 512MB Cache, 7200RPM)",34.990.000,+0%,+0%,,,https://hoanghapc.vn/o-cu-ng-hdd-seagate-ironwolf-pro-24tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD Seagate IronWolf Pro 32TB (3.5 inch, SATA3, 512MB Cache, 7200RPM)",50.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cu-ng-hdd-seagate-ironwolf-pro-32tb
-Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Ultrastar DC HC555 18TB (3.5 Inch/ SATA 3/ 7200RPM/ 512MB Cache),30.000.000,+0%,+7.1%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-hc555-18tb
+Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Ultrastar DC HC555 18TB (3.5 Inch/ SATA 3/ 7200RPM/ 512MB Cache),30.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-hc555-18tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD WD Red Pro 16TB (3.5 inch, SATA3 6Gb/s, 512MB Cache, 7200RPM, WD161KFGX)",24.500.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-hdd-wd-red-pro-16tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD Seagate Exos X24 20TB (3.5 inch, SATA3, 512MB Cache, 7200RPM)",32.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-hdd-seagate-exos-x24-20tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ Cứng HDD Western Enterprise Ultrastar DC HC330 10TB (3.5 inch, Sata3 6Gb/s, 256MB Cache, 7200rpm)",17.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-western-enterprise-ultrastar-dc-hc330-10tb
@@ -680,10 +680,10 @@ Hoàng Hà PC (Hà Nội),HDD,"Ổ Cứng HDD Western Digital Ultrastar DC HC520
 Hoàng Hà PC (Hà Nội),HDD,"Ổ Cứng HDD Western Digital Red Plus 4TB (3.5 inch, SATA3, 128MB Cache, 5400rpm) - WD40EFZZ",7.000.000,+0%,,,,https://hoanghapc.vn/o-cu-ng-hdd-western-digital-red-plus-4tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ Cứng HDD Western Digital Caviar Blue 2TB (WD20EZBX) (3.5 inch, Sata3 6Gb/s, 256MB Cache, 7200rpm)",4.800.000,+20%,+20%,,,https://hoanghapc.vn/hdd-western-caviar-blue-2tb
 Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Blue 4TB (3.5 Inch/ SATA 3/ 5400 RPM/ 256MB Cache),6.000.000,+0%,+20%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-blue-4tb
-Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Ultrastar DC HC555 20TB (3.5 Inch/ SATA 3/ 7200RPM/ 512MB Cache),35.000.000,+0%,+9.4%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-hc555-20tb
+Hoàng Hà PC (Hà Nội),HDD,Ổ cứng HDD Western Digital Ultrastar DC HC555 20TB (3.5 Inch/ SATA 3/ 7200RPM/ 512MB Cache),35.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-hdd-western-digital-ultrastar-hc555-20tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD Seagate Exos 7E10 10TB (3.5 inch, SATA3, 256MB Cache, 7200RPM)",17.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-hdd-seagate-enterprise-exos-7e10-10tb
-Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD Seagate Barracuda 4TB (3.5 inch, SATA3 6Gb/s, 256MB Cache, 5400rpm)",6.000.000,+0%,,,,https://hoanghapc.vn/o-cung-seagate-barracuda-4tb-64mb-cache
-Hoàng Hà PC (Hà Nội),HDD,"Ổ Cứng HDD Seagate Barracuda 2TB (3.5 inch, Sata3 6Gb/s, 256MB Cache, 7200rpm)",4.800.000,+20%,,,,https://hoanghapc.vn/hdd-seagate-barracuda-2tb
+Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD Seagate Barracuda 4TB (3.5 inch, SATA3 6Gb/s, 256MB Cache, 5400rpm)",6.000.000,+0%,+20%,,,https://hoanghapc.vn/o-cung-seagate-barracuda-4tb-64mb-cache
+Hoàng Hà PC (Hà Nội),HDD,"Ổ Cứng HDD Seagate Barracuda 2TB (3.5 inch, Sata3 6Gb/s, 256MB Cache, 7200rpm)",4.800.000,+20%,+20%,,,https://hoanghapc.vn/hdd-seagate-barracuda-2tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ Cứng HDD Seagate Ironwolf 8TB (3.5 inch, Sata3 6Gb/s, 256MB Cache, 7200rpm)",12.000.000,+0%,,,,https://hoanghapc.vn/seagate-ironwolf-nas-8tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD Seagate Ironwolf 10TB (3.5 inch, SATA3 6Gb/s, 256MB Cache, 7200rpm)",16.000.000,+0%,,,,https://hoanghapc.vn/o-cung-seagate-ironwolf-10tb
 Hoàng Hà PC (Hà Nội),HDD,"Ổ cứng HDD Seagate Ironwolf Pro 12TB (3.5 inch, 7200 RPM, Cache 256MB, ST12000NT001)",20.000.000,+0%,+0%,,,https://hoanghapc.vn/o-cung-hdd-seagate-ironwolf-pro-12tb
@@ -747,13 +747,13 @@ Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Segotep GM850 850W (8
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn EVGA SuperNOVA 1000G FTW 1000W (80 Plus Gold/ Full Modular/ Black),3.000.000,+0%,+0%,,,https://hoanghapc.vn/nguon-evga-supernova-1000g-ftw-1000w
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn ANTEC GSK 1200 V2 1200W ATX 3.1 PCIe 5.1 (80 Plus Gold/ Full-Modular/ Black),4.000.000,,,,,https://hoanghapc.vn/nguon-antec-gsk-1200-v2-1200w-atx-3-1-pcie-5-1
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn ANTEC CSK 750DC EC 750W (80 Plus Bronze/ Non-Modular/ Black),1.800.000,,,,,https://hoanghapc.vn/nguon-antec-csk-750dc-ec-750w
-Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Thermaltake Dockpower FI 1000W (80 Plus Gold | ATX 3.1 | PCIe 5.1 | Full Modular),4.500.000,,,,,https://hoanghapc.vn/nguon-thermaltake-dockpower-fi-1000w
-Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Thermaltake AX 3200W (80 Plus Platinum | ATX 3.1 | PCIe 5.0 | Full Modular),22.000.000,,,,,https://hoanghapc.vn/nguon-thermaltake-ax-3200w
+Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Thermaltake Dockpower FI 1000W (80 Plus Gold | ATX 3.1 | PCIe 5.1 | Full Modular),4.500.000,+0%,,,,https://hoanghapc.vn/nguon-thermaltake-dockpower-fi-1000w
+Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Thermaltake AX 3200W (80 Plus Platinum | ATX 3.1 | PCIe 5.0 | Full Modular),22.000.000,+0%,,,,https://hoanghapc.vn/nguon-thermaltake-ax-3200w
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Segotep AN650W 650W (80 Plus/ Non Modular),990.000,+0%,+0%,,,https://hoanghapc.vn/nguon-segotep-an650w
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Asus TUF Gaming 850W Gold EVO (ATX 3.1/ 80 Plus Gold/ Full Modular),3.500.000,+0%,,,,https://hoanghapc.vn/nguon-asus-tuf-gaming-850w-gold-evo
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Super Flower Leadex VII XG ATX 3.1 1300W 80 Plus Gold (Full Modular),6.500.000,+0%,+0%,,,https://hoanghapc.vn/nguon-super-flower-leadex-vii-xg-atx-3-1-1300w
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Super Flower Leadex Titanium 2200W ATX 3.1 (Cybenetics Titanium/ Full-Modular/ Đen),16.000.000,+0%,+0%,,,https://hoanghapc.vn/nguon-super-flower-leadex-titanium-2200w-atx-3-1
-Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Asus Rog Thor 1200W Platinum III (ATX 3.1/ 80 Plus Platinum/ Full Modular),14.000.000,,,,,https://hoanghapc.vn/nguon-asus-rog-thor-1200w-platinum-iii
+Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Asus Rog Thor 1200W Platinum III (ATX 3.1/ 80 Plus Platinum/ Full Modular),14.000.000,+0%,,,,https://hoanghapc.vn/nguon-asus-rog-thor-1200w-platinum-iii
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Asus TUF Gaming 750W Bronze EVO (ATX 3.1/ 80 Plus Bronze/ Full Modular),2.000.000,+0%,+0%,,,https://hoanghapc.vn/nguon-asus-tuf-gaming-750w-bronze-evo
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Asus Rog Thor 1000W Platinum III (ATX 3.1/ 80 Plus Platinum/ Full Modular),13.000.000,+0%,+0%,,,https://hoanghapc.vn/nguon-asus-rog-thor-1000w-platinum-iii
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Segotep GM1250W 1250W ATX 3.0 (80 Plus Gold | PCIE 5.0),3.500.000,+0%,,,,https://hoanghapc.vn/nguon-segotep-gm1250w-1250w-atx-3-0
