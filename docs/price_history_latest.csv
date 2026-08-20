@@ -91,12 +91,12 @@ MemoryZone,Mainboard,Mainboard MSI PRO B840M-P WIFI6E DDR5,3.200.000,+0%,+0%,,,h
 MemoryZone,Mainboard,Mainboard ASUS TUF GAMING B760M-PLUS WIFI DDR4,3.490.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-pc-asus-tuf-gaming-b760m-plus-wifi-d4
 MemoryZone,Mainboard,Mainboard MSI B760M GAMING PLUS WIFI DDR5,3.500.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-pc-msi-b760m-gaming-plus-wifi
 MemoryZone,Mainboard,Mainboard ASRock B650M Pro RS Wifi DDR5,3.600.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-pc-asrock-b650m-pro-rs-wifi
+MemoryZone,Mainboard,Mainboard ASUS TUF GAMING B650M-E WIFI DDR5,3.850.000,,,,,https://memoryzone.com.vn/mainboard-pc-asus-tuf-gaming-b650m-e-wifi
 MemoryZone,Mainboard,Mainboard ASUS TUF GAMING B760M-PLUS WIFI II DDR5,3.890.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-pc-asus-tuf-gaming-b760m-plus-wifi-ii
 MemoryZone,Mainboard,Mainboard MSI B860M GAMING WIFI DDR5,3.950.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-msi-b860m-gaming-wifi-ddr5
 MemoryZone,Mainboard,Mainboard MSI MPG B760I EDGE WIFI DDR5,4.750.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-msi-mpg-b760i-edge-wifi-ddr5
 MemoryZone,Mainboard,Mainboard MSI MAG B760M MORTAR WIFI II DDR5,4.800.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-pc-msi-mag-b760m-mortar-wifi-ii
 MemoryZone,Mainboard,Mainboard MSI PRO Z790-P WIFI DDR5,4.850.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-msi-pro-z790-p-wifi-ddr5
-MemoryZone,Mainboard,Mainboard MSI B860M GAMING PLUS WIFI DDR5,4.850.000,+0%,+0%,,,https://memoryzone.com.vn/mainboard-pc-msi-b860m-gaming-plus-wifi
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính Gamdias AURA GP550 550W PSAURAGP550GA,590.000,+0%,+0%,,,https://memoryzone.com.vn/nguon-may-tinh-gamdias-aura-gp550-550w-psauragp550ga
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính MSI MAG A650BNL 650W 80 Plus Bronze MAG-A650BNL,1.150.000,+0%,+0%,,,https://memoryzone.com.vn/nguon-may-tinh-msi-mag-a650bnl-650w-80-plus-bronze-mag-a650bnl
 MemoryZone,PSU - Nguồn máy tính,Nguồn máy tính MSI MAG A750BN PCIE5 III 750W 80 Plus Bronze MAG-A750BN-PCIE5-III,1.390.000,+0%,+0%,,,https://memoryzone.com.vn/nguon-may-tinh-msi-mag-a750bn-pcie5-iii-750w-80-plus-bronze-mag-a750bn-pcie5-iii
@@ -285,7 +285,6 @@ HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn Asus PRIME 750B BLACK ( 80 Pl
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn Asus PRIME 650B BLACK ( 80 Plus Bronze),1.209.000,-28.8%,+0%,,,https://hacom.vn/nguon-asus-prime-650b-black-80-plus-bronze
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn máy tính AIGO VK550 - 500W (Màu Đen),799.000,+0%,+0%,,,https://hacom.vn/nguon-may-tinh-aigo-vk550-550w-mau-den
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn máy tính AIGO VK650 - 650W (80 Plus/ Active PFC/ Single Rail),999.000,+0%,+0%,,,https://hacom.vn/nguon-may-tinh-aigo-vk650-650w-80-plus-active-pfc-single-rail
-HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn Xigmatek X-POWER III 650 - 600W EN45990 (Màu Đen),999.000,+0%,,,,https://hacom.vn/nguon-xigmatek-x-power-iii-650-600w-en45990-mau-den
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn Gigabyte GP- P750GM 750W (80 Plus Gold/Full Modular/Màu Đen),1.649.000,-37.8%,+0%,,,https://hacom.vn/nguon-gigabyte-gp-p750gm-750w-80-plus-gold-full-modular-mau-den
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn máy tính AIGO VK450 - 450W (Màu Đen),699.000,+0%,+0%,,,https://hacom.vn/nguon-may-tinh-aigo-vk450-450w-mau-den
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn Gigabyte GP- P850GM 850W (80 Plus Gold/Full Modular/Màu Đen),1.909.000,,,,,https://hacom.vn/nguon-gigabyte-gp-p850gm-850w-80-plus-gold-full-modular-mau-den
@@ -305,6 +304,7 @@ HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn máy tính Corsair RM850e ATX
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn máy tính Cooler Master MWE V3 230V 650 - 650W (80 Plus Bronze/ATX3.1),1.139.000,-40%,,,,https://hacom.vn/nguon-may-tinh-cooler-master-mwe-v3-230v-650-650w-80-plus-bronze-atx3.1
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn máy tính Corsair RM1000e ATX 3.1 1000W (80 Plus Gold/ Màu Đen),4.849.000,+0%,+0%,,,https://hacom.vn/nguon-may-tinh-corsair-rm1000e-atx-3.1-80-plus-gold-mau-den
 HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn máy tính DARKFLASH PMT850 GOLD - 850W (80 Plus Gold/ATX3.1/PCI-e 5.1/Full Modular),1.899.000,-29.4%,,,,https://hacom.vn/nguon-may-tinh-darkflash-pmt850-gold-850w-80-plus-gold-atx3.1-pci-e-5.1-full-modular
+HACOM (Hà Nội),PSU - Nguồn máy tính,Nguồn máy tính DARKFLASH PMT750 GOLD - 750W (80 Plus Gold/ATX3.1/PCI-e 5.1/Full Modular),1.699.000,-31.7%,+0%,,,https://hacom.vn/nguon-may-tinh-darkflash-pmt750-gold-750w-80-plus-gold-atx3.1-pci-e-5.1-full-modular
 HACOM (Hà Nội),Màn hình,Màn hình Gigabyte GS25F2A (24.5 inch/FHD/IPS/240Hz/1ms/loa),4.999.000,,,,,https://hacom.vn/man-hinh-gigabyte-gs25f2a
 HACOM (Hà Nội),Màn hình,Màn hình Gigabyte G25F2A (24.5 inch/FHD/IPS/240hz/1ms/loa),4.599.000,+0%,+0%,,,https://hacom.vn/man-hinh-gigabyte-g25f2a
 HACOM (Hà Nội),Màn hình,Màn hình Gigabyte MO27Q2 (27 inch/QHD/QD-OLED/240Hz/0.03ms/loa),16.299.000,+0%,+0%,,,https://hacom.vn/man-hinh-gigabyte-mo27q2
@@ -397,8 +397,8 @@ An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 16GB DDR5 bus 6400 (
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR5 bus 5600 (KVR56S46BS6-8),5.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-8gb-ddr5-bus-5600-kvr56s46bs6-8.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingmax 16GB DDR4 bus 3200MHz,7.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingmax-gsoh22f-16gb-ddr4-3200mhz-ddr4-so-dimm-pc4-25600-16gb-1-2v.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 16GB DDR5 bus 5600 (KVR56S46BS8-16WP),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-16gb-ddr5-bus-5600-kvr56s46bs8-16wp.html
-An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 16GB DDR4 bus 3200 (KVR32S22D8/16WP),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-16gb-ddr4-bus-3200-kvr32s22d8/16wp.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR4 bus 3200 (KVR32S22S8/8WP),4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-8gb-ddr4-bus-3200-kvr32s22s8/8wp.html
+An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 16GB DDR4 bus 3200 (KVR32S22D8/16WP),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-16gb-ddr4-bus-3200-kvr32s22d8/16wp.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop 8GB DDR5 4800MHz OEM,2.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-8gb-ddr5-4800mhz-oem.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR4 bus 3200 MHz,4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-kingston-8gb-ddr4-3200-s22-1rx8-sodimm-kvr32s22s8-8_id33196.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 16GB DDR5 bus 4800Mhz CL40 (CT16G48C40S5),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-crucial-16gb-ddr5-bus-4800mhz-cl40-ct16g48c40s5.html
@@ -719,6 +719,7 @@ Hoàng Hà PC (Hà Nội),VGA - Card màn hình,"VGA GIGABYTE GEFORCE RTX 5080 W
 Hoàng Hà PC (Hà Nội),VGA - Card màn hình,"VGA ASUS DUAL RTX 3050 OC 6GB (GDDR6, 96-bit, HDMI+DP+DVI-D)",4.990.000,-9.3%,-9.3%,,,https://hoanghapc.vn/vga-asus-dual-rtx-3050-6gb-oc
 Hoàng Hà PC (Hà Nội),VGA - Card màn hình,"VGA GIGABYTE GEFORCE RTX 5080 AERO OC SFF 16G (GDDR7, 256-bit, HDMI +DP, 1x16-pin)",45.000.000,+0%,,,,https://hoanghapc.vn/vga-gigabyte-geforce-rtx-5080-aero-oc-sff-16g
 Hoàng Hà PC (Hà Nội),Mainboard,Mainboard Gigabyte Z790 AORUS ELITE AX DDR5 ( WIFI + Bluetooth ),3.690.000,+0%,-26.2%,,,https://hoanghapc.vn/mainboard-gigabyte-z790-aorus-elite-ax
+Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard ASUS PRIME Z790-P D4-CSM (Intel Z790, Socket 1700, ATX, 4 khe Ram DDR4)",5.500.000,,,,,https://hoanghapc.vn/mainboard-asus-prime-z790-p-d4-csm
 Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard MSI PRO Z790-P WIFI DDR4 (Intel Z790, Socket 1700, ATX, 4 khe Ram DDR4)",5.200.000,+0%,+0%,,,https://hoanghapc.vn/mainboard-msi-pro-z790-p-wifi-ddr4
 Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard ASUS ROG STRIX Z790-E GAMING WIFI II (Intel Z790, Socket 1700, ATX, 4 khe Ram DDR5)",13.990.000,+0%,+0%,,,https://hoanghapc.vn/mainboard-asus-strix-z790-e-gaming-wifi
 Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard ASUS ROG STRIX Z790-F GAMING WIFI (Intel Z790, Socket 1700, ATX, 4 khe Ram DDR5)",11.290.000,+0%,+0%,,,https://hoanghapc.vn/mainboard-asus-strix-z790-f-gaming-wifi
@@ -741,7 +742,6 @@ Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard ASRock Z790 PG Riptide (Intel Z79
 Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard ASUS PRIME Z890-P WIFI CSM (Intel Z890, Socket 1851, ATX, 4 khe RAM DDR5)",7.000.000,+0%,+0%,,,https://hoanghapc.vn/mainboard-asus-prime-z890-p-wifi-csm
 Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard ASRock Z690 STEEL LEGEND/ D5 (Intel Z690, Socket 1700, ATX, 4 khe Ram DDR5)",2.990.000,+0%,-25.2%,,,https://hoanghapc.vn/mainboard-asrock-z690-steel-legend-d5
 Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard Gigabyte B650 AORUS ELITE AX (AMD B650, Socket AM5, ATX, 4 khe RAM DDR5)",6.900.000,+0%,+0%,,,https://hoanghapc.vn/mainboard-gigabyte-b650-aorus-elite-ax
-Hoàng Hà PC (Hà Nội),Mainboard,"Mainboard ASUS ROG STRIX B650E-E GAMING WIFI (AMD B650, Socket AM5, ATX, 4 khe RAM DDR5)",8.890.000,+0%,,,,https://hoanghapc.vn/mainboard-asus-rog-strix-b650e-e-gaming-wifi
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Gigabyte GP-UD850GM PG5 850W (80 Plus Gold/ Full Modular),3.200.000,+0%,,,,https://hoanghapc.vn/nguon-gigabyte-gp-ud850gm-pg5
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Gigabyte UD1600PM PG5 AI TOP (1600W/ 80 Plus Platinum/ Full Modular),12.000.000,+0%,+0%,,,https://hoanghapc.vn/nguon-gigabyte-ud1600pm-pg5-ai-top
 Hoàng Hà PC (Hà Nội),PSU - Nguồn máy tính,Nguồn Gigabyte UD1300GM PG5 1300W (80 Plus Gold | PCIe 5.0 | Full Modular),5.000.000,+0%,+0%,,,https://hoanghapc.vn/nguon-gigabyte-ud1300gm-pg5-1300w
