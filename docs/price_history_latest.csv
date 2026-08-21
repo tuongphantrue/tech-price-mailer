@@ -345,7 +345,7 @@ GEARVN,Laptop,"Laptop gaming Acer Aspire 7 A715-59G-59RD (Core 5-210H/ RTX 3050 
 GEARVN,Laptop,"Laptop Acer Aspire Lite 15 AL15-49P-R6XX (Ryzen 5 7430U/ 8GB/ 512GB/15.6""/ Win 11)",20.990.000,+0%,,,,https://gearvn.com/products/laptop-acer-aspire-lite-15-al15-49p-r6xx-ryzen-5-7430u-8gb-512gb-15-6-win-11
 GEARVN,Laptop,"Laptop Acer Aspire Lite 15 AL15-36P-30TN (Core 3-N350/ 8GB/ 512GB/ 15.6"" FHD/ Win 11)",18.990.000,,,,,https://gearvn.com/products/laptop-acer-aspire-lite-14-al15-36p-30tn
 GEARVN,Laptop,"Laptop Asus ExpertBook P3 P3406CCAP-U516W (Ultra 5-225H/ 16GB/ 512GB/ 14"" IPS/ Win 11)",30.490.000,,,,,https://gearvn.com/products/laptop-asus-expertbook-p3-p3406ccap-u516w-14-ips-60hz-intel-core-ultra-5-225h-16gb-512gb-windows-11
-GEARVN,Laptop,"Laptop Dell 15 Pro Essential PV15250 VKVKD (I5-1334U/ 8GB/ 512GB/ 15.6"" FHD) - Nhập Khẩu Chính Hãng",16.990.000,+0%,,,,https://gearvn.com/products/laptop-dell-15-pro-essential-pv15250-vkvkd-i5-1334u-8gb-512gb-15-6-fhd
+GEARVN,Laptop,"Laptop Dell 15 Pro Essential PV15250 VKVKD (I5-1334U/ 8GB/ 512GB/ 15.6"" FHD/DOS) - Nhập Khẩu Chính Hãng",16.990.000,+0%,,,,https://gearvn.com/products/laptop-dell-15-pro-essential-pv15250-vkvkd-i5-1334u-8gb-512gb-15-6-fhd
 GEARVN,Laptop,"Laptop Acer Aspire Lite 15 AL15-53P-56EC (Core 5-120U/ 16GB/ 512GB/ 15.6"" FHD IPS)",23.990.000,,,,,https://gearvn.com/products/laptop-acer-aspire-lite-15-al15-53p-56ec-core-5-120u-8gb-512gb-15-6-fhd-ips
 GEARVN,Laptop,"Laptop gaming Lenovo LOQ 15ARP10E 83S0006RVN (Ryzen 7-7735HS/ RTX 3050 6GB/ 16GB/ 1TB/ 15.6"" FHD/ Win 11)",30.990.000,,,,,https://gearvn.com/products/laptop-gaming-lenovo-loq-15arp10e-83s0006rvn-ryzen-7-7735hs-rtx-3050-6gb-16gb-1tb-15-6-fhd-win-11
 GEARVN,HDD,Ổ Cứng HDD Seagate Barracuda 1TB,3.290.000,+0%,+0%,,,https://gearvn.com/products/hdd-seagate-barracuda-1tb-7200rpm
@@ -393,8 +393,8 @@ An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 16GB DDR5 bus 6400 (
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR5 bus 5600 (KVR56S46BS6-8),5.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-8gb-ddr5-bus-5600-kvr56s46bs6-8.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingmax 16GB DDR4 bus 3200MHz,7.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingmax-gsoh22f-16gb-ddr4-3200mhz-ddr4-so-dimm-pc4-25600-16gb-1-2v.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 16GB DDR5 bus 5600 (KVR56S46BS8-16WP),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-16gb-ddr5-bus-5600-kvr56s46bs8-16wp.html
-An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR4 bus 3200 (KVR32S22S8/8WP),4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-8gb-ddr4-bus-3200-kvr32s22s8/8wp.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 16GB DDR4 bus 3200 (KVR32S22D8/16WP),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-16gb-ddr4-bus-3200-kvr32s22d8/16wp.html
+An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR4 bus 3200 (KVR32S22S8/8WP),4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-kingston-8gb-ddr4-bus-3200-kvr32s22s8/8wp.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop 8GB DDR5 4800MHz OEM,2.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-8gb-ddr5-4800mhz-oem.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Kingston 8GB DDR4 bus 3200 MHz,4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-kingston-8gb-ddr4-3200-s22-1rx8-sodimm-kvr32s22s8-8_id33196.html
 An Phát Computer (Hà Nội),RAM Laptop,Ram laptop Crucial 16GB DDR5 bus 4800Mhz CL40 (CT16G48C40S5),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/ram-laptop-crucial-16gb-ddr5-bus-4800mhz-cl40-ct16g48c40s5.html
@@ -476,12 +476,6 @@ An Phát Computer (Hà Nội),HDD,"Ổ cứng HDD NAS Seagate Ironwolf Pro 10TB 
 An Phát Computer (Hà Nội),HDD,Ổ cứng Western Digital Enterprise Ultrastar HA340 8TB 7200RPM 256MB- WUS721208BLE6L4,13.999.000,+0%,,,,https://www.anphatpc.com.vn/o-cung-western-digital-enterprise-ultrastar-ha340-8tb-7200rpm-256mb-wus721208ble6l4.html
 An Phát Computer (Hà Nội),HDD,Ổ cứng Seagate Barracuda 2TB 256MB cache (ST2000DM008),5.999.000,+0%,+50%,,,https://www.anphatpc.com.vn/o-cung-seagate-barracuda-2tb-256mb-cache-st2000dm008.html
 An Phát Computer (Hà Nội),HDD,Ổ cứng Western Digital Red Plus 2TB 3.5 inch 64MB Cache 5400RPM WD20EFPX,4.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/o-cung-western-digital-red-plus-2tb-3.5-inch-64mb-cache-5400rpm-wd20efpx.html
-An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus ROG Astral RTX 5080 16GB GDDR7 OC (ROG-ASTRAL-RTX5080-O16G-GAMING),59.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-rog-astral-rtx-5080-16gb-gddr7-oc.html
-An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus ROG Astral RTX 5090 32GB GDDR7 OC (ROG-ASTRAL-RTX5090-O32G-GAMING),200.000.000,+42.9%,+42.9%,,,https://www.anphatpc.com.vn/vga-asus-rog-astral-rtx-5090-32gb-gddr7-oc.html
-An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5060 8GB GDDR7 OC (DUAL-RTX5060-O8G),11.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5060-8gb-gddr7-oc-dual-rtx5060-o8g.html
-An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus Prime RTX 5070 Ti 16GB GDDR7 (PRIME-RTX5070TI-16G),37.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-prime-rtx-5070-ti-16gb-gddr7.html
-An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5060 Ti 8GB GDDR7 OC (DUAL-RTX5060TI-O8G),17.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5060-ti-8gb-gddr7-oc-dual-rtx5060ti-o8g.html
-An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5060 8GB GDDR7 OC - A (DUAL-RTX5060-O8G-A),19.890.000,+17.7%,+65.8%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5060-8gb-gddr7-oc.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Prime RTX 5050 8GB GDDR6 OC Edition (PRIME-RTX5050-O8G),9.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-prime-rtx-5050-8gb-gddr6-oc-edition-prime-rtx5050-o8g.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus Dual RX 9060 XT 16GB GDDR6 (DUAL RX9060XT-16G),17.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-dual-rx-9060-xt-16gb-gddr6-dual-rx9060xt-16g.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus DUAL RTX 3050 6GB (DUAL-RTX3050-6G),7.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-3050-6gb-dual-rtx3050-6g.html
@@ -489,6 +483,12 @@ An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus TUF GAMING RTX 5070
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus TUF GAMING RTX 5090 32GB GDDR7 OC (TUF-RTX5090-O32G-GAMING),199.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-tuf-rtx-5090-32gb-gddr7-oc.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5050 8GB GDDR6 OC Edition (DUAL-RTX5050-O8G),12.199.000,+22%,+22%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5050-8gb-gddr6-oc-edition-dual-rtx5050-o8g.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS PRIME RTX 5060 Ti 16GB GDDR7 (PRIME-RTX5060TI-16G),21.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-prime-rtx-5060-ti-16gb-gddr7-prime-rtx5060ti-16g.html
+An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus ROG Astral RTX 5080 16GB GDDR7 OC (ROG-ASTRAL-RTX5080-O16G-GAMING),59.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-rog-astral-rtx-5080-16gb-gddr7-oc.html
+An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus ROG Astral RTX 5090 32GB GDDR7 OC (ROG-ASTRAL-RTX5090-O32G-GAMING),200.000.000,+42.9%,+42.9%,,,https://www.anphatpc.com.vn/vga-asus-rog-astral-rtx-5090-32gb-gddr7-oc.html
+An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5060 8GB GDDR7 OC (DUAL-RTX5060-O8G),11.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5060-8gb-gddr7-oc-dual-rtx5060-o8g.html
+An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus Prime RTX 5070 Ti 16GB GDDR7 (PRIME-RTX5070TI-16G),37.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-prime-rtx-5070-ti-16gb-gddr7.html
+An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5060 Ti 8GB GDDR7 OC (DUAL-RTX5060TI-O8G),17.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5060-ti-8gb-gddr7-oc-dual-rtx5060ti-o8g.html
+An Phát Computer (Hà Nội),VGA - Card màn hình,VGA ASUS Dual RTX 5060 8GB GDDR7 OC - A (DUAL-RTX5060-O8G-A),19.890.000,+17.7%,+65.8%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-5060-8gb-gddr7-oc.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Asus DUAL RTX 3050 OC 6GB (DUAL-RTX3050-O6G),7.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-asus-dual-rtx-3050-oc-6gb-dual-rtx3050-o6g.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Gigabyte Radeon RX 6500 XT EAGLE 4G (GV-R65XTEAGLE-4GD),6.999.000,+0%,+0%,,,https://www.anphatpc.com.vn/vga-gigabyte-radeon-rx-6500-xt-eagle-4g-gv-r65xteagle-4gd.html
 An Phát Computer (Hà Nội),VGA - Card màn hình,VGA Gigabyte RTX 5060 WINDFORCE MAX OC 8GB (N5060WF2MAX OC-8GD),16.690.000,+0%,+39.1%,,,https://www.anphatpc.com.vn/vga-gigabyte-rtx-5060-windforce-max-oc-8gb-n5060wf2max-oc-8gd.html
@@ -552,7 +552,6 @@ An Phát Computer (Hà Nội),Màn hình,Phân giải điểm ảnh: 2K (2560 x 
 ThinkPro,RAM,RAM Laptop Samsung DDR4 32GB Bus 3200MHz,2.999.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-samsung-ddr4-32gb-bus-3200mhz
 ThinkPro,RAM,RAM Laptop Samsung DDR4 16GB Bus 3200MHz,990.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-samsung-16gb-ddr4-3200mhz
 ThinkPro,RAM,RAM Laptop Samsung DDR4 8GB Bus 2666MHz,390.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-samsung-8gb-ddr4-2666mhz
-ThinkPro,RAM,RAM Laptop Samsung DDR5 8GB Bus 5600MHz,990.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-samsung-ddr5-8gb-bus-5600mhz
 ThinkPro,RAM,RAM Laptop Skhynix DDR4 32GB Bus 3200MHz,1.990.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-skhynix-ddr4-32gb-bus-3200mhz
 ThinkPro,RAM,RAM Laptop Micron DDR4 16GB Bus 3200MHz,990.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-micron-16gb-ddr4-3200mhz
 ThinkPro,RAM,RAM Laptop Kingston DDR5 32GB Bus 4800MHz,2.790.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-kingston-ddr5-32gb-bus-4800mhz
@@ -568,6 +567,7 @@ ThinkPro,RAM,Ram Laptop Kingston 8Gb KCP432SS8/8,2.599.000,+0%,-6.8%,,,https://t
 ThinkPro,RAM,Ram Laptop Kingston 8Gb KCP556SS6-8,3.790.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-kingston-8gb-kcp556ss6-8
 ThinkPro,RAM,Ram Laptop Kingston 16Gb KVR32S22D8/S8,4.190.000,+0%,+2.4%,,,https://thinkpro.vn/ram/ram-laptop-kingston-16gb-kvr32s22d8s8
 ThinkPro,RAM,Ram Laptop Kingston 8Gb KVR56S46BS6-8,3.990.000,+0%,+8.1%,,,https://thinkpro.vn/ram/ram-laptop-kingston-8gb-kvr56s46bs6-8
+ThinkPro,RAM,Ram Laptop Kingston 8Gb KVR32S22S8/S6,2.390.000,+0%,+0%,,,https://thinkpro.vn/ram/ram-laptop-kingston-8gb-kvr32s22s8s6
 ThinkPro,SSD / Ổ cứng,SSD Union 512GB NVME M2 2242,1.190.000,+0%,+0%,,,https://thinkpro.vn/o-cung/ssd-union-512gb-nvme-m2-2242
 ThinkPro,SSD / Ổ cứng,SSD Skhynix 512GB NVME M2 2280,1.490.000,+0%,+0%,,,https://thinkpro.vn/o-cung/o-cung-ssd-sk-hynix-512gb-m2-nvme-2280
 ThinkPro,SSD / Ổ cứng,SSD Kioxia 512GB NVME M2 2230,1.490.000,+0%,+0%,,,https://thinkpro.vn/o-cung/o-cung-ssd-kioxia-512gb-nvme-2230
